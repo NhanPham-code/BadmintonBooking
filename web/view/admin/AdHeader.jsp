@@ -38,9 +38,12 @@
             .header .logo {
                 display: flex;
                 align-items: center;
+                flex-shrink: 0; /* Đảm bảo logo không co lại */
             }
             .header .logo img {
                 margin-right: 10px;
+                width: 50px; /* Tăng kích thước logo */
+                height: 50px; /* Tăng kích thước logo */
             }
             .header .search-bar {
                 flex-grow: 1;
@@ -50,6 +53,7 @@
                 background: #d9d9d9;
                 border-radius: 4px;
                 padding: 5px 10px;
+                max-width: 500px; /* Giảm chiều rộng của thanh tìm kiếm */
             }
             .header .search-bar input {
                 border: none;
@@ -122,35 +126,43 @@
                 background: #145569;
                 border-radius: 4px;
             }
-            .admin-content{
+            .admin-content {
                 display: flex;
-                width: 120px;
-                height: 42px;
+                align-items: center;
                 position: relative;
+                flex-shrink: 0; /* Đảm bảo phần hồ sơ không co lại */
             }
             .drop {
                 position: relative;
-                display: inline-block;
-                margin: 5px 35px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
             }
-            .auth-links{
+            .drop p{
+                margin: 0px 30px;
+            }
+            .auth-links {
                 display: none;
-                position: relative;
+                position: absolute;
+                top: 100%; /* Đảm bảo menu xuất hiện bên dưới */
+                left: 50%; /* Canh giữa theo chiều ngang */
+                transform: translateX(-50%); /* Dịch chuyển để canh giữa */
                 background-color: #1f7a8c;
                 min-width: 120px;
                 box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
                 z-index: 1;
             }
             .auth-links a {
-                color: black;
+                color: white; /* Thay đổi thành màu trắng */
                 padding: 12px 16px;
                 text-decoration: none;
                 display: block;
             }
-            .drop i{
+            .drop i {
                 font-size: 33px;
-                }
-            .drop:hover .auth-links{
+                margin-right: 5px; /* Thêm khoảng cách giữa icon và tên người dùng */
+            }
+            .drop:hover .auth-links {
                 display: block;
             }
         </style>
@@ -175,6 +187,7 @@
             <div class="admin-content">
                 <div class="drop">
                     <i class="far fa-user-circle"></i>
+                    <p>Admin</p> <!-- Bạn có thể thay "Admin" bằng biến động của người dùng đăng nhập -->
                     <div class="auth-links">
                         <a href="#">Logout</a>
                         <a href="#">Profile</a>
