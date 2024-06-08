@@ -19,7 +19,7 @@
         <style>
             body {
                 font-family: Arial, Helvetica, sans-serif;
-                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg'); /* Đường dẫn đến hình ảnh */
+                background-image: url('<%=request.getContextPath()%>/img/background/bg2.jpg'); /* Đường dẫn đến hình ảnh */
                 background-size: cover; /* Phủ kín toàn bộ phần nền */
                 background-position: center; /* Canh chỉnh vị trí ảnh */
                 display: flex;
