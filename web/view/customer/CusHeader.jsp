@@ -13,6 +13,8 @@
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            />
+        <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
@@ -75,10 +77,6 @@
             .header .search-bar button:hover {
                 background: #145569;
             }
-            .header {
-                display: flex;
-                gap: 10px;
-            }
             .header .auth-links a {
                 background: none;
                 border: none;
@@ -138,7 +136,7 @@
                 align-items: center;
                 cursor: pointer;
             }
-            .drop p{
+            .drop p {
                 margin: 0px 30px;
             }
             .auth-links {
@@ -173,8 +171,6 @@
                 <img
                     src="<%=request.getContextPath()%>/img/logo/logo.png"
                     alt="Logo"
-                    width="40px"
-                    height="40px"
                     />
                 <span>Badminton Stadium Booking</span>
             </div>
@@ -195,12 +191,10 @@
                 </div>
             </div> 
         </div>
-        <div class="banner"></div>
-
         <div class="nav">
             <a href="CusStaList.jsp">STADIUM LIST</a>
             <a href="CusPopular.jsp">POPULAR</a>
-            <a href="CusProfile.jsp">ACCOUNT</a>
+            <a href="CusBooking.jsp">BOOKING HISTORY</a>
         </div>
     </body>
 </html>

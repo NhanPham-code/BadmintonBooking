@@ -30,6 +30,7 @@
                 box-sizing: border-box;
             }
             .footer {
+                margin-top: 0px;
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
@@ -42,7 +43,7 @@
         </style>
     </head>
     <body>
-        <div class="footer">
+        <div class="footer" style="margin-top: 0px">
             <div>CONTACT US: 0778289817</div>
             <div>EMAIL: group1@gmail.com</div>
         </div>
