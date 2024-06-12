@@ -1,17 +1,19 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>HomePage</title>
+        <title>Customer HomePage</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
-            html, body {
-                height: 100%;
+            body {
                 margin: 0;
                 font-family: 'Inter', sans-serif;
+                background: white;
                 display: flex;
                 flex-direction: column;
-                background: white;
+                min-height: 100vh;
             }
             .header, .footer {
                 width: 100%;
@@ -76,7 +78,9 @@
                 background: #145569;
             }
             .banner {
-                flex-grow: 1;
+                width: 100%;
+                height: 149px;
+                background: url('<%=request.getContextPath()%>/img/background/bg1.jpg') no-repeat center center;
                 background-size: cover;
                 display: flex;
                 justify-content: center;
@@ -85,7 +89,6 @@
                 font-size: 32px;
                 font-weight: 700;
                 border-bottom: 1px solid black;
-                transition: background-image 0.5s ease-in-out;
             }
             .nav {
                 width: 100%;
@@ -109,32 +112,84 @@
                 background: #145569;
                 border-radius: 4px;
             }
+            .stadium-list {
+                width: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                flex-grow: 1;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+            .stadium-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #FFFFFF;
+                padding: 20px;
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                cursor: pointer;
+            }
+            .stadium-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+            .stadium-item img {
+                width: 80px;
+                height: 80px;
+                border-radius: 8px;
+                object-fit: cover;
+            }
+            .stadium-details {
+                flex-grow: 1;
+                margin-left: 20px;
+            }
+            .stadium-details div {
+                margin: 5px 0;
+            }
+            .stadium-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+            }
+            .stadium-actions a {
+                background: #1F7A8C;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .stadium-actions a:hover {
+                background: #145569;
+            }
             .footer {
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                box-sizing: border-box;
+                margin-top: auto;
             }
             .footer div {
                 margin: 5px 0;
             }
+            .rating {
+                display: flex;
+                align-items: center;
+            }
+            .rating .fa-star {
+                color: gold;
+                margin-left: 5px;
+            }
         </style>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var imageUrls = ['<%=request.getContextPath()%>/img/background/bg1.jpg', '<%=request.getContextPath()%>/img/background/bg2.jpg'];
-                var banner = document.querySelector('.banner');
-                var index = 0;
-
-                function changeImage() {
-                    banner.style.backgroundImage = "url('" + imageUrls[index] + "')";
-                    index = (index + 1) % imageUrls.length;
-                }
-                changeImage(); // Hi?n th? ?nh ??u tiên
-                setInterval(changeImage, 5000); // Chuy?n ??i ?nh sau m?i 5 giây
-            });
-        </script>
     </head>
     <body>
         <div class="header">
@@ -142,7 +197,12 @@
                 <img src="<%=request.getContextPath()%>/img/logo/logo.png" alt="Logo" width="40px" height="40px">
                 <span>Badminton Stadium Booking</span>
             </div>
-
+            <form class="search-bar" action="searchStadium" method="get">
+                <input type="text" name="searchKey" placeholder="Search">
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
             <div class="auth-links">
                 <a href="#">Login</a>
                 <a href="#">Register</a>
@@ -152,10 +212,26 @@
         <div class="nav">
             <a href="stadiumList">STADIUM LIST</a>
             <a href="#">POPULAR</a>
+            <a href="#">BOOKING HISTORY</a>
         </div>
 
-        <div class="banner" id="banner">
-            <!-- N?i dung banner -->
+        <div class="stadium-list">
+            <c:forEach var="st" items="${requestScope.stList}">
+                <div class="stadium-item" onclick="window.location.href = '#';">
+                    <img src="<%=request.getContextPath()%>${st.stadium_image}" alt="Stadium">
+                    <div class="stadium-details">
+                        <div>${st.stadium_name}</div>
+                        <div>${st.stadium_address}</div>
+                        <div class="rating">
+                            Rating: ${st.avg_ratingScore}
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stadium-actions">
+                        <a href="bookingPage.jsp">Booking</a>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
 
         <div class="footer">

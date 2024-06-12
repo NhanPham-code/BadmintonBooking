@@ -46,7 +46,7 @@ public class accountDAO {
     public static void main(String[] args) {
         accountDAO dao = new accountDAO();
         
-        Account ac = dao.getAccountById("ACC002");
+        Account ac = dao.getAccountById("ACC004");
         
         System.out.println(ac.getAcc_ID() + ac.getEmail());
         

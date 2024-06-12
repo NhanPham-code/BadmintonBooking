@@ -5,7 +5,6 @@
 
 package controller;
 
-import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,16 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Stadium;
 
 /**
  *
- * @author PC
+ * @author nhanPH
  */
-@WebServlet(name="stadiumList", urlPatterns={"/stadiumList"})
-public class stadiumList extends HttpServlet {
+@WebServlet(name="searchStadium", urlPatterns={"/searchStadium"})
+public class searchStadium extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -39,10 +35,10 @@ public class stadiumList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet stadiumList</title>");  
+            out.println("<title>Servlet searchStadium</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet stadiumList at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet searchStadium at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,13 +55,7 @@ public class stadiumList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        // get all stadium
-        stadiumDAO stDAO = new stadiumDAO();
-        List<Stadium> stList = stDAO.getAllStadium();
-        
-        // send to JSP
-        request.setAttribute("stList", stList);
-        request.getRequestDispatcher("view/common/CommonStaList.jsp").forward(request, response);
+        processRequest(request, response);
     } 
 
     /** 

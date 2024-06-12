@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.Stadium;
+import model.StadiumOwner;
 
 /**
  *
@@ -23,9 +24,9 @@ public class stadiumDAO {
     ResultSet rs;
     DBContext db = new DBContext();
 
-    
     public List<Stadium> getAllStadium() {
-         List<Stadium> stadiumList = new ArrayList<>();
+        stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+        List<Stadium> stadiumList = new ArrayList<>();
         String sql = "select * from Stadium";
         try {
             conn = db.getConnection();
@@ -42,16 +43,29 @@ public class stadiumDAO {
                 st.setAvg_ratingScore(rs.getDouble("avg_ratingScore"));
                 st.setPricePerHour(rs.getInt("pricePerHour"));
                 st.setQRcode(rs.getString("QRCode"));
-                
-                
+                // get stadium owner of stadium
+                StadiumOwner sto = stoDAO.getStadiumOwnerById(rs.getString("owner_ID"));
+                st.setOwner(sto);
+
                 stadiumList.add(st);
             }
         } catch (Exception ex) {
             System.out.println();
         }
-        
-        
-        return null;
-        
+
+        return stadiumList;
+    }
+
+    public static void main(String[] args) {
+        stadiumDAO stDAO = new stadiumDAO();
+
+        List<Stadium> stList = new ArrayList<>();
+        stList = stDAO.getAllStadium();
+
+        for (int i = 0; i < stList.size(); i++) {
+            Stadium st = stList.get(i);
+            System.out.println(st.getStadium_name());
+            System.out.println(st.getAvg_ratingScore());
+        }
     }
 }
