@@ -56,6 +56,40 @@ public class stadiumDAO {
         return stadiumList;
     }
 
+    public List<Stadium> searchStadiumByKey(String key) {
+        stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+        List<Stadium> stList = new ArrayList<>();
+        String sql = "SELECT * FROM stadium WHERE stadium_name LIKE ? OR stadium_address LIKE ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + key + "%");
+            ps.setString(2, "%" + key + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Stadium st = new Stadium();
+                st.setStadium_ID(rs.getString("stadium_ID"));
+                st.setStadium_name(rs.getString("stadium_name"));
+                st.setStadium_address(rs.getString("stadium_address"));
+                st.setStadium_phone(rs.getString("stadium_phone"));
+                st.setOpentime(rs.getString("opentime"));
+                st.setStadium_image(rs.getString("stadium_image"));
+                st.setAvg_ratingScore(rs.getDouble("avg_ratingScore"));
+                st.setPricePerHour(rs.getInt("pricePerHour"));
+                st.setQRcode(rs.getString("QRCode"));
+                // get stadium owner of stadium
+                StadiumOwner sto = stoDAO.getStadiumOwnerById(rs.getString("owner_ID"));
+                st.setOwner(sto);
+
+                stList.add(st);
+            }
+        } catch (Exception ex) {
+            System.out.println();
+        }
+
+        return stList;
+    }
+
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
 

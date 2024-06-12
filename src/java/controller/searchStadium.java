@@ -5,6 +5,7 @@
 
 package controller;
 
+import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Stadium;
 
 /**
  *
@@ -55,7 +58,19 @@ public class searchStadium extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String searchKey = request.getParameter("searchKey");
+        
+        stadiumDAO stDAO = new stadiumDAO();
+        List<Stadium> searchList = stDAO.searchStadiumByKey(searchKey);
+        
+        String err = "";
+        if(searchList.isEmpty()) {
+            err += "Can not find stadium !!!";
+        }
+        
+        request.setAttribute("err", err);
+        request.setAttribute("stList", searchList);
+        request.getRequestDispatcher("view/common/CommonStaList.jsp").forward(request, response);
     } 
 
     /** 

@@ -185,9 +185,17 @@
                 display: flex;
                 align-items: center;
             }
+            
             .rating .fa-star {
                 color: gold;
                 margin-left: 5px;
+            }
+            
+            .error-message {
+                color: brown;
+                font-weight: bold;
+                margin: 20px 0;
+                text-align: center;
             }
         </style>
     </head>
@@ -212,10 +220,12 @@
         <div class="nav">
             <a href="stadiumList">STADIUM LIST</a>
             <a href="#">POPULAR</a>
-            <a href="#">BOOKING HISTORY</a>
         </div>
 
         <div class="stadium-list">
+            
+            <div class="error-message"><h1>${requestScope.err}</h1></div>
+            
             <c:forEach var="st" items="${requestScope.stList}">
                 <div class="stadium-item" onclick="window.location.href = '#';">
                     <img src="<%=request.getContextPath()%>${st.stadium_image}" alt="Stadium">
