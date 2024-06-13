@@ -208,15 +208,7 @@
 
             }
 
-            .filter-dropdown select {
-                padding: 5px;
-                font-size: 14px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-left: 5px;
-            }
-
+            
             .filter-label {
                 margin-right: 10px;
 

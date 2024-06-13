@@ -90,6 +90,50 @@ public class stadiumDAO {
         return stList;
     }
 
+    public Stadium getStadiumByID(String stadiumID) {
+        stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+        Stadium stadium = null;
+        String sql = "SELECT * FROM Stadium WHERE stadium_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadiumID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                stadium = new Stadium();
+                stadium.setStadium_ID(rs.getString("stadium_ID"));
+                stadium.setStadium_name(rs.getString("stadium_name"));
+                stadium.setStadium_address(rs.getString("stadium_address"));
+                stadium.setStadium_phone(rs.getString("stadium_phone"));
+                stadium.setOpentime(rs.getString("opentime"));
+                stadium.setStadium_image(rs.getString("stadium_image"));
+                stadium.setAvg_ratingScore(rs.getDouble("avg_ratingScore"));
+                stadium.setPricePerHour(rs.getInt("pricePerHour"));
+                stadium.setQRcode(rs.getString("QRCode"));
+                // get stadium owner of stadium
+                StadiumOwner sto = stoDAO.getStadiumOwnerById(rs.getString("owner_ID"));
+                stadium.setOwner(sto);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return stadium;
+    }
+
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
 
