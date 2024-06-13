@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author Admin
+ * @author nhanPH
  */
 public class Customer {
     

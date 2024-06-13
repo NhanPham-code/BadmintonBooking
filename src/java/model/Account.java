@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author PC
+ * @author nhanPH
  */
 public class Account {
     private String acc_ID;
