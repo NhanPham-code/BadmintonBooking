@@ -174,8 +174,8 @@
                     />
                 <span>Badminton Stadium Booking</span>
             </div>
-            <form class="search-bar" action="searchResults.jsp" method="get">
-                <input type="text" name="query" placeholder="Search" />
+            <form class="search-bar" action="searchStadium" method="get">
+                <input type="text" name="searchKey" placeholder="Search">
                 <button type="submit">
                     <i class="fas fa-search"></i>
                 </button>
@@ -183,18 +183,18 @@
             <div class="admin-content">
                 <div class="drop">
                     <i class="far fa-user-circle"></i>
-                    <p>Customer</p> <!-- Bạn có thể thay "Admin" bằng biến động của người dùng đăng nhập -->
+                    <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="#">Logout</a>
-                        <a href="#">Profile</a>
+                        <a href="<%=request.getContextPath()%>/#">Logout</a>
+                        <a href="<%=request.getContextPath()%>/#">Profile</a>
                     </div>
                 </div>
             </div> 
         </div>
         <div class="nav">
-            <a href="CusStaList.jsp">STADIUM LIST</a>
-            <a href="CusPopular.jsp">POPULAR</a>
-            <a href="CusBooking.jsp">BOOKING HISTORY</a>
+            <a href="<%=request.getContextPath()%>/stadiumList">STADIUM LIST</a>
+            <a href="<%=request.getContextPath()%>/#">POPULAR</a>
+            <a href="<%=request.getContextPath()%>/#">BOOKING HISTORY</a>
         </div>
     </body>
 </html>

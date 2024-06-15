@@ -36,7 +36,7 @@ public class feedbackDAO {
                 Feedback fb = new Feedback();
                 fb.setRatingScore(rs.getFloat(1));
                 fb.setDescription(rs.getString(2));
-                fb.setCustomer(cDAO.getCustomerNyID(rs.getString(3)));
+                fb.setCustomer(cDAO.getCustomerByID(rs.getString(3)));
                 fb.setStadium_ID(rs.getString(4));
                 FeedbackList.add(fb);
             }
@@ -61,7 +61,7 @@ public class feedbackDAO {
                 Feedback fb = new Feedback();
                 fb.setRatingScore(rs.getFloat(1));
                 fb.setDescription(rs.getString(2));
-                fb.setCustomer(cDAO.getCustomerNyID(rs.getString(3)));
+                fb.setCustomer(cDAO.getCustomerByID(rs.getString(3)));
                 fb.setStadium_ID(rs.getString(4));
                 FeedbackList.add(fb);
             }

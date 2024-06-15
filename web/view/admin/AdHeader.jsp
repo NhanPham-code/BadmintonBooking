@@ -178,28 +178,21 @@
                     />
                 <span>Badminton Stadium Booking</span>
             </div>
-            <form class="search-bar" action="searchResults.jsp" method="get">
-                <input type="text" name="query" placeholder="Search" />
-                <button type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
             <div class="admin-content">
                 <div class="drop">
                     <i class="far fa-user-circle"></i>
-                    <p>Admin</p> <!-- Bạn có thể thay "Admin" bằng biến động của người dùng đăng nhập -->
+                    <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="#">Logout</a>
-                        <a href="#">Profile</a>
+                        <a href="<%=request.getContextPath()%>/#">Logout</a>
+                        <a href="<%=request.getContextPath()%>/#">Profile</a>
                     </div>
                 </div>
             </div> 
         </div>
-        <div class="banner"></div>
 
         <div class="nav">
-            <a href="AdStaManage.jsp">STADIUM MANAGEMENT</a>
-            <a href="AdAccManage.jsp">ACCOUNT MANAGEMENT</a>
+            <a href="<%=request.getContextPath()%>/stadiumList">STADIUM MANAGEMENT</a>
+            <a href="<%=request.getContextPath()%>/#">ACCOUNT MANAGEMENT</a>
         </div>
     </body>
 </html>

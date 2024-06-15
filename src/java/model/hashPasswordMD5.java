@@ -34,7 +34,7 @@ public class hashPasswordMD5 {
 
     public static void main(String[] args) {
         hashPasswordMD5 md = new hashPasswordMD5();
-        String plaintextPassword = "123";
+        String plaintextPassword = "3105";
         String hashedPassword = md.hashPasswordMD5(plaintextPassword);
         System.out.println("Original Password: " + plaintextPassword);
         System.out.println("MD5 Hashed Password: " + hashedPassword);

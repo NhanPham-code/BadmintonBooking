@@ -8,6 +8,11 @@ import DBContext.DBContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Account;
 
 /**
@@ -20,10 +25,10 @@ public class accountDAO {
     PreparedStatement ps;
     ResultSet rs;
     DBContext db = new DBContext();
-    
+
     public Account getAccountById(String id) {
         Account ac = new Account();
-        
+
         String sql = "select * from Account where acc_ID = ?";
         try {
             conn = db.getConnection();
@@ -39,16 +44,151 @@ public class accountDAO {
         } catch (Exception ex) {
             System.out.println();
         }
-        
+
         return ac;
     }
-    
+
+    public boolean checkLogin(String email, String password) {
+        String sql = "select * from Account where Email = ? and Password = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            rs = ps.executeQuery();
+            return rs.next(); // Trả về true nếu có kết quả, ngược lại trả về false
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public Account getAccountByEmail(String email) {
+        Account ac = null;
+        String sql = "select * from Account where Email = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                ac = new Account();
+                ac.setAcc_ID(rs.getString("acc_ID"));
+                ac.setEmail(rs.getString("Email"));
+                ac.setPassword(rs.getString("Password"));
+                ac.setRole(rs.getString("Role"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ac;
+    }
+
+    public List<Account> getAllAccount() {
+        List<Account> accountList = new ArrayList<>();
+        String sql = "select * from account";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account ac = new Account();
+                ac.setAcc_ID(rs.getString("acc_ID"));
+                ac.setEmail(rs.getString("email"));
+                ac.setPassword(rs.getString("password"));
+                ac.setRole(rs.getString("role"));
+                accountList.add(ac);
+            }
+        } catch (Exception ex) {
+            System.out.println();
+        }
+
+        return accountList;
+    }
+
+    public int addNewAcc(Account accNew) {
+        int check = 0;
+        String sql = "INSERT INTO [dbo].[Account]\n"
+                + "           ([Acc_ID]\n"
+                + "           ,[Email]\n"
+                + "           ,[Password]\n"
+                + "           ,[Role])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?)";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, accNew.getAcc_ID());
+            ps.setString(2, accNew.getEmail());
+            ps.setString(3, accNew.getPassword());
+            ps.setString(4, accNew.getRole());
+            check = ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return check;
+    }
+
     public static void main(String[] args) {
         accountDAO dao = new accountDAO();
-        
-        Account ac = dao.getAccountById("ACC004");
-        
-        System.out.println(ac.getAcc_ID() + ac.getEmail());
-        
+
+        Account ac = new Account();
+        ac.setAcc_ID("ACC8");
+        ac.setEmail("nhan4@gmail.com");
+        ac.setPassword("37e7897f62e8d91b1ce60515829ca282");
+        ac.setRole("Customer");
+
+        int check = dao.addNewAcc(ac);
+
+        System.out.println(check);
+
     }
 }

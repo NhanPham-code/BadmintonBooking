@@ -212,8 +212,8 @@
                 </button>
             </form>
             <div class="auth-links">
-                <a href="#">Login</a>
-                <a href="#">Register</a>
+                <a href="<%=request.getContextPath()%>/view/common/login.jsp">Login</a>
+                <a href="<%=request.getContextPath()%>/view/common/register.jsp">Register</a>
             </div>
         </div>
 

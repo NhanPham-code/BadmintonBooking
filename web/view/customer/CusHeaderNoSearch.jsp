@@ -10,14 +10,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Header Customer</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         <style>
             body {
                 margin: 0;
@@ -40,12 +34,12 @@
             .header .logo {
                 display: flex;
                 align-items: center;
-                flex-shrink: 0; /* Đảm bảo logo không co lại */
+                flex-shrink: 0;
             }
             .header .logo img {
                 margin-right: 10px;
-                width: 50px; /* Tăng kích thước logo */
-                height: 50px; /* Tăng kích thước logo */
+                width: 50px;
+                height: 50px;
             }
             .header .search-bar {
                 flex-grow: 1;
@@ -55,7 +49,7 @@
                 background: #d9d9d9;
                 border-radius: 4px;
                 padding: 5px 10px;
-                max-width: 500px; /* Giảm chiều rộng của thanh tìm kiếm */
+                max-width: 500px;
             }
             .header .search-bar input {
                 border: none;
@@ -136,7 +130,7 @@
                 align-items: center;
                 cursor: pointer;
             }
-            .drop p {
+            .drop p{
                 margin: 0px 30px;
             }
             .auth-links {
@@ -168,28 +162,25 @@
     <body>
         <div class="header">
             <div class="logo">
-                <img
-                    src="<%=request.getContextPath()%>/img/logo/logo.png"
-                    alt="Logo"
-                    />
+                <img src="<%=request.getContextPath()%>/img/logo/logo.png" alt="Logo"/>
                 <span>Badminton Stadium Booking</span>
             </div>
-            
+
             <div class="admin-content">
                 <div class="drop">
                     <i class="far fa-user-circle"></i>
-                    <p>Customer</p> <!-- Bạn có thể thay "Admin" bằng biến động của người dùng đăng nhập -->
+                    <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="#">Logout</a>
-                        <a href="#">Profile</a>
+                        <a href="<%=request.getContextPath()%>/#">Logout</a>
+                        <a href="<%=request.getContextPath()%>/#">Profile</a>
                     </div>
                 </div>
             </div> 
         </div>
         <div class="nav">
-            <a href="CusStaList.jsp">STADIUM LIST</a>
-            <a href="CusPopular.jsp">POPULAR</a>
-            <a href="CusBooking.jsp">BOOKING HISTORY</a>
+            <a href="<%=request.getContextPath()%>/stadiumList">STADIUM LIST</a>
+            <a href="<%=request.getContextPath()%>/#">POPULAR</a>
+            <a href="<%=request.getContextPath()%>/#">BOOKING HISTORY</a>
         </div>
     </body>
 </html>

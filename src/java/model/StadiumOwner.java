@@ -9,20 +9,13 @@ package model;
  * @author nhanPH
  */
 public class StadiumOwner {
-    
+
     private String owner_ID;
     private String owner_name;
     private String owner_phone;
-    private Account account;
+    private String acc_ID;
 
     public StadiumOwner() {
-    }
-    
-    public StadiumOwner(String owner_ID, String owner_name, String owner_phone, Account account) {
-        this.owner_ID = owner_ID;
-        this.owner_name = owner_name;
-        this.owner_phone = owner_phone;
-        this.account = account;
     }
 
     public String getOwner_ID() {
@@ -49,12 +42,12 @@ public class StadiumOwner {
         this.owner_phone = owner_phone;
     }
 
-    public Account getAccount() {
-        return account;
+    public String getAcc_ID() {
+        return acc_ID;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAcc_ID(String acc_ID) {
+        this.acc_ID = acc_ID;
     }
-    
+
 }

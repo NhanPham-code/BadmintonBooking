@@ -132,18 +132,18 @@
     </head>
     <body>
         <h3 style="color: red">${requestScope.error}</h3>
-        <c:set var="ac" value="${requestScope.ac}"></c:set>
+     
         <form action="<%=request.getContextPath()%>/login" method="post">
             <div class="container">
                 <h1 style="text-align:center">Login</h1>
                 <p style="text-align:center">Please fill in this form to login an account.</p>
                 <hr>
                 <label for="email"><b>Email</b></label> 
-                <input type="text" placeholder="Enter Email" name="email" value="${ac.getEmail()}" required>
+                <input type="text" placeholder="Enter Email" name="email" value="${requestScope.email}" required>
 
                 <div class="password-container">
                     <label for="password"><b>Password</b></label>
-                    <input type="password" id="password" placeholder="Enter Password" name="password" value="${requestScope.password}" required>
+                    <input type="password" id="password" placeholder="Enter Password" name="password" required>
                     <i class="fa fa-eye show-password" onclick="togglePasswordVisibility()"></i>
                 </div>
                 <div class="forgot-pass">
@@ -152,7 +152,7 @@
                 <hr>
                 <div class="btn">
                     <input class="registerbtn" type="submit" value="LOGIN">
-                    <button type="button" class="registerbtn" onclick="redirectToPage('<%=request.getContextPath()%>/view/customer/CusRegister.jsp')">REGISTER</button>
+                    <button type="button" class="registerbtn" onclick="redirectToPage('<%=request.getContextPath()%>/view/common/register.jsp')">REGISTER</button>
                 </div>
             </div>               
         </form>

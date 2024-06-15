@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -89,26 +89,31 @@
         </style>
     </head>
     <body>
-      <jsp:include page = "AdHeader.jsp" flush = "true" />
-      
+        <jsp:include page = "AdHeader.jsp" flush = "true" />
+
         <div class="stadium-list">
-            <div class="stadium-item" onclick="window.location.href = 'AdStaDetail.jsp';">
-                <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
-                <div class="stadium-details">
-                    <div>Sân vận động TAINTAY</div>
-                    <div>222/66 Nguyễn Văn Cừ, An Hòa, Ninh Kiều, CT</div>
-                    <div class="rating">
-                        Rating: 4/5
-                        <i class="fas fa-star"></i>
+
+            <div class="error-message"><h1>${requestScope.err}</h1></div>
+
+            <c:forEach var="st" items="${requestScope.stList}">
+                <div class="stadium-item" onclick="window.location.href = 'G_stadiumDetail?stadiumID=${st.stadium_ID}';">
+                    <img src="${st.stadium_image}" alt="Stadium">
+                    <div class="stadium-details">
+                        <div>${st.stadium_name}</div>
+                        <div>${st.stadium_address}</div>
+                        <div class="rating">
+                            Rating: ${st.avg_ratingScore}
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stadium-actions">
+                        <a href="bookingPage.jsp">Booking</a>
                     </div>
                 </div>
-                <div class="stadium-actions">
-                    <a href="bookingPage.jsp">Delete</a> <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-                </div>
-                <!-- Details button removed, click on item for details -->
-            </div>
-            <!-- Repeat the above stadium-item div for each stadium entry -->
+            </c:forEach>
+                            
         </div>
+
     </body>
 </html>
 

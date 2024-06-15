@@ -18,27 +18,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <title>Sport Stadium Booking System</title>
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #ffffff;
+            html, body {
+                height: 100%;
                 margin: 0;
-                padding: 0;
+                font-family: "Inter", sans-serif;
             }
             .content {
                 padding: 20px;
             }
             #stadium {
-                width: 100vw; /* Chiều rộng bằng chiều rộng của viewport */
-                height: 590px; /* Chiều cao bằng chiều cao của viewport */
-                background-size: cover; /* Đảm bảo ảnh bao phủ toàn bộ khung */
-                background-position: center; /* Ảnh nằm giữa khung */
-                background-repeat: no-repeat; /* Đảm bảo ảnh không lặp lại */
-                transition: background-image 0.5s ease-in-out; /* Hiệu ứng chuyển đổi hình ảnh */
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                transition: background-image 0.5s ease-in-out;
+                z-index: -1;
+            }
+
+            .header, .nav {
+                z-index: 1;
             }
         </style>
     </head>
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>
+        <jsp:include page="HeaderStadiumOwner.jsp" flush="true" />
+        
+        
         <div id="stadium"></div>
 
         <script>
