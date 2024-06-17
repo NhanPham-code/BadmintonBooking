@@ -1,12 +1,5 @@
-
-<%-- 
-    Document   : CusStaList
-    Created on : Jun 7, 2024, 3:27:03 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,36 +7,73 @@
         <title>Customer HomePage</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
+            body {
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background: white;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .footer {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
+            
+            .banner {
+                width: 100%;
+                height: 149px;
+                background: url('<%=request.getContextPath()%>/img/background/bg1.jpg') no-repeat center center;
+                background-size: cover;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: black;
+                font-size: 32px;
+                font-weight: 700;
+                border-bottom: 1px solid black;
+            }
+            
             .stadium-list {
                 width: 100%;
-                background: #E3E6ED;
                 padding: 20px;
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
-                flex-grow: 1; /* Make the stadium list take the available space */
+                flex-grow: 1;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
             }
             .stadium-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 background: #FFFFFF;
-                padding: 20px; /* Increase padding for larger appearance */
-                border: 1px solid black;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                font-size: 18px; /* Increase font size */
-                position: relative; /* Position for the overlay effect */
+                padding: 20px;
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
                 cursor: pointer;
-                transition: transform 0.3s ease; /* Smooth transform transition */
             }
             .stadium-item:hover {
-                transform: scale(1.05); /* Slightly enlarge the stadium item */
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             }
             .stadium-item img {
-                width: 80px; /* Increase image size */
-                height: 80px; /* Increase image size */
-                border-radius: 50%;
+                width: 80px;
+                height: 80px;
+                border-radius: 8px;
+                object-fit: cover;
             }
             .stadium-details {
                 flex-grow: 1;
@@ -73,8 +103,8 @@
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
-                padding: 10px; /* Reduce padding to make footer smaller */
-                margin-top: auto; /* Push the footer to the bottom */
+                padding: 10px;
+                margin-top: auto;
             }
             .footer div {
                 margin: 5px 0;
@@ -83,9 +113,17 @@
                 display: flex;
                 align-items: center;
             }
+            
             .rating .fa-star {
                 color: gold;
                 margin-left: 5px;
+            }
+            
+            .error-message {
+                color: brown;
+                font-weight: bold;
+                margin: 20px 0;
+                text-align: center;
             }
         </style>
     </head>
@@ -93,11 +131,11 @@
         <jsp:include page = "CusHeader.jsp" flush = "true" />
 
         <div class="stadium-list">
-
+            
             <div class="error-message"><h1>${requestScope.err}</h1></div>
-
+            
             <c:forEach var="st" items="${requestScope.stList}">
-                <div class="stadium-item" onclick="window.location.href = 'G_stadiumDetail?stadiumID=${st.stadium_ID}';">
+                <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
                     <img src="${st.stadium_image}" alt="Stadium">
                     <div class="stadium-details">
                         <div>${st.stadium_name}</div>
@@ -114,6 +152,9 @@
             </c:forEach>
         </div>
 
-        <jsp:include page = "CusFooter.jsp" flush = "true" />
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
+        </div>
     </body>
 </html>

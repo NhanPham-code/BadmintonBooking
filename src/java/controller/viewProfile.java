@@ -4,28 +4,32 @@
  */
 package controller;
 
-import DAO.courtDAO;
-import DAO.feedbackDAO;
-import DAO.stadiumDAO;
+import DAO.accountDAO;
+import DAO.adminDAO;
+import DAO.customerDAO;
+
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Court;
-import model.Feedback;
-import model.Stadium;
+
+import model.Account;
+import model.Admin;
+import model.Customer;
+
+import model.StadiumOwner;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "G_feedbackFilter", urlPatterns = {"/G_feedbackFilter"})
-public class G_feedbackFilter extends HttpServlet {
+@WebServlet(name = "viewProfile", urlPatterns = {"/viewProfile"})
+public class viewProfile extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +48,10 @@ public class G_feedbackFilter extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet G_FeedbackFilter</title>");
+            out.println("<title>Servlet viewProfile</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet G_FeedbackFilter at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet viewProfile at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,32 +69,47 @@ public class G_feedbackFilter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String stadiumID = request.getParameter("stadiumID");
-        String ratingScore = request.getParameter("rating");
-
-        Stadium stadium = new Stadium();
-        stadiumDAO sDAO = new stadiumDAO();
-        stadium = sDAO.getStadiumByID(stadiumID);
-        request.setAttribute("stadium", stadium);
-
-        List<Court> courtList = new ArrayList<>();
-        courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtList(stadiumID);
-        request.setAttribute("courtList", courtList);
-
-        if (ratingScore.equals("all")) {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackList(stadiumID);
-            request.setAttribute("feedbackList", feedbackList);
-        } else {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackFilterList(stadiumID,Integer.parseInt(ratingScore));
-            request.setAttribute("feedbackList", feedbackList);
+        Cookie[] cookies = request.getCookies();
+        String email = null;
+        // get role
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("email")) {
+                email = ck.getValue();
+            }
         }
-        request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);       
+        accountDAO aDAO = new accountDAO();
+        Account ac = aDAO.getAccountByEmail(email);
 
+        if (ac.getRole().equals("Admin")) {
+            adminDAO adDAO = new adminDAO();
+            Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
+
+            request.setAttribute("account", ac);
+            request.setAttribute("admin", ad);
+            request.setAttribute("name", ad.getAdmin_name());
+
+            request.getRequestDispatcher("view/admin/AdPro.jsp").forward(request, response);
+
+        } else if (ac.getRole().equals("Customer")) {
+            customerDAO cusDAO = new customerDAO();
+            Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+
+            request.setAttribute("account", ac);
+            request.setAttribute("customer", cus);
+            request.setAttribute("name", cus.getCustomer_Name());
+
+            request.getRequestDispatcher("view/customer/CusProfile.jsp").forward(request, response);
+
+        } else if (ac.getRole().equals("StadiumOwner")) {
+            stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
+            StadiumOwner stdo = owDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+
+            request.setAttribute("account", ac);
+            request.setAttribute("owner", stdo);
+            request.setAttribute("name", stdo.getOwner_name());
+            //response.getWriter().println("StadiumOwner");
+            request.getRequestDispatcher("view/stadiumowner/ProfileOwner.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -104,7 +123,7 @@ public class G_feedbackFilter extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

@@ -3,8 +3,8 @@
     Created on : Jun 14, 2024, 11:08:33 PM
     Author     : PC
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,7 +20,7 @@
                 flex-direction: column;
                 background: white;
             }
-            .header, .footer {
+            .footer {
                 width: 100%;
                 background: #022B3A;
                 color: white;
@@ -30,58 +30,8 @@
                 padding: 10px 20px;
                 box-sizing: border-box;
             }
-            .header .logo {
-                display: flex;
-                align-items: center;
-            }
-            .header .logo img {
-                margin-right: 10px;
-            }
-            .header .search-bar {
-                flex-grow: 1;
-                margin: 0 20px;
-                display: flex;
-                align-items: center;
-                background: #D9D9D9;
-                border-radius: 4px;
-                padding: 5px 10px;
-            }
-            .header .search-bar input {
-                border: none;
-                background: transparent;
-                flex-grow: 1;
-                padding: 5px;
-            }
-            .header .search-bar button {
-                background: #1F7A8C;
-                border: none;
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .header .search-bar button:hover {
-                background: #145569;
-            }
-            .header .auth-links {
-                display: flex;
-                gap: 10px;
-            }
-            .header .auth-links a {
-                background: none;
-                border: none;
-                color: white;
-                padding: 10px 20px;
-                border-radius: 4px;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            .header .auth-links a:hover {
-                background: #145569;
-            }
+            
+            
             .banner {
                 flex-grow: 1;
                 background-size: cover;
@@ -94,28 +44,7 @@
                 border-bottom: 1px solid black;
                 transition: background-image 0.5s ease-in-out;
             }
-            .nav {
-                width: 100%;
-                background: #1F7A8C;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                color: white;
-                padding: 10px 0;
-            }
-            .nav a {
-                background: transparent;
-                border: none;
-                color: white;
-                font-size: 18px;
-                text-decoration: none;
-                cursor: pointer;
-                padding: 10px 20px;
-            }
-            .nav a:hover {
-                background: #145569;
-                border-radius: 4px;
-            }
+            
             .footer {
                 justify-content: space-around;
                 display: flex;

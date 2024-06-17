@@ -6,8 +6,11 @@ package controller;
 
 import DAO.accountDAO;
 import DAO.adminDAO;
+import DAO.courtDAO;
 import DAO.customerDAO;
+import DAO.feedbackDAO;
 import DAO.stadiumDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,18 +19,22 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import model.Account;
 import model.Admin;
+import model.Court;
 import model.Customer;
+import model.Feedback;
 import model.Stadium;
+import model.StadiumOwner;
 
 /**
  *
- * @author PC
+ * @author ADMIN
  */
-@WebServlet(name = "stadiumList", urlPatterns = {"/stadiumList"})
-public class stadiumList extends HttpServlet {
+@WebServlet(name = "G_stadiumDetail", urlPatterns = {"/stadiumDetail"})
+public class stadiumDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +53,10 @@ public class stadiumList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet stadiumList</title>");
+            out.println("<title>Servlet G_stadiumDetail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet stadiumList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet G_stadiumDetail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -69,13 +76,9 @@ public class stadiumList extends HttpServlet {
             throws ServletException, IOException {
 
         Cookie[] cookies = request.getCookies();
-        String role = null;
         String email = null;
         // get role
         for (Cookie ck : cookies) {
-            if (ck.getName().equalsIgnoreCase("role")) {
-                role = ck.getValue();
-            }
             if (ck.getName().equalsIgnoreCase("email")) {
                 email = ck.getValue();
             }
@@ -83,31 +86,54 @@ public class stadiumList extends HttpServlet {
         accountDAO aDAO = new accountDAO();
         Account ac = aDAO.getAccountByEmail(email);
 
-        String destinationJSP = "view/common/CommonStaList.jsp";
+        String stadiumID = request.getParameter("stadiumID");
 
-        if (role != null) {
-            switch (role.toLowerCase()) {
-                case "customer":
-                    customerDAO cusDAO = new customerDAO();
-                    Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-                    request.setAttribute("name", cus.getCustomer_Name());
-                    destinationJSP = "view/customer/CusStaList.jsp";
-                    break;
-                case "admin":
-                    adminDAO adDAO = new adminDAO();
-                    Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
-                    request.setAttribute("name", ad.getAdmin_name());
-                    destinationJSP = "view/admin/AdStaManage.jsp";
-                    break;
-                default:
-                    // Handle unknown roles or unexpected situations
-                    break;
+        Stadium stadium = new Stadium();
+        stadiumDAO sDAO = new stadiumDAO();
+        stadium = sDAO.getStadiumByID(stadiumID);
+        request.setAttribute("stadium", stadium);
+
+        List<Court> courtList = new ArrayList<>();
+        courtDAO cDAO = new courtDAO();
+        courtList = cDAO.getCourtList(stadiumID);
+        request.setAttribute("courtList", courtList);
+
+        List<Feedback> feedbackList = new ArrayList<>();
+        feedbackDAO fbDAO = new feedbackDAO();
+        feedbackList = fbDAO.getFeedbackList(stadiumID);
+        request.setAttribute("feedbackList", feedbackList);
+
+        String role = null;
+        // get role
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("role")) {
+                role = ck.getValue();
             }
         }
+        if (role != null) {
+            if (role.equals("Customer")) {
+                customerDAO cusDAO = new customerDAO();
+                Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
 
-        List<Stadium> stList = new stadiumDAO().getAllStadium();
-        request.setAttribute("stList", stList);
-        request.getRequestDispatcher(destinationJSP).forward(request, response);
+                request.setAttribute("name", cus.getCustomer_Name());
+
+                request.getRequestDispatcher("view/customer/CusStaDetail.jsp").forward(request, response);
+            } else if (role.equalsIgnoreCase("admin")) {
+                adminDAO adDAO = new adminDAO();
+                Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
+
+                request.setAttribute("name", ad.getAdmin_name());
+                request.getRequestDispatcher("view/admin/AdStaDetail.jsp").forward(request, response);
+            } else if (role.equalsIgnoreCase("stadiumowner")) {
+                stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
+                StadiumOwner stdo = owDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+
+                request.setAttribute("name", stdo.getOwner_name());
+                request.getRequestDispatcher("view/stadiumowner/StadiumDetail.jsp").forward(request, response);
+            }
+        } else {
+            request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -122,6 +148,7 @@ public class stadiumList extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
     }
 
     /**
@@ -133,4 +160,5 @@ public class stadiumList extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

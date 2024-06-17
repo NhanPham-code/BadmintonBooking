@@ -13,14 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         <style>
-            body {
-                margin: 0;
-                font-family: "Inter", sans-serif;
-                background: white;
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-            }
+            
             .header {
                 width: 100%;
                 background: #022b3a;
@@ -171,8 +164,8 @@
                     <i class="far fa-user-circle"></i>
                     <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="<%=request.getContextPath()%>/#">Logout</a>
-                        <a href="<%=request.getContextPath()%>/#">Profile</a>
+                        <a href="">Logout</a>
+                        <a href="viewProfile">Profile</a>
                     </div>
                 </div>
             </div> 

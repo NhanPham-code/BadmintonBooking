@@ -184,8 +184,8 @@
                     <i class="far fa-user-circle"></i>
                     <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="<%=request.getContextPath()%>/#">Logout</a>
-                        <a href="<%=request.getContextPath()%>/#">Profile</a>
+                        <a href="">Logout</a>
+                        <a href="viewProfile">Profile</a>
                     </div>
                 </div>
             </div> 

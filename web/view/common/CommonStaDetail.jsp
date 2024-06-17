@@ -352,7 +352,7 @@
             <div class="top-container">
                 <c:set var="st" value="${requestScope.stadium}"></c:set>
 
-                    <img src="<%=request.getContextPath()%>/img/court/c2.jpg" alt="Picture">
+                    <img src="${st.stadium_image}" alt="Picture">
 
             </div>
             <div class="flex-container">
@@ -392,7 +392,7 @@
                     <div class="feedback-container">
                         <div style="display: flex;">
                             <h2 style="color: white;">Feedback</h2>
-                            <form class="filter-container" action="G_feedbackFilter" method="GET">
+                            <form class="filter-container" action="feedbackFilter" method="GET">
 
                                 <div class="filter-dropdown">
                                     <select id="rating-filter" name = "rating">
