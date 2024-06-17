@@ -137,10 +137,14 @@ public class stadiumOwnerDAO {
     public static void main(String[] args) {
         stadiumOwnerDAO dao = new stadiumOwnerDAO();
 
-        StadiumOwner sto = dao.getStadimOwnerByAccID("ACC7");
-
-        System.out.println(sto.getOwner_name());
-
+        StadiumOwner sto = new StadiumOwner();
+        sto.setOwner_ID("OWNER3");
+        sto.setOwner_name("owner3");
+        sto.setOwner_phone("0939740742");
+        sto.setAcc_ID("ACC6");
+        
+        int check = dao.addNewOwner(sto);
+        System.out.println(check);
     }
 
 }

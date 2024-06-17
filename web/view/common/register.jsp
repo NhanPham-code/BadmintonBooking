@@ -111,8 +111,7 @@
                 <p style="text-align:center">Please fill in this form to create an account.</p>
                 <hr>
                 <label for="name"><b>Name</b></label>
-                <input type="text" placeholder="Enter Name" name="name" id="name" required 
-                       pattern="^[^\s]+$" title="Name must not contain spaces">
+                <input type="text" placeholder="Enter Name" name="name" id="name" required>
                 <label for="phone"><b>Phone Number</b></label>
                 <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" required maxlength="11" pattern="[0-9]{10,11}">
                 <label for="email"><b>Email</b></label>
