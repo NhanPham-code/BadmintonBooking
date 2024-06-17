@@ -227,7 +227,7 @@
             <div class="error-message"><h1>${requestScope.err}</h1></div>
             
             <c:forEach var="st" items="${requestScope.stList}">
-                <div class="stadium-item" onclick="window.location.href = 'G_stadiumDetail?stadiumID=${st.stadium_ID}';">
+                <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
                     <img src="${st.stadium_image}" alt="Stadium">
                     <div class="stadium-details">
                         <div>${st.stadium_name}</div>

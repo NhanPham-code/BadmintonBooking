@@ -14,25 +14,17 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
-            #stadium {
-                width: 100vw; /* Chiều rộng bằng chiều rộng của viewport */
-                height: 590px; /* Chiều cao bằng chiều cao của viewport */
-                background-size: cover; /* Đảm bảo ảnh bao phủ toàn bộ khung */
-                background-position: center; /* Ảnh nằm giữa khung */
-                background-repeat: no-repeat; /* Đảm bảo ảnh không lặp lại */
-                transition: background-image 0.5s ease-in-out; /* Hiệu ứng chuyển đổi hình ảnh */
-            }
-            body {
+           html, body {
+                height: 100%;
                 margin: 0;
-                font-family: "Inter", sans-serif;
-                background: white;
+                font-family: 'Inter', sans-serif;
                 display: flex;
                 flex-direction: column;
-                min-height: 100vh;
+                background: white;
             }
-            .header {
+            .footer {
                 width: 100%;
-                background: #022b3a;
+                background: #022B3A;
                 color: white;
                 display: flex;
                 justify-content: space-between;
@@ -40,66 +32,10 @@
                 padding: 10px 20px;
                 box-sizing: border-box;
             }
-            .header .logo {
-                display: flex;
-                align-items: center;
-                flex-shrink: 0; /* Đảm bảo logo không co lại */
-            }
-            .header .logo img {
-                margin-right: 10px;
-                width: 50px; /* Tăng kích thước logo */
-                height: 50px; /* Tăng kích thước logo */
-            }
-            .header .search-bar {
-                flex-grow: 1;
-                margin: 0 20px;
-                display: flex;
-                align-items: center;
-                background: #d9d9d9;
-                border-radius: 4px;
-                padding: 5px 10px;
-                max-width: 500px; /* Giảm chiều rộng của thanh tìm kiếm */
-            }
-            .header .search-bar input {
-                border: none;
-                background: transparent;
-                flex-grow: 1;
-                padding: 5px;
-            }
-            .header .search-bar button {
-                background: #1f7a8c;
-                border: none;
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .header .search-bar button:hover {
-                background: #145569;
-            }
-            .header {
-                display: flex;
-                gap: 10px;
-            }
-            .header .auth-links a {
-                background: none;
-                border: none;
-                color: white;
-                padding: 10px 20px;
-                border-radius: 4px;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            .header .auth-links a:hover {
-                background: #145569;
-            }
+            
+            
             .banner {
-                width: 100%;
-                height: 149px;
-                background: url('<%=request.getContextPath()%>/img/background/bg1.jpg') no-repeat center center;
+                flex-grow: 1;
                 background-size: cover;
                 display: flex;
                 justify-content: center;
@@ -108,67 +44,18 @@
                 font-size: 32px;
                 font-weight: 700;
                 border-bottom: 1px solid black;
+                transition: background-image 0.5s ease-in-out;
             }
-            .nav {
-                width: 100%;
-                background: #1f7a8c;
-                display: flex;
+            
+            .footer {
                 justify-content: space-around;
-                align-items: center;
-                color: white;
-                padding: 10px 0;
-            }
-            .nav a {
-                background: transparent;
-                border: none;
-                color: white;
-                font-size: 18px;
-                text-decoration: none;
-                cursor: pointer;
-                padding: 10px 20px;
-            }
-            .nav a:hover {
-                background: #145569;
-                border-radius: 4px;
-            }
-            .admin-content {
                 display: flex;
                 align-items: center;
-                position: relative;
-                flex-shrink: 0; /* Đảm bảo phần hồ sơ không co lại */
+                padding: 10px;
+                box-sizing: border-box;
             }
-            .drop {
-                position: relative;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-            }
-            .drop p{
-                margin: 0px 30px;
-            }
-            .auth-links {
-                display: none;
-                position: absolute;
-                top: 100%; /* Đảm bảo menu xuất hiện bên dưới */
-                left: 50%; /* Canh giữa theo chiều ngang */
-                transform: translateX(-50%); /* Dịch chuyển để canh giữa */
-                background-color: #1f7a8c;
-                min-width: 120px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
-            }
-            .auth-links a {
-                color: white; /* Thay đổi thành màu trắng */
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-            .drop i {
-                font-size: 33px;
-                margin-right: 5px; /* Thêm khoảng cách giữa icon và tên người dùng */
-            }
-            .drop:hover .auth-links {
-                display: block;
+            .footer div {
+                margin: 5px 0;
             }
         </style>
     </head>
@@ -176,21 +63,30 @@
     <body>
         <jsp:include page="AdHeader.jsp" flush="true" />
 
-        <div id="stadium"></div>
+        <div class="banner" id="banner">
+            <!-- N?i dung banner -->
+        </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var imageUrls = ['<%=request.getContextPath()%>/img/background/bg1.jpg', '<%=request.getContextPath()%>/img/background/bg2.jpg'];
-                var stadium = document.getElementById('stadium');
+                var banner = document.querySelector('.banner');
                 var index = 0;
 
                 function changeImage() {
-                    stadium.style.backgroundImage = "url('" + imageUrls[index] + "')";
+                    banner.style.backgroundImage = "url('" + imageUrls[index] + "')";
                     index = (index + 1) % imageUrls.length;
                 }
-                changeImage(); // Hiển thị ảnh đầu tiên
-                setInterval(changeImage, 5000); // Chuyển đổi ảnh sau mỗi 5 giây
+                changeImage(); // Hi?n th? ?nh ??u tiên
+                setInterval(changeImage, 5000); // Chuy?n ??i ?nh sau m?i 5 giây
             });
         </script>
+        
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
+        </div>
     </body>
+    
+    
     
 </html>

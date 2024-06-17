@@ -4,30 +4,28 @@
  */
 package controller;
 
-import DAO.accountDAO;
-import DAO.adminDAO;
-import DAO.customerDAO;
+import DAO.courtDAO;
+import DAO.feedbackDAO;
 import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
-import model.Account;
-import model.Admin;
-import model.Customer;
+import model.Court;
+import model.Feedback;
 import model.Stadium;
 
 /**
  *
- * @author PC
+ * @author ADMIN
  */
-@WebServlet(name = "stadiumList", urlPatterns = {"/stadiumList"})
-public class stadiumList extends HttpServlet {
+@WebServlet(name = "G_feedbackFilter", urlPatterns = {"/feedbackFilter"})
+public class feedbackFilter extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +44,10 @@ public class stadiumList extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet stadiumList</title>");
+            out.println("<title>Servlet G_FeedbackFilter</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet stadiumList at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet G_FeedbackFilter at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,47 +65,32 @@ public class stadiumList extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String stadiumID = request.getParameter("stadiumID");
+        String ratingScore = request.getParameter("rating");
 
-        Cookie[] cookies = request.getCookies();
-        String role = null;
-        String email = null;
-        // get role
-        for (Cookie ck : cookies) {
-            if (ck.getName().equalsIgnoreCase("role")) {
-                role = ck.getValue();
-            }
-            if (ck.getName().equalsIgnoreCase("email")) {
-                email = ck.getValue();
-            }
+        Stadium stadium = new Stadium();
+        stadiumDAO sDAO = new stadiumDAO();
+        stadium = sDAO.getStadiumByID(stadiumID);
+        request.setAttribute("stadium", stadium);
+
+        List<Court> courtList = new ArrayList<>();
+        courtDAO cDAO = new courtDAO();
+        courtList = cDAO.getCourtList(stadiumID);
+        request.setAttribute("courtList", courtList);
+
+        if (ratingScore.equals("all")) {
+            List<Feedback> feedbackList = new ArrayList<>();
+            feedbackDAO fbDAO = new feedbackDAO();
+            feedbackList = fbDAO.getFeedbackList(stadiumID);
+            request.setAttribute("feedbackList", feedbackList);
+        } else {
+            List<Feedback> feedbackList = new ArrayList<>();
+            feedbackDAO fbDAO = new feedbackDAO();
+            feedbackList = fbDAO.getFeedbackFilterList(stadiumID,Integer.parseInt(ratingScore));
+            request.setAttribute("feedbackList", feedbackList);
         }
-        accountDAO aDAO = new accountDAO();
-        Account ac = aDAO.getAccountByEmail(email);
+        request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);       
 
-        String destinationJSP = "view/common/CommonStaList.jsp";
-
-        if (role != null) {
-            switch (role.toLowerCase()) {
-                case "customer":
-                    customerDAO cusDAO = new customerDAO();
-                    Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-                    request.setAttribute("name", cus.getCustomer_Name());
-                    destinationJSP = "view/customer/CusStaList.jsp";
-                    break;
-                case "admin":
-                    adminDAO adDAO = new adminDAO();
-                    Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
-                    request.setAttribute("name", ad.getAdmin_name());
-                    destinationJSP = "view/admin/AdStaManage.jsp";
-                    break;
-                default:
-                    // Handle unknown roles or unexpected situations
-                    break;
-            }
-        }
-
-        List<Stadium> stList = new stadiumDAO().getAllStadium();
-        request.setAttribute("stList", stList);
-        request.getRequestDispatcher(destinationJSP).forward(request, response);
     }
 
     /**
@@ -133,4 +116,5 @@ public class stadiumList extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
 }

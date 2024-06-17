@@ -4,28 +4,23 @@
  */
 package controller;
 
-import DAO.courtDAO;
-import DAO.feedbackDAO;
-import DAO.stadiumDAO;
+import DAO.accountDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Court;
-import model.Feedback;
-import model.Stadium;
+import model.hashPasswordMD5;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "G_stadiumDetail", urlPatterns = {"/G_stadiumDetail"})
-public class G_stadiumDetail extends HttpServlet {
+@WebServlet(name = "changePassword", urlPatterns = {"/changePassword"})
+public class changePassword extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +39,10 @@ public class G_stadiumDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet G_stadiumDetail</title>");            
+            out.println("<title>Servlet changePassword</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet G_stadiumDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet changePassword at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,25 +60,7 @@ public class G_stadiumDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String stadiumID = request.getParameter("stadiumID");
-        
-        Stadium stadium = new Stadium();
-        stadiumDAO sDAO = new stadiumDAO();
-        stadium = sDAO.getStadiumByID(stadiumID);
-        request.setAttribute("stadium", stadium);
-        
-        List<Court> courtList = new ArrayList<>();
-        courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtList(stadiumID);
-        request.setAttribute("courtList", courtList);
-        
-        List<Feedback> feedbackList = new ArrayList<>();
-        feedbackDAO fbDAO = new feedbackDAO();
-        feedbackList = fbDAO.getFeedbackList(stadiumID);
-        request.setAttribute("feedbackList", feedbackList);
-        
-        request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);       
+        request.getRequestDispatcher("view/common/ChangePassword.jsp").forward(request, response);
     }
 
     /**
@@ -97,8 +74,39 @@ public class G_stadiumDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String currentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        Cookie[] cookies = request.getCookies();
+        String email = null;
+        // get role
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("email")) {
+                email = ck.getValue();
+            }
+        }
         
+        hashPasswordMD5 md5 = new hashPasswordMD5();
+        String hashPass = md5.hashPasswordMD5(currentPassword);
+
+        accountDAO aDAO = new accountDAO();
+        boolean check = aDAO.checkLogin(email, hashPass);
+        if (!check) {
+            request.setAttribute("error", "Incorrect password! Please try again!");
+            request.getRequestDispatcher("view/common/ChangePassword.jsp").forward(request, response);
+        } else {
+            if (!newPassword.equals(confirmPassword)) {
+                request.setAttribute("error", "Password is not match");
+                request.getRequestDispatcher("view/common/ChangePassword.jsp").forward(request, response);
+            } else {
+                String hashNewPass = md5.hashPasswordMD5(newPassword);
+
+                aDAO.updatePassword(email, hashNewPass);
+                request.setAttribute("done", "Your password was changed");
+                request.getRequestDispatcher("view/common/ChangePassword.jsp").forward(request, response);
+            }
+        }
     }
 
     /**

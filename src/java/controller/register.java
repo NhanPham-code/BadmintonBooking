@@ -109,7 +109,7 @@ public class register extends HttpServlet {
             // add to DB
             aDAO.addNewAcc(accNew);
             
-            if (role.equalsIgnoreCase("Stadium Owner")) {
+            if (role.equalsIgnoreCase("StadiumOwner")) {
 
                 // add to stadium owner table
                 stadiumOwnerDAO oDAO = new stadiumOwnerDAO();

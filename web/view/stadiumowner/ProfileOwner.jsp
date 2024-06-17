@@ -1,7 +1,7 @@
 <%-- 
-    Document   : AdPro
-    Created on : Jun 5, 2024, 8:23:28 AM
-    Author     : ADMIN
+    Document   : ProfileOwner
+    Created on : Jun 13, 2024, 9:06:29 PM
+    Author     : WINDOWS
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -58,10 +58,13 @@
                 box-sizing: border-box;
             }
 
-
             .avatar {
                 font-size: 5rem;
                 color: #1f7a8c;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            h2 {
                 text-align: center;
                 margin-bottom: 20px;
             }
@@ -126,14 +129,10 @@
                 color: gold;
                 margin-left: 5px;
             }
-            h2 {
-                text-align: center;
-                margin-bottom: 20px;
-            }
         </style>
     </head>
     <body>
-        <jsp:include page="AdHeader.jsp" flush="true" />
+        <jsp:include page="HeaderStadiumOwner.jsp" flush="true" />
 
         <div class="cus-account">
             <div class="cus-profile">
@@ -143,14 +142,14 @@
                     </div>
                     <h2> ${requestScope.name}'s Profile</h2>
                     <div class="cus-details">
-                        <c:set var="admin" value="${requestScope.admin}"></c:set>
+                        <c:set var="owner" value="${requestScope.owner}"></c:set>
                         <c:set var="account" value="${requestScope.account}"></c:set>
-                        <div>Your ID: ${admin.admin_ID}</div>
-                        <div>Your Name:${admin.admin_name}</div>
+                        <div>Your ID: ${owner.owner_ID}</div>
+                        <div>Your Name:${owner.owner_name}</div>
 
                         <div class="phone">
                             <i class="fas fa-phone"></i>
-                            Phone: ${admin.admin_phone}
+                            Phone: ${owner.owner_phone}
                         </div>
                         <div>Email: ${account.email}</div>
                     </div>
@@ -163,11 +162,11 @@
                 </div>
                 <!-- Repeat the above stadium-item div for each stadium entry -->
             </div>
-
+            
         </div>
-        <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
-        </div>
+                    <div class="footer">
+                <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            </div>
     </body>
 </html>
 

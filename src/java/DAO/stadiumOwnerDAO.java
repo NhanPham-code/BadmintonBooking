@@ -133,6 +133,34 @@ public class stadiumOwnerDAO {
         }
         return check;
     }
+    
+    public void updateProfile(String StdoID, String name, String phone){
+        String sql = "update customer set owner_name = ?, owner_phone = ? where owner_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, phone);
+            ps.setString(3, StdoID);
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }     
+    }
 
     public static void main(String[] args) {
         stadiumOwnerDAO dao = new stadiumOwnerDAO();

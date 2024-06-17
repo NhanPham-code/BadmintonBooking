@@ -89,9 +89,9 @@ public class accountDAO {
             if (rs.next()) {
                 ac = new Account();
                 ac.setAcc_ID(rs.getString("acc_ID"));
-                ac.setEmail(rs.getString("Email"));
-                ac.setPassword(rs.getString("Password"));
-                ac.setRole(rs.getString("Role"));
+                ac.setEmail(rs.getString("email"));
+                ac.setPassword(rs.getString("password"));
+                ac.setRole(rs.getString("role"));
             }
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -175,6 +175,62 @@ public class accountDAO {
             }
         }
         return check;
+    }
+    
+    public void updateEmail(String newEmail, String accID){
+        String sql = "update account set email = ? where acc_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newEmail);
+            ps.setString(2, accID);
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }     
+    }
+    
+    public void updatePassword(String email, String newPassword){
+
+        String sql = "update account set password = ? where email = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public static void main(String[] args) {

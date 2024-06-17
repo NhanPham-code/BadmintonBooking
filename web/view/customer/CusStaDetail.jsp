@@ -5,336 +5,383 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title> Stadium Detail </title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Badminton Stadium Booking System</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
-            .stadium-bg{
-                width: 100%;
-                background: #e3e6ed;
-                padding: 40px 45px;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                flex-grow: 1;
-                align-items: center;
-            }
-            .stadium-board {
-                display: flex;
-                width: 84%;
-                padding-bottom: 100px;
-                background: #ffffff;
-                border-radius: 4px;
-                height: 720px;
-                position: relative;
-                flex-direction: column;
-            }
-            .stadium-des{
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                margin-bottom: 20px;
-                padding-bottom: 50px;
-            }
-            .stadium-detail{
-                display: flex;
-                padding: 0 60px;
-                justify-content: space-around;
-            }
-            p{
-                color: #022b3a;
-                text-align: left;
-                font-family: 'Inter-Bold', sans-serif;
-                font-size: 28px;
-                font-weight: 700;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                margin-left: 10px;
-            }
-            img{
-                margin-top: 20px;
-            }
-            .stadium-inf{
-                margin-right: 20px;
-            }
-            .stadium-inf div{
-                color: #000000;
-                text-align: left;
-                font-family: 'Inter-Regular', sans-serif;
-                font-size: 16px;
-                font-weight: 400;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                margin: 10px 10px;
-            }
-            .rating-filter {
-                display: flex;
-                background: white;
-                width: 120px;
-                height: 42px;
-                position: relative;
-            }
-            .star {
-                padding: 10px;
-                color: #000000;
-                text-align: left;
-                font-family: "Inter-Medium", sans-serif;
-                font-size: 16px;
-                font-weight: 500;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: left;
-            }
-            .dropdown {
-                position: relative;
-                display: inline-block;
-                margin: 10px 20px;
-            }
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                min-width: 160px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
-            }
-
-            .cus-rate {
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-            .cus-rate .fa-star {
-                color: gold;
-                margin-left: 5px;
-            }
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
-            .rating {
-                background: #1f7a8c;
-                border-radius: 4px;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px;
-                height: 300px;
-                width: 1310px;
-                position: relative;
-            }
-            .booking-detail {
-                overflow: auto;
-                height: 210px;
-            }
-            .head{
-                width: 100%;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                color: white;
-                font-size: 18px;
-                padding: 15px 0;
-            }
-            .booking-inf img {
-                width: 60px; /* Increase image size */
-                height: 60px; /* Increase image size */
-                border-radius: 50%;
-            }
-            .booking-inf{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: #ffffff;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px 1px 0px 1px;
-                height: 60px;
-                padding: 7px;
-                position: relative;
-            }
-            .booking-inf div{
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #bfdbf7;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
 
             }
-            .avatar i {
-                font-size: 40px;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-            }
-
-            .avatar {
-                text-align: center;
-                position: relative;
-            }
-            .stadium-details{
-                flex-grow: 1;
-                margin-left: 20px;
-            }
-            .stadium-details div {
-                margin: 3px 0;
-            }
-            .stadium-actions {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 5px;
-                flex-grow: 1;
-                margin-right: 20px;
-            }
-            .stadium-actions a {
-                background: #1F7A8C;
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            .stadium-actions a:hover {
-                background: #145569;
-            }
-            .star-rating {
-                display: flex;
-                align-items: center;
-            }
-            .star-rating .fa-star {
-                color: gold;
-                margin-left: 5px;
-            }
-            .court{
-                height: 190px;
-                overflow: auto;
-            }
-            table {
-                border-collapse: collapse; /* Gộp các đường biên thành một */
-            }
-
-            th, td {
-                border: 1px solid #ddd; /* Đường biên ô */
-                text-align: left; /* Căn lề văn bản trong ô */
-                padding: 10px;
-            }
-
-            th {
-                background-color: #f2f2f2; /* Màu nền cho ô tiêu đề */
-                color: black; /* Màu chữ cho ô tiêu đề */
-            }
-
-            .booking {
-
-                border-radius: 6px;
-                background-color: #022B3A;
-                color: white;
-                padding: 13px 20px;
-                margin: 6px 0;
-                border: none;
-                cursor: pointer;
-                height: 50px;
-                width: 12%;
-                opacity: 0.9;
-                position: relative;
-                font-size: 20px;
-            }
-
-            .but-book{
-                padding-top: 30px;
+            
+            .container {
                 display: flex;
                 justify-content: center;
+                flex-direction: column;
+                max-width: 1300px;               
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                margin-left: 60px;
+                
+
             }
 
-            .booking:hover {
-                opacity: 1;
+            .top-container {
+                text-align: center;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+
+            }
+
+            .top-container img {
+                margin-top: 20px;
+                width: 80%;
+                height:300px;
+                border-radius: 5px;
+            }
+
+            .flex-container {
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 20px;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+
+            .left-container, .right-container {
+                flex: 1;
+                margin-right: 20px;
+
+            }
+
+            .right-container {
+                margin-right: 0;
+            }
+
+            .table-container{
+                background-color: #022B3A;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                height: 530px;
+            }
+
+            .feedback-form {
+
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                background-color:#022B3A;
+            }
+
+            .feedback-container {
+                height: 205px; /* Set a max height for scrollbar to appear */
+                overflow-y: auto; /* Enable vertical scrollbar */
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #022B3A;
+                overflow-y: scroll;
+                display: block;
+            }
+            .table-container table {
+                width: 100%;
+                border-collapse: collapse;
+                max-height: 200px;
+                border-radius: 5px;
+            }
+
+            .table-container th{
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #1F7A8C;
+            }
+            .table-container td {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #ffffff;
+            }
+
+            .stadium-info{
+                display:flex;
+            }
+            .stadium-info img{
+                margin-right: 40px;
+                margin-left: 40px;
+                width: 200px;
+                height: 200px;
+                background-color: #ccc;
+                display: block;
+                margin-bottom: 20px;
+            }
+
+
+            .feedback-item {
+                display: flex;
+                align-items: center;
+                background: #fff;
+                margin-bottom: 10px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            .feedback-item i {
+                font-size: 50px;
+                margin-right: 10px;
+            }
+
+            .feedback-content {
+                flex-grow: 2;
+            }
+
+            .feedback-rating {
+                font-size: 14px;
+            }
+
+            .feedback-name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .feedback-description {
+                margin-bottom: 5px;
+            }
+
+            .feedback-form {
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .feedback-form .form-group {
+                margin-bottom: 15px;
+            }
+
+            .feedback-form label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .feedback-form textarea, .feedback-form select {
+                width: 94%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .feedback-form button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #1F7A8C;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .feedback-form button:hover {
+                background-color: #145569;
+            }
+
+            .filter-container {
+                display: flex;
+                align-items: center;
+                margin-left: 55%;
+            }
+
+            .filter-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #f0f0f0;
+                outline: none;
+                margin-left: 10px;
+            }
+
+            .filter-dropdown select {
+                padding: 5px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 5px;
+            }
+
+            .booking-btn {
+                display: block;
+                width: 200px;
+                padding: 10px;
+                background-color: #1F7A8C;
+                color: white;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 20px auto;
+            }
+
+            .booking-btn:hover {
+                background-color: #145569;
+            }
+            .rating {
+                display: flex;
+                align-items: center;
+            }
+            .rating .fa-star {
+                font-size: 20px;
+                color: gold;
+                margin-left: 5px;
+
+            }
+            .footer {
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
             }
         </style>
+
     </head>
     <body>
+
         <jsp:include page = "CusHeader.jsp" flush = "true" />
+        <div class="container">
+            <div class="top-container">
+                <c:set var="st" value="${requestScope.stadium}"></c:set>
 
-        <div class="stadium-bg">
-            <div class="stadium-board">
-                <div class="stadium-des">
-                    <div class="stadium-inf">
-                        <p>Sân Đại Á</p>
-                        <div>29B Mậu Thân, An Hoà, Ninh Kiều, Cần Thơ</div>
-                        <div>0939129217</div>
-                        <div>price</div>
-                    </div>
+                    <img src="${st.stadium_image}" alt="Picture">
 
-                    <img
-                        src="<%=request.getContextPath()%>/img/court/c1.jpg"
-                        alt="Stadium"
-                        width="820px"
-                        height="320px"
-                        />
-                </div>
-                <div class="stadium-detail">
-                    <div class="rating">
-                        <div class="rating-filter">
-                            <div class="star">Rating</div>
-                            <div class="dropdown">
-                                <button class="dropbt">
-                                    <i class="fa fa-caret-down"></i>
-                                </button>
-                                <div class="dropdown-content">
-                                    <div class="cus-rate">
-                                        5
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        4
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        3
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        2
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        1
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="booking-detail">
-                            <div class="booking-inf">                              
-                                <div class="avatar">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div class="stadium-details">
-                                    <div>Username</div>
-                                    <div>Feedback</div>
-                                    <div class="star-rating">
-                                        4/5
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="stadium-actions">
-                                    <a href="bookingPage.jsp">Delete</a> <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="but-book"> 
-                    <button type="submit" class="booking"><a href="CusBooking.jsp" style="font-weight: bold; color: white;">BOOKING</a></button>
-                </div>
             </div>
+            <div class="flex-container">
+                <div class="left-container">
+
+                    <div class="table-container">
+                        <h1 style="text-align: center;color: white;">${st.stadium_name}</h1>
+
+                        <div class="stadium-info"> 
+                            <img src="${st.QRcode}" alt="Stadium Background">
+                            <div>
+                                <p style="margin-top: 60px; color: white;">Address: ${st.stadium_address}</p>
+                                <p style="color: white;">Phone Number: ${st.stadium_phone}</p>
+                                <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
+                            </div>
+                        </div>
+                        <h2 style="color: white;margin-top: 30px;">Court List</h2>
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th style="color: white;">Court Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="c" items="${requestScope.courtList}">
+                                    <tr>
+                                        <td>${c.number}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="right-container">
+                    <div class="feedback-container">
+                        <div style="display: flex;">
+                            <h2 style="color: white;">Feedback</h2>
+                            <form class="filter-container" action="feedbackFilter" method="GET">
+
+                                <div class="filter-dropdown">
+                                    <select id="rating-filter" name = "rating">
+                                        <option value="all">All</option>
+                                        <option value="5">5 stars</option>
+                                        <option value="4">4 stars</option>
+                                        <option value="3">3 stars</option>
+                                        <option value="2">2 stars</option>
+                                        <option value="1">1 star</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value=${st.stadium_ID}>
+                                <button id="filter-button" type="submit" class="filter-button">Filter</button>
+                            </form>
+                        </div>
+                        <div class="feedback-list">
+                            <c:forEach var="fb" items="${requestScope.feedbackList}">
+                                <div class="feedback-item" data-rating="${fb.ratingScore}">
+                                    <i class="fas fa-user-circle"></i>
+                                    <div class="feedback-content">
+                                        <p class="feedback-name">${fb.customer.customer_Name}</p>
+                                        <p class="feedback-description">${fb.description}</p>
+                                        <div class="rating">                        
+                                            <p class="feedback-rating">Rating Score: ${fb.ratingScore}</p>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+
+                    <div class="feedback-form">
+                        <h2>Leave Feedback</h2>
+                        <form id="feedback-form" action="process_feedback.php" method="post">
+                            <div class="form-group">
+                                <label for="feedback-description">Description:</label>
+                                <textarea id="feedback-description" name="feedback-description" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="rating">Rating:</label>
+                                <select id="rating" name="rating" required>
+                                    <option value="">Choose a rating</option>
+                                    <option value="1">1 - Very Poor</option>
+                                    <option value="2">2 - Poor</option>
+                                    <option value="3">3 - Average</option>
+                                    <option value="4">4 - Good</option>
+                                    <option value="5">5 - Excellent</option>
+                                </select>
+                            </div>
+                            <button type="submit">Submit Feedback</button>
+                        </form>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <button class="booking-btn">Book Now</button>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
         </div>
     </body>
 </html>
+
