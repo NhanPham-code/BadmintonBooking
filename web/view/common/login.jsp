@@ -147,7 +147,7 @@
                     <i class="fa fa-eye show-password" onclick="togglePasswordVisibility()"></i>
                 </div>
                 <div class="forgot-pass">
-                    <a href="CusResetPass.jsp">Forgot Password?</a>
+                    <a href="<%=request.getContextPath()%>/view/common/FillEmailVerify.jsp">Forgot Password?</a>
                 </div>
                 <hr>
                 <div class="btn">
