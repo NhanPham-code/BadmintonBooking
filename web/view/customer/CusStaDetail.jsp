@@ -21,21 +21,24 @@
                 margin: 0;
                 padding: 0;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center
 
             }
-            
+
             .container {
                 display: flex;
                 justify-content: center;
                 flex-direction: column;
-                max-width: 1300px;               
+                max-width: 1300px;
                 background-color: #f5f5f5;
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
                 margin-bottom: 20px;
                 margin-left: 60px;
-                
+
 
             }
 
@@ -176,6 +179,12 @@
             .feedback-form .form-group {
                 margin-bottom: 15px;
             }
+            .feedback-form .form-group select {
+                width: 98%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
 
             .feedback-form label {
                 display: block;
@@ -183,7 +192,7 @@
                 margin-bottom: 5px;
             }
 
-            .feedback-form textarea, .feedback-form select {
+            .feedback-form textarea{
                 width: 94%;
                 padding: 10px;
                 border: 1px solid #ccc;
@@ -352,21 +361,24 @@
 
                     <div class="feedback-form">
                         <h2>Leave Feedback</h2>
-                        <form id="feedback-form" action="process_feedback.php" method="post">
-                            <div class="form-group">
-                                <label for="feedback-description">Description:</label>
-                                <textarea id="feedback-description" name="feedback-description" rows="4" required></textarea>
+                        <c:set var="fb" value="${requestScope.feedback}"></c:set>
+                            <form id="feedback-form" action="feedback" method="post">
+                                <div class="form-group">
+                                    <label for="feedback-description">Description:</label>
+                                    <textarea id="feedback-description" name="description" rows="4" required>${fb.description}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="rating">Rating:</label>
                                 <select id="rating" name="rating" required>
                                     <option value="">Choose a rating</option>
-                                    <option value="1">1 - Very Poor</option>
-                                    <option value="2">2 - Poor</option>
-                                    <option value="3">3 - Average</option>
-                                    <option value="4">4 - Good</option>
-                                    <option value="5">5 - Excellent</option>
+                                    <option value="1" ${fb.ratingScore == 1 ? 'selected' : ''}>1 - Very Poor</option>
+                                    <option value="2" ${fb.ratingScore == 2 ? 'selected' : ''}>2 - Poor</option>
+                                    <option value="3" ${fb.ratingScore == 3 ? 'selected' : ''}>3 - Average</option>
+                                    <option value="4" ${fb.ratingScore == 4 ? 'selected' : ''}>4 - Good</option>
+                                    <option value="5" ${fb.ratingScore == 5 ? 'selected' : ''}>5 - Excellent</option>
                                 </select>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
+                                <input type="hidden" id="customerID" name="customerID" value="${requestScope.cusID}">
                             </div>
                             <button type="submit">Submit Feedback</button>
                         </form>

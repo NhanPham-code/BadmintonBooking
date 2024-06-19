@@ -75,6 +75,20 @@ public class stadiumDetail extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        doPost(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
         String email = null;
         // get role
@@ -114,8 +128,15 @@ public class stadiumDetail extends HttpServlet {
             if (role.equals("Customer")) {
                 customerDAO cusDAO = new customerDAO();
                 Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-
+                request.setAttribute("cusID", cus.getCustomer_ID());
                 request.setAttribute("name", cus.getCustomer_Name());
+
+                Feedback cusFeedback = new Feedback();
+                cusFeedback = fbDAO.getFeedback(stadiumID, cus.getCustomer_ID());
+
+                if (cusFeedback != null) {
+                    request.setAttribute("feedback", cusFeedback);
+                }
 
                 request.getRequestDispatcher("view/customer/CusStaDetail.jsp").forward(request, response);
             } else if (role.equalsIgnoreCase("admin")) {
@@ -134,20 +155,6 @@ public class stadiumDetail extends HttpServlet {
         } else {
             request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);
         }
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
 
     }
 

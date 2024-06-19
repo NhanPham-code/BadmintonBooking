@@ -17,14 +17,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
         <style>
-            body {
-                margin: 0;
-                font-family: "Inter", sans-serif;
-                background: white;
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-            }
+            
             .header {
                 width: 100%;
                 background: #022b3a;

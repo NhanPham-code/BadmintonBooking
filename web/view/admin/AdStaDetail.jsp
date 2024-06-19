@@ -3,331 +3,338 @@
     Created on : Jun 5, 2024, 4:04:19 PM
     Author     : ADMIN
 --%>
+<%-- 
+    Document   : AdStaManage
+    Created on : Jun 6, 2024, 12:21:07 PM
+    Author     : ADMIN
+--%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title> Stadium Detail Management </title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Badminton Stadium Booking System</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
-            .stadium-bg{
-                width: 100%;
-                background: #e3e6ed;
-                padding: 40px 45px;
-                box-sizing: border-box;
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #bfdbf7;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+            .container {
                 display: flex;
+                justify-content: center;
                 flex-direction: column;
-                gap: 20px;
-                flex-grow: 1; /* Make the stadium list take the available space */
-            }
-            .stadium-board {
-                background: #ffffff;
-                border-radius: 4px;
-                height: 720px;
-                position: relative;
-            }
-            .stadium-des{
-                display: flex;
-                padding-left: 145px;
-                align-items: center;
-                margin-bottom: 20px;
-            }
-            .stadium-detail{
-                display: flex;
-                padding: 0 60px;
-                justify-content: space-around;
-            }
-            p{
-                color: #022b3a;
-                text-align: left;
-                font-family: 'Inter-Bold', sans-serif;
-                font-size: 28px;
-                font-weight: 700;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                margin-left: 10px;
-            }
-            .stadium-des img{
+                max-width: 1300px;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
                 margin-top: 20px;
+                margin-bottom: 20px;
+                margin-left: 60px;
             }
-            .stadium-inf{
-                margin-right: 20px;
+            .top-container {
+                text-align: center;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
             }
-            .stadium-inf div{
-                color: #000000;
-                text-align: left;
-                font-family: 'Inter-Regular', sans-serif;
-                font-size: 16px;
-                font-weight: 400;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                margin: 10px 10px;
+            .top-container img {
+                margin-top: 20px;
+                width: 80%;
+                height:300px;
+                border-radius: 5px;
             }
-            .rating-filter {
-                display: flex;
-                background: white;
-                width: 120px;
-                height: 42px;
-                position: relative;
-            }
-            .star {
-                padding: 10px;
-                color: #000000;
-                text-align: left;
-                font-family: "Inter-Medium", sans-serif;
-                font-size: 16px;
-                font-weight: 500;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: left;
-            }
-            .dropdown {
-                position: relative;
-                display: inline-block;
-                margin: 10px 20px;
-            }
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                min-width: 160px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
-            }
-
-            .cus-rate {
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-            .cus-rate .fa-star {
-                color: gold;
-                margin-left: 5px;
-            }
-            .dropdown:hover .dropdown-content {
-                display: block;
-            }
-            .rating {
-                background: #1f7a8c;
-                border-radius: 4px;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px;
-                height: 300px;
-                width:  800px;
-                position: relative;
-            }
-            .booking-detail {
-                overflow: auto;
-                height: 210px;
-            }
-            .head{
-                width: 100%;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                color: white;
-                font-size: 18px;
-                padding: 15px 0;
-            }
-            .booking-inf img {
-                width: 60px; /* Increase image size */
-                height: 60px; /* Increase image size */
-                border-radius: 50%;
-            }
-            .booking-inf{
+            .flex-container {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
-                background: #ffffff;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px 1px 0px 1px;
-                height: 60px;
-                padding: 7px;
-                position: relative;
+                padding: 0px 20px;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
             }
-            .booking-inf div{
-               
-                margin-left: 20px;
+            .left-container, .right-container {
+                flex: 1;
+                margin-right: 20px;
             }
-            .avatar i {
-                margin: 4px 0px;
-                font-size: 40px;
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
+            .right-container {
+                margin-right: 0;
             }
-         
-            .avatar {
+            .table-container{
+                background-color: #022B3A;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                height: 530px;
+            }
+
+            .feedback-container {
+                height: 550px; /* Set a max height for scrollbar to appear */
+                /* Enable vertical scrollbar */
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #022B3A;
+                display: block;
+            }
+            .table-container table {
+                width: 100%;
+                border-collapse: collapse;
+                max-height: 200px;
+                border-radius: 5px;
+            }
+            .table-container th{
+                border: 2px solid #000;
+                padding: 8px;
                 text-align: center;
-                background: #d9d9d9;
-                border-radius: 50%;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px;
-                border-radius: 50%;
-                width: 50px; /* Increase image size */
-                height: 50px; /* Increase image size */
-                position: relative;
+                background-color: #1F7A8C;
             }
-            .stadium-details div {
-                margin: 3px 0;
+            .table-container td {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #ffffff;
             }
-            .stadium-actions {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 5px;
+            .stadium-info{
+                display:flex;
             }
-            .stadium-actions a {
-                background: #1F7A8C;
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-                text-decoration: none;
+            .stadium-info img{
+                margin-right: 40px;
+                margin-left: 40px;
+                width: 200px;
+                height: 200px;
+                background-color: #ccc;
+                display: block;
+                margin-bottom: 20px;
+            }
+            .feedback-item {
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin: 20px 10px;
                 cursor: pointer;
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border-radius: 5px;
             }
-            .stadium-actions a:hover {
-                background: #145569;
+            .feedback-item i {
+                font-size: 50px;
+                margin-right: 10px;
             }
-            .star-rating {
+            .feedback-item.selected {
+                background-color: #b5eaff;
+            }
+            .feedback-content {
+                flex-grow: 2;
+            }
+            .feedback-rating {
+                font-size: 14px;
+            }
+            .feedback-name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .feedback-description {
+                margin-bottom: 5px;
+            }
+            .feedback-list{
+                overflow-y: scroll;
+                height:450px;
+                background-color: #0d4b64;
+                margin:0px 15px;
+
+            }
+            .filter-container {
+                display: flex;
+                align-items: center;
+                margin-left: 55%;
+            }
+            .filter-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #f0f0f0;
+                outline: none;
+                margin-left: 10px;
+            }
+            .filter-dropdown select {
+                padding: 5px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 5px;
+            }
+            .delete-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #f0f0f0;
+                outline: none;
+                margin-left: 20px;
+                margin-top:10px;
+            }
+            .booking-btn {
+                display: block;
+                width: 200px;
+                padding: 10px;
+                background-color: #1F7A8C;
+                color: white;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 20px auto;
+            }
+            .booking-btn:hover {
+                background-color: #145569;
+            }
+            .rating {
                 display: flex;
                 align-items: center;
             }
-            .star-rating .fa-star {
+            .rating .fa-star {
+                font-size: 20px;
                 color: gold;
                 margin-left: 5px;
             }
-            .court{
-                height: 190px;
-                overflow: auto;
-            }
-            table {
-                border-collapse: collapse; /* Gộp các đường biên thành một */
-            }
-
-            th, td {
-                border: 1px solid #ddd; /* Đường biên ô */
-                text-align: left; /* Căn lề văn bản trong ô */
+            .footer {
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 10px;
-            }
-
-            th {
-                background-color: #f2f2f2; /* Màu nền cho ô tiêu đề */
-                color: black; /* Màu chữ cho ô tiêu đề */
+                box-sizing: border-box;
             }
         </style>
     </head>
     <body>
-        <jsp:include page = "AdHeader.jsp" flush = "true" />
-
-        <div class="stadium-bg">
-            <div class="stadium-board">
-                <div class="stadium-des">
-                    <div class="stadium-inf">
-                        <p>Sân Đại Á</p>
-                        <div>29B Mậu Thân, An Hoà, Ninh Kiều, Cần Thơ</div>
-                        <div>0939129217</div>
-                        <div>price</div>
-                    </div>
-
-                    <img
-                        src="<%=request.getContextPath()%>/img/court/c1.jpg"
-                        alt="Stadium"
-                        width="820px"
-                        height="320px"
-                        />
-                </div>
-                <div class="stadium-detail">
-                    <div class="rating">
-                        <div class="rating-filter">
-                            <div class="star">Rating</div>
-                            <div class="dropdown">
-                                <button class="dropbt">
-                                    <i class="fa fa-caret-down"></i>
-                                </button>
-                                <div class="dropdown-content">
-                                    <div class="cus-rate">
-                                        5
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        4
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        3
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        2
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <div class="cus-rate">
-                                        1
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
+        <jsp:include page="AdHeader.jsp" flush="true" />
+        <div class="container">
+            <div class="top-container">
+                <c:set var="st" value="${requestScope.stadium}"></c:set>
+                <img src="${st.stadium_image}" alt="Picture">
+            </div>
+            <div class="flex-container">
+                <div class="left-container">
+                    <div class="table-container">
+                        <h1 style="text-align: center;color: white;">${st.stadium_name}</h1>
+                        <div class="stadium-info">
+                            <img src="${st.QRcode}" alt="Stadium Background">
+                            <div>
+                                <p style="margin-top: 60px; color: white;">Address: ${st.stadium_address}</p>
+                                <p style="color: white;">Phone Number: ${st.stadium_phone}</p>
+                                <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
                             </div>
                         </div>
-                        <div class="booking-detail">
-                            <div class="booking-inf">                              
-                                <div class="avatar">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
-                                <div class="stadium-details">
-                                    <div>Username</div>
-                                    <div>Feedback</div>
-                                    <div class="star-rating">
-                                        4/5
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="stadium-actions">
-                                    <a href="bookingPage.jsp">Delete</a> <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="court">
+                        <h2 style="color: white;margin-top: 30px;">Court List</h2>
                         <table>
-                            <tr>
-                                <th>Court ID</th>
-                                <th>Court Number</th>
-                            </tr>
-                            <tr>
-                                <td>0001</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>0002</td>
-                                <td>2</td>
-                            </tr>
-                            <tr>
-                                <td>0003</td>
-                                <td>3</td>
-                            </tr>
-                            <tr>
-                                <td>0004</td>
-                                <td>4</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th style="color: white;">Court Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="c" items="${requestScope.courtList}">
+                                    <tr>
+                                        <td>${c.number}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                         </table>
-                    </div>  
+                    </div>
+                </div>
+                <div class="right-container">
+                    <div class="feedback-container">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h2 style="color: white;">Feedback</h2>
+                            <form class="filter-container" action="feedbackFilter" method="GET">
+                                <div class="filter-dropdown">
+                                    <select id="rating-filter" name="rating">
+                                        <option value="all">All</option>
+                                        <option value="5">5 stars</option>
+                                        <option value="4">4 stars</option>
+                                        <option value="3">3 stars</option>
+                                        <option value="2">2 stars</option>
+                                        <option value="1">1 star</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
+                                <button id="filter-button" type="submit" class="filter-button">Filter</button>
+                            </form>
+                        </div>
+                        <form id="deleteFeedbackForm" action="deleteFeedback" method="POST">
+                            <div class="feedback-list">
+                                <c:forEach var="fb" items="${requestScope.feedbackList}">
+                                    <div class="feedback-item" data-feedback-id="${fb.customer.customer_ID}" data-rating="${fb.ratingScore}">
+                                        <i class="fas fa-user-circle"></i>
+                                        <div class="feedback-content">
+                                            <p class="feedback-name">${fb.customer.customer_Name}</p>
+                                            <p class="feedback-description">${fb.description}</p>
+                                            <div class="rating">
+                                                <p class="feedback-rating">Rating Score: ${fb.ratingScore}</p>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                            <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
+                            <input type="hidden" name="selectedFeedback" id="selectedFeedback">
+                            <button type="button" onclick="deleteSelectedFeedback()" class="delete-button">Delete Feedback</button>
+                        </form>
+
+                        <script>
+                            function deleteSelectedFeedback() {
+                                var selectedFeedbackIds = [];
+                                document.querySelectorAll('.feedback-item.selected').forEach(function (item) {
+                                    selectedFeedbackIds.push(item.getAttribute('data-feedback-id'));
+                                });
+
+                                if (selectedFeedbackIds.length === 0) {
+                                    alert('Please select at least one feedback item to delete.');
+                                    return;
+                                }
+
+                                if (confirm('Are you sure you want to delete the selected feedback?')) {
+                                    var selectedFeedbackString = selectedFeedbackIds.join('_');
+                                    document.getElementById('selectedFeedback').value = selectedFeedbackString;
+                                    document.getElementById('deleteFeedbackForm').submit();
+                                }
+                            }
+
+                            document.querySelectorAll('.feedback-item').forEach(function (item) {
+                                item.addEventListener('click', function () {
+                                    this.classList.toggle('selected');
+                                });
+                            });
+                        </script>
+                    </div>
                 </div>
             </div>
+            <button class="booking-btn">Delete Stadium</button>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
         </div>
     </body>
 </html>
+
+

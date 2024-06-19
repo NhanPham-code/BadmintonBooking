@@ -11,7 +11,7 @@ package model;
 public class Feedback {
     private String stadium_ID;
     private Customer customer;
-    private float ratingScore;
+    private int ratingScore;
     private String description;
 
     public String getStadium_ID() {
@@ -30,11 +30,11 @@ public class Feedback {
         this.customer = customer;
     }
 
-    public float getRatingScore() {
+    public int getRatingScore() {
         return ratingScore;
     }
 
-    public void setRatingScore(float ratingScore) {
+    public void setRatingScore(int ratingScore) {
         this.ratingScore = ratingScore;
     }
 
@@ -49,7 +49,7 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(String stadiumID, Customer customer, float ratingScore, String description) {
+    public Feedback(String stadiumID, Customer customer, int ratingScore, String description) {
         this.stadium_ID = stadium_ID;
         this.customer = customer;
         this.ratingScore = ratingScore;
