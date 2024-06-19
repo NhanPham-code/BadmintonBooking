@@ -134,6 +134,68 @@ public class stadiumDAO {
         return stadium;
     }
 
+    public boolean deleteStadium(String stadium_ID) {
+       String deleteFeedbacksSql = "DELETE FROM Feedback WHERE stadium_ID = ?";
+        String deleteBookingDetailsSql = "DELETE FROM BookingDetail WHERE booking_ID IN (SELECT booking_ID FROM Booking WHERE stadium_ID = ?)";
+        String deleteBookingsSql = "DELETE FROM Booking WHERE stadium_ID = ?";
+        String deleteCourtsSql = "DELETE FROM Court WHERE stadium_ID = ?";
+        String deleteStadiumSql = "DELETE FROM Stadium WHERE stadium_ID = ?";
+
+        try {
+            conn = db.getConnection();
+
+            // Bắt đầu transaction
+            conn.setAutoCommit(false);
+
+            // Xóa các hàng trong bảng Feedback
+            ps = conn.prepareStatement(deleteFeedbacksSql);
+            ps.setString(1, stadium_ID);
+            ps.executeUpdate();
+
+            // Xóa các hàng trong bảng BookingDetail
+            ps = conn.prepareStatement(deleteBookingDetailsSql);
+            ps.setString(1, stadium_ID);
+            ps.executeUpdate();
+
+            // Xóa các hàng trong bảng Booking
+            ps = conn.prepareStatement(deleteBookingsSql);
+            ps.setString(1, stadium_ID);
+            ps.executeUpdate();
+
+            // Xóa các hàng trong bảng Court
+            ps = conn.prepareStatement(deleteCourtsSql);
+            ps.setString(1, stadium_ID);
+            ps.executeUpdate();
+
+            // Xóa sân vận động
+            ps = conn.prepareStatement(deleteStadiumSql);
+            ps.setString(1, stadium_ID);
+            
+            int affectedRows = ps.executeUpdate();
+
+            // Commit transaction
+            conn.commit();
+
+            return affectedRows > 0;
+            
+        } catch (Exception ex) {
+            try {
+                // Rollback transaction nếu có lỗi xảy ra
+                conn.rollback();
+            } catch (Exception rollbackEx) {
+                System.out.println(rollbackEx);
+            }
+            System.out.println(ex);
+            return false;
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (Exception autoCommitEx) {
+                System.out.println(autoCommitEx);
+            }
+        }
+    }
+    
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
 
@@ -146,4 +208,5 @@ public class stadiumDAO {
             System.out.println(st.getAvg_ratingScore());
         }
     }
+
 }

@@ -30,7 +30,7 @@
                 padding: 10px 20px;
                 box-sizing: border-box;
             }
-            
+
             .banner {
                 width: 100%;
                 height: 149px;
@@ -44,7 +44,7 @@
                 font-weight: 700;
                 border-bottom: 1px solid black;
             }
-            
+
             .stadium-list {
                 width: 100%;
                 padding: 20px;
@@ -118,12 +118,12 @@
                 display: flex;
                 align-items: center;
             }
-            
+
             .rating .fa-star {
                 color: gold;
                 margin-left: 5px;
             }
-            
+
             .error-message {
                 color: brown;
                 font-weight: bold;
@@ -133,12 +133,12 @@
         </style>
     </head>
     <body>
-       <jsp:include page="AdHeader.jsp" flush="true" />
+        <jsp:include page="AdHeader.jsp" flush="true" />
 
         <div class="stadium-list">
-            
+
             <div class="error-message"><h1>${requestScope.err}</h1></div>
-            
+
             <c:forEach var="st" items="${requestScope.stList}">
                 <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
                     <img src="${st.stadium_image}" alt="Stadium">
@@ -151,10 +151,11 @@
                         </div>
                     </div>
                     <div class="stadium-actions">
-                        <a href="bookingPage.jsp">Booking</a>
+                        <a href='deleteStadium?stadiumID=${st.stadium_ID}'>Delete</a>
                     </div>
                 </div>
             </c:forEach>
+            
         </div>
 
         <div class="footer">
