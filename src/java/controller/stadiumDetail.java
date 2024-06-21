@@ -95,7 +95,7 @@ public class stadiumDetail extends HttpServlet {
 
         List<Court> courtList = new ArrayList<>();
         courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtList(stadiumID);
+        courtList = cDAO.getCourtListByStadiumID(stadiumID);
         request.setAttribute("courtList", courtList);
 
         List<Feedback> feedbackList = new ArrayList<>();

@@ -146,7 +146,7 @@
                         </div>
                     </div>
                     <div class="stadium-actions">
-                        <a href="bookingPage.jsp">Booking</a>
+                        <a href="<%=request.getContextPath()%>/bookingTime?stadium_ID=${st.stadium_ID}">Booking</a>
                     </div>
                 </div>
             </c:forEach>

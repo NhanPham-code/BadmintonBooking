@@ -4,9 +4,6 @@
  */
 package controller;
 
-import DAO.courtDAO;
-import DAO.feedbackDAO;
-import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,18 +11,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Court;
-import model.Feedback;
-import model.Stadium;
 
 /**
  *
- * @author ADMIN
+ * @author Admin
  */
-@WebServlet(name = "G_feedbackFilter", urlPatterns = {"/feedbackFilter"})
-public class feedbackFilter extends HttpServlet {
+@WebServlet(name = "bookingConfirm", urlPatterns = {"/bookingConfirm"})
+public class bookingConfirm extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +36,10 @@ public class feedbackFilter extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet G_FeedbackFilter</title>");
+            out.println("<title>Servlet bookingConfirm</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet G_FeedbackFilter at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet bookingConfirm at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,32 +57,7 @@ public class feedbackFilter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String stadiumID = request.getParameter("stadiumID");
-        String ratingScore = request.getParameter("rating");
-
-        Stadium stadium = new Stadium();
-        stadiumDAO sDAO = new stadiumDAO();
-        stadium = sDAO.getStadiumByID(stadiumID);
-        request.setAttribute("stadium", stadium);
-
-        List<Court> courtList = new ArrayList<>();
-        courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtListByStadiumID(stadiumID);
-        request.setAttribute("courtList", courtList);
-
-        if (ratingScore.equals("all")) {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackList(stadiumID);
-            request.setAttribute("feedbackList", feedbackList);
-        } else {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackFilterList(stadiumID,Integer.parseInt(ratingScore));
-            request.setAttribute("feedbackList", feedbackList);
-        }
-        request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);       
-
+        processRequest(request, response);
     }
 
     /**
@@ -104,7 +71,7 @@ public class feedbackFilter extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Auto create bookingID
     }
 
     /**

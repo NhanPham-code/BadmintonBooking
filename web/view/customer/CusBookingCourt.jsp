@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -36,7 +37,7 @@
 
             .court-detail h1 {
                 font-size: 32px;
-                color: #022B3A;
+                color: lightseagreen;
                 margin-bottom: 20px;
             }
 
@@ -135,29 +136,33 @@
 
         <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
 
-        <div class="court-detail">
+        <form class="court-detail" action="bookingCourt" method="post">
             <h1>Choosing Court</h1>
             <div class="courtbtn">
-                <div class="court">
-                    <input type="checkbox" class="court-checkbox" id="court-01" value="01" name="selectedCourt">
-                    <label for="court-01">
-                        <img src="<%=request.getContextPath()%>/img/icon/icon.png" alt="icon" />
-                        <p>01</p>
-                    </label>
-                </div>
-                <div class="court">
-                    <input type="checkbox" class="court-checkbox" id="court-02" value="02" name="selectedCourt">
-                    <label for="court-02">
-                        <img src="<%=request.getContextPath()%>/img/icon/icon.png" alt="icon" />
-                        <p>02</p>
-                    </label>
-                </div>
+                <input type="hidden" name="stadium_ID" value="${requestScope.stadium_ID}">
+                <input type="hidden" name="startTime" value="${requestScope.startTime}">
+                <input type="hidden" name="endTime" value="${requestScope.endTime}">
+                <input type="hidden" name="date" value="${requestScope.date}">
+                
+                
+                <c:forEach var="court" items="${requestScope.courtList}">
+                   
+                    <div class="court">
+                        <input type="checkbox" class="court-checkbox" id="court-${court.number}" value="${court.court_ID}" name="selectedCourt">
+                        <label for="court-${court.number}">
+                            <img src="<%=request.getContextPath()%>/img/icon/icon.png" alt="icon" />
+                            <p>${court.number}</p>
+                        </label>
+                    </div>
+                        
+                </c:forEach>
+                
             </div>
 
             <div class="but-book"> 
                 <button type="submit" class="booking"><b>Booking</b></button>
             </div>
-        </div>
+        </form>
 
     </body>
 </html>

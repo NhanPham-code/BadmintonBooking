@@ -376,7 +376,7 @@
                 </div>
 
             </div>
-            <button class="booking-btn">Book Now</button>
+            <a class="booking-btn" href="<%=request.getContextPath()%>/bookingTime?stadium_ID=${st.stadium_ID}">Book Now</a>
         </div>
 
         <div class="footer">

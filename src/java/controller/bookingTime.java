@@ -4,28 +4,34 @@
  */
 package controller;
 
+import DAO.accountDAO;
+import DAO.bookingDAO;
 import DAO.courtDAO;
-import DAO.feedbackDAO;
-import DAO.stadiumDAO;
+import DAO.customerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import model.Account;
+import model.Booking;
 import model.Court;
-import model.Feedback;
-import model.Stadium;
+import model.Customer;
 
 /**
  *
- * @author ADMIN
+ * @author Admin
  */
-@WebServlet(name = "G_feedbackFilter", urlPatterns = {"/feedbackFilter"})
-public class feedbackFilter extends HttpServlet {
+@WebServlet(name = "bookingTime", urlPatterns = {"/bookingTime"})
+public class bookingTime extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +50,10 @@ public class feedbackFilter extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet G_FeedbackFilter</title>");
+            out.println("<title>Servlet bookingTime</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet G_FeedbackFilter at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet bookingTime at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,32 +71,31 @@ public class feedbackFilter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String stadiumID = request.getParameter("stadiumID");
-        String ratingScore = request.getParameter("rating");
-
-        Stadium stadium = new Stadium();
-        stadiumDAO sDAO = new stadiumDAO();
-        stadium = sDAO.getStadiumByID(stadiumID);
-        request.setAttribute("stadium", stadium);
-
-        List<Court> courtList = new ArrayList<>();
-        courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtListByStadiumID(stadiumID);
-        request.setAttribute("courtList", courtList);
-
-        if (ratingScore.equals("all")) {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackList(stadiumID);
-            request.setAttribute("feedbackList", feedbackList);
-        } else {
-            List<Feedback> feedbackList = new ArrayList<>();
-            feedbackDAO fbDAO = new feedbackDAO();
-            feedbackList = fbDAO.getFeedbackFilterList(stadiumID,Integer.parseInt(ratingScore));
-            request.setAttribute("feedbackList", feedbackList);
+        
+        // get stadiumID
+        String stadium_ID = request.getParameter("stadium_ID");
+        request.setAttribute("stadium_ID", stadium_ID);
+        
+        // get email
+        String email = "";
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("email")) {
+                    email = cookie.getValue();
+                }
+            }
         }
-        request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);       
 
+        accountDAO accDAO = new accountDAO();
+        Account ac = accDAO.getAccountByEmail(email);
+
+        // get customer name
+        customerDAO cusDAO = new customerDAO();
+        Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+
+        request.setAttribute("name", cus.getCustomer_Name());
+        request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
     }
 
     /**
@@ -104,7 +109,7 @@ public class feedbackFilter extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

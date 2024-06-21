@@ -40,7 +40,7 @@
             .court-detail h1,
             .payment h1 {
                 font-size: 24px; /* Tăng kích thước tiêu đề */
-                color: #BFDBF7; /* Đổi màu chữ */
+                color: lightseagreen; /* Đổi màu chữ */
             }
 
             .calendar {
@@ -158,8 +158,6 @@
 
             document.addEventListener('DOMContentLoaded', function () {
                 var appointmentTimes = document.querySelectorAll('.appointment-time');
-                var courtCheckboxes = document.querySelectorAll('.court-checkbox');
-
                 var selectedAppointmentTimes = [];
 
                 appointmentTimes.forEach(function (checkbox) {
@@ -168,37 +166,30 @@
                             if (selectedAppointmentTimes.length === 2) {
                                 var firstSelected = selectedAppointmentTimes.shift();
                                 firstSelected.checked = false;
-                                firstSelected.nextElementSibling.style.backgroundColor = 'green'; // Huỷ highlight
                             }
                             // Kiểm tra xem checkbox đã được chọn trước đó chưa
                             var index = selectedAppointmentTimes.indexOf(this);
                             if (index === -1) {
                                 selectedAppointmentTimes.push(this);
                             }
-                            this.nextElementSibling.style.backgroundColor = '#0056b3'; // Highlight checkbox
-
-                            // Update appointment time range
-                            updateAppointmentTimeRange();
                         } else {
                             var index = selectedAppointmentTimes.indexOf(this);
                             if (index > -1) {
                                 selectedAppointmentTimes.splice(index, 1);
                             }
-                            this.nextElementSibling.style.backgroundColor = 'green'; // Huỷ highlight
-
-                            // Update appointment time range
-                            updateAppointmentTimeRange();
                         }
 
-                        // Update court availability
-                        updateCourtAvailability();
+                        // Update appointment time range
+                        updateAppointmentTimeRange();
                     });
                 });
 
                 function updateAppointmentTimeRange() {
                     // Reset all appointment time backgrounds
                     appointmentTimes.forEach(function (checkbox) {
-                        checkbox.nextElementSibling.style.backgroundColor = 'green';
+                        if (!checkbox.disabled) {
+                            checkbox.nextElementSibling.style.backgroundColor = 'green';
+                        }
                     });
 
                     // Update selected appointment time range background
@@ -208,42 +199,46 @@
 
                         for (var i = startTime; i <= endTime; i++) {
                             var checkbox = document.getElementById('time-' + i);
-                            if (checkbox) {
-                                checkbox.nextElementSibling.style.backgroundColor = '#0056b3'; // Tô đen khung giờ trong khoảng giữa
+                            if (checkbox && !checkbox.disabled) {
+                                checkbox.nextElementSibling.style.backgroundColor = '#0056b3';
                             }
                         }
                     }
 
                     // Highlight selected appointment times
                     selectedAppointmentTimes.forEach(function (checkbox) {
-                        checkbox.nextElementSibling.style.backgroundColor = '#0056b3'; // Tô màu cho các checkbox được chọn
+                        checkbox.nextElementSibling.style.backgroundColor = '#0056b3';
                     });
-
-                    // Check if user selected more than 2 checkboxes, then reset selection
-                    if (selectedAppointmentTimes.length > 2) {
-                        selectedAppointmentTimes.forEach(function (checkbox) {
-                            checkbox.checked = false;
-                        });
-                        selectedAppointmentTimes = [];
-                    }
-                }
-
-                function updateCourtAvailability() {
-                    if (selectedAppointmentTimes.length === 0) {
-                        // Block all courts if no appointment time selected
-                        courtCheckboxes.forEach(function (checkbox) {
-                            checkbox.disabled = true;
-                            checkbox.parentElement.style.opacity = '0.5';
-                        });
-                    } else {
-                        // Unblock all courts
-                        courtCheckboxes.forEach(function (checkbox) {
-                            checkbox.disabled = false;
-                            checkbox.parentElement.style.opacity = '1';
-                        });
-                    }
                 }
             });
+
+            // check time logic
+            document.addEventListener('DOMContentLoaded', function () {
+                var dateInput = document.getElementById('date');
+                var appointmentTimes = document.querySelectorAll('.appointment-time');
+
+                dateInput.addEventListener('change', function () {
+                    var selectedDate = new Date(this.value);
+                    var currentDate = new Date();
+                    var currentHour = currentDate.getHours();
+
+                    appointmentTimes.forEach(function (checkbox) {
+                        var appointmentHour = parseInt(checkbox.value);
+                        checkbox.disabled = false;
+                        checkbox.nextElementSibling.style.backgroundColor = 'green';
+
+                        // Xử lý logic khi ngày đã qua
+                        if (selectedDate < new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())) {
+                            checkbox.disabled = true;
+                            checkbox.nextElementSibling.style.backgroundColor = 'gray';
+                        } else if (selectedDate.toDateString() === currentDate.toDateString() && appointmentHour <= currentHour) {
+                            checkbox.disabled = true;
+                            checkbox.nextElementSibling.style.backgroundColor = 'gray';
+                        }
+                    });
+                });
+            });
+
 
         </script>
     </head>
@@ -251,7 +246,10 @@
 
         <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
 
-        <form class="stadium-board">
+
+        <form class="stadium-board" action="bookingCourt" method="get">
+            <h1 style="color: red">${requestScope.error}</h1>
+            <input type="hidden" name="stadium_ID" value="${requestScope.stadium_ID}">
             <div class="calendar">
                 <label for="date"><h1>SELECT A DATE</h1></label>
                 <input type="date" id="date" name="date">
@@ -261,43 +259,43 @@
                     <h1>CHOOSING TIME</h1>
                     <!-- Checkbox giờ -->
                     <div class="appointment-times">
-                        <input type="checkbox" class="appointment-time" id="time-5" value="5:00">
+                        <input type="checkbox" class="appointment-time" id="time-5" name="time" value="5:00:00">
                         <label for="time-5">5:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-6" value="6:00">
+                        <input type="checkbox" class="appointment-time" id="time-6" name="time" value="6:00:00">
                         <label for="time-6">6:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-7" value="7:00">
+                        <input type="checkbox" class="appointment-time" id="time-7" name="time" value="7:00:00">
                         <label for="time-7">7:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-8" value="8:00">
+                        <input type="checkbox" class="appointment-time" id="time-8"  name="time"value="8:00:00">
                         <label for="time-8">8:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-9" value="9:00">
+                        <input type="checkbox" class="appointment-time" id="time-9" name="time" value="9:00:00">
                         <label for="time-9">9:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-10" value="10:00">
+                        <input type="checkbox" class="appointment-time" id="time-10" name="time" value="10:00:00">
                         <label for="time-10">10:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-11" value="11:00">
+                        <input type="checkbox" class="appointment-time" id="time-11" name="time" value="11:00:00">
                         <label for="time-11">11:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-12" value="12:00">
+                        <input type="checkbox" class="appointment-time" id="time-12" name="time" value="12:00:00">
                         <label for="time-12">12:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-13" value="13:00">
+                        <input type="checkbox" class="appointment-time" id="time-13" name="time" value="13:00:00">
                         <label for="time-13">13:00</label>
                     </div>
                     <div class="appointment-times">
-                        <input type="checkbox" class="appointment-time" id="time-14" value="14:00">
+                        <input type="checkbox" class="appointment-time" id="time-14" name="time" value="14:00:00">
                         <label for="time-14">14:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-15" value="15:00">
+                        <input type="checkbox" class="appointment-time" id="time-15" name="time" value="15:00:00">
                         <label for="time-15">15:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-16" value="16:00">
+                        <input type="checkbox" class="appointment-time" id="time-16" name="time" value="16:00:00">
                         <label for="time-16">16:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-17" value="17:00">
+                        <input type="checkbox" class="appointment-time" id="time-17" name="time" value="17:00:00">
                         <label for="time-17">17:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-18" value="18:00">
+                        <input type="checkbox" class="appointment-time" id="time-18" name="time" value="18:00:00">
                         <label for="time-18">18:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-19" value="19:00">
+                        <input type="checkbox" class="appointment-time" id="time-19" name="time" value="19:00:00">
                         <label for="time-19">19:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-20" value="20:00">
+                        <input type="checkbox" class="appointment-time" id="time-20" name="time" value="20:00:00">
                         <label for="time-20">20:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-21" value="21:00">
+                        <input type="checkbox" class="appointment-time" id="time-21" name="time" value="21:00:00">
                         <label for="time-21">21:00</label>
-                        <input type="checkbox" class="appointment-time" id="time-22" value="22:00">
+                        <input type="checkbox" class="appointment-time" id="time-22" name="time" value="22:00:00">
                         <label for="time-22">22:00</label>
                     </div>
                 </div>

@@ -4,8 +4,9 @@
     Author     : PC
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -168,43 +169,109 @@
 
             .qr-code img{
                 width: 80%;
+                max-width: 300px;
             }
+
+            /* Custom file upload styles */
+            .file-upload-container {
+                margin-top: 20px;
+            }
+
+            .file-upload-label {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #022B3A;
+                color: white;
+                cursor: pointer;
+                border-radius: 6px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+
+            .file-upload-label:hover {
+                background-color: #0056b3;
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+
+            .file-upload-label:active {
+                background-color: #004494;
+                transform: scale(1.02);
+            }
+
+            .file-upload-label:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.4);
+            }
+
+            .file-upload-input {
+                display: none;
+            }
+
         </style>
     </head>
     <body>
+        <c:set var="st" value="${requestScope.st}"></c:set>
+        <c:set var="cus" value="${requestScope.cus}"></c:set>
+            <div class="confirmation-container">
+                <h1>Confirm Booking</h1>
+                <form action="bookingConfirm" method="post" enctype="multipart/form-data">
+                    <div class="details">
 
+                        <input type="hidden" name="customerID" value="${cus.customer_ID}"> <!-- comment -->
 
+                    <input type="hidden" name="customerName" value="${cus.customer_Name}">
+                    <p><span>Customer Name:</span> ${cus.customer_Name}</p>
 
-        <div class="confirmation-container">
-            <h1>Confirm Booking</h1>
-            <div class="details">
-                <p><span>Customer Name:</span> John Doe</p>
-                <p><span>Phone Number:</span> 123-456-7890</p>
-                <p><span>Stadium Name:</span> Central Tennis Court</p>
-                <p><span>Stadium Phone Number:</span> 098-765-4321</p>
-                <p><span>Price:</span> $100</p>
-                <p><span>Booking Date:</span> 2024-06-15</p>
-                <p><span>Booking Time:</span> 10:00 AM - 11:00 AM</p>
-                <p><span>Court Number:</span> 1 </p>
-            </div>
-            <div class="total">
-                Total: $100
-            </div>
-            <button class="confirm-button" onclick="openModal()">Confirm</button>
-        </div>
+                    <input type="hidden" name="phoneNumber" value="${cus.customer_Phone}">
+                    <p><span>Phone Number:</span> ${cus.customer_Phone}</p>
 
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>Payment Information</h2>
-                <p>Please transfer the amount to the following account:</p>
-                <p>Account Name: Central Badminton Club</p>
-                <p>Account Number: 123456789</p>
-                <div class="qr-code">
-                    <img src="<%=request.getContextPath()%>/img/QRCode/qr.png" alt="QR Code" />
+                    <input type="hidden" name="stadiumID" value="${st.stadium_ID}">  <!-- comment -->
+
+                    <input type="hidden" name="stadiumName" value="${st.stadium_name}">
+                    <p><span>Stadium Name:</span> ${st.stadium_name}</p>
+
+                    <input type="hidden" name="stadiumPhoneNumber" value="${st.stadium_phone}">
+                    <p><span>Stadium Phone Number:</span> ${st.stadium_phone}</p>
+
+                    <input type="hidden" name="pricePerHour" value="${st.pricePerHour}">
+                    <p><span>Price Per Hour Of Court:</span> ${st.pricePerHour}</p>
+
+                    <c:forEach var="court" items="${requestScope.courtList}">
+                        <input type="hidden" name="court_ID" value="${court.court_ID}"> <!-- comment -->
+                        <p><span>Court Number:</span> ${court.number}</p>
+                    </c:forEach>
+
+                    <input type="hidden" name="bookingTime" value="${requestScope.startTime}-${requestScope.endTime}"> <!-- comment -->
+                    <p><span>Booking Time:</span> ${requestScope.startTime} - ${requestScope.endTime}</p>
+
+                    <input type="hidden" name="bookingDate" value="${requestScope.date}"> <!-- comment -->
+                    <p><span>Booking Date:</span> ${requestScope.date}</p>
                 </div>
-                <a href="waitAcceptPage.jsp">DONE</a>
-            </div>
+                <div class="total">
+                    <input type="hidden" name="total" value="${requestScope.total}"> <!-- comment -->
+                    <p><span>TOTAL:</span> ${requestScope.total}</p>
+                </div>
+                <button type="button" class="confirm-button" onclick="openModal()">Confirm</button>
+
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <h2>Payment Information</h2>
+                        <p>Please transfer the amount to the following account:</p>
+                        <div class="qr-code">
+                            <img src="<%=request.getContextPath()%>/${st.QRcode}"
+                                 alt="QR Code" />
+                        </div>
+                        <div class="file-upload-container">
+                            <label for="bankingImage" class="file-upload-label">Upload Banking Image</label>
+                            <!-- comment -->
+                            <input type="file" id="bankingImage" name="bankingImage" class="file-upload-input" accept="image/*" required>
+                        </div>
+                        <br>
+                        <button type="submit" class="confirm-button">DONE</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
         <script>
@@ -215,6 +282,13 @@
             function closeModal() {
                 document.getElementById("myModal").style.display = "none";
             }
+
+            // JavaScript to handle custom file upload button
+            document.querySelector('.file-upload-label').addEventListener('click', function () {
+                document.querySelector('.file-upload-input').click();
+            });
+
         </script>
+
     </body>
 </html>
