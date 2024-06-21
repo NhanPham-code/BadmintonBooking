@@ -43,7 +43,7 @@ public class home extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet home</title>");            
+            out.println("<title>Servlet home</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet home at " + request.getContextPath() + "</h1>");
@@ -65,10 +65,11 @@ public class home extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //response.sendRedirect("view/common/CommonHome.jsp");
-                Cookie[] cookies = request.getCookies();
-        String token = null;
-        String email = null;
-        if (cookies != null) {
+        
+        Cookie[] cookies = request.getCookies();
+        String token = "";
+        String email = "";
+        if (cookies != null && cookies.length > 1) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equalsIgnoreCase("email")) {
                     email = cookie.getValue();
@@ -100,7 +101,7 @@ public class home extends HttpServlet {
         } else {
             request.getRequestDispatcher("view/common/CommonHome.jsp").forward(request, response);
         }
-
+        
     }
 
     /**
