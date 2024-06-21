@@ -57,6 +57,7 @@ public class bookingCourt extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String stadium_ID = request.getParameter("stadium_ID");
         try {
             String email = getEmailFromCookies(request);
 
@@ -67,13 +68,12 @@ public class bookingCourt extends HttpServlet {
             Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
             request.setAttribute("name", cus.getCustomer_Name());
 
-            String stadium_ID = request.getParameter("stadium_ID");
-
             String date = request.getParameter("date");
             Date bookDate;
             if (date != null) {
                 bookDate = Date.valueOf(date);
             } else {
+                request.setAttribute("stadium_ID", stadium_ID);
                 request.setAttribute("error", "Please enter a date for booking!!!");
                 request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
                 return;
@@ -81,6 +81,7 @@ public class bookingCourt extends HttpServlet {
 
             String[] times = request.getParameterValues("time");
             if (times == null || times.length == 0) {
+                request.setAttribute("stadium_ID", stadium_ID);
                 request.setAttribute("error", "Please select a time for booking!!!");
                 request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
                 return;
@@ -88,6 +89,7 @@ public class bookingCourt extends HttpServlet {
 
             List<Time> selectedTime = getSelectedTimes(times, request, response);
             if (selectedTime.isEmpty()) {
+                request.setAttribute("stadium_ID", stadium_ID);
                 request.setAttribute("error", "Please select a valid time for booking!!!");
                 request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
                 return;
@@ -131,6 +133,7 @@ public class bookingCourt extends HttpServlet {
 
             request.getRequestDispatcher("view/customer/CusBookingCourt.jsp").forward(request, response);
         } catch (Exception e) {
+            request.setAttribute("stadium_ID", stadium_ID);
             request.setAttribute("error", "Please select date and time for booking!!!");
             request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
         }
