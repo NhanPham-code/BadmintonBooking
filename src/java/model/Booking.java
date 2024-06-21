@@ -26,6 +26,23 @@ public class Booking {
     private Stadium stadium;
     private List<Court> courtList;
 
+    public Booking() {
+    }
+
+    
+    public Booking(String booking_ID, int courtQuantity, Time startTime, Time endTime, java.sql.Date date, int total, boolean bookingAccepted, Customer customer, Stadium stadium, List<Court> courtList) {
+        this.booking_ID = booking_ID;
+        this.courtQuantity = courtQuantity;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.total = total;
+        this.bookingAccepted = bookingAccepted;
+        this.customer = customer;
+        this.stadium = stadium;
+        this.courtList = courtList;
+    }
+
     public String getBooking_ID() {
         return booking_ID;
     }
@@ -57,7 +74,6 @@ public class Booking {
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
-
 
     public Date getDate() {
         return date;
@@ -115,7 +131,4 @@ public class Booking {
         this.bankingImage = bankingImage;
     }
 
-    
-    
-    
 }

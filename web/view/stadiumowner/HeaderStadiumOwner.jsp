@@ -193,7 +193,7 @@
 
         <div class="nav">
             <a href="<%=request.getContextPath()%>/#">STADIUM MANAGEMENT</a>
-            <a href="<%=request.getContextPath()%>/#">BOOKING MANAGEMENT</a>
+            <a href="<%=request.getContextPath()%>/CustomerHistoryController">BOOKING MANAGEMENT</a>
         </div>
     </body>
 </html>

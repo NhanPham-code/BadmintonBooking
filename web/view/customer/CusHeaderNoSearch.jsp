@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         <style>
-            
+
             .header {
                 width: 100%;
                 background: #022b3a;
@@ -164,8 +164,8 @@
                     <i class="far fa-user-circle"></i>
                     <p>${requestScope.name}</p> <!-- Đảm bảo name không null -->
                     <div class="auth-links">
-                        <a href="<%=request.getContextPath()%>/logout">Logout</a>
-                        <a href="<%=request.getContextPath()%>/viewProfile">Profile</a>
+                        <a href="logout">Logout</a>
+                        <a href="viewProfile">Profile</a>
                     </div>
                 </div>
             </div> 
@@ -173,7 +173,7 @@
         <div class="nav">
             <a href="<%=request.getContextPath()%>/stadiumList">STADIUM LIST</a>
             <a href="<%=request.getContextPath()%>/#">POPULAR</a>
-            <a href="<%=request.getContextPath()%>/#">BOOKING HISTORY</a>
+            <a href="<%=request.getContextPath()%>/CustomerHistoryController">BOOKING HISTORY</a>
         </div>
     </body>
 </html>
