@@ -139,10 +139,10 @@
         <form class="court-detail" action="bookingCourt" method="post">
             <h1>Choosing Court</h1>
             <div class="courtbtn">
-                <input type="text" name="stadium_ID" value="${requestScope.stadium_ID}">
-                <input type="text" name="startTime" value="${requestScope.startTime}">
-                <input type="text" name="endTime" value="${requestScope.endTime}">
-                <input type="text" name="date" value="${requestScope.date}">
+                <input type="hidden" name="stadium_ID" value="${requestScope.stadium_ID}">
+                <input type="hidden" name="startTime" value="${requestScope.startTime}">
+                <input type="hidden" name="endTime" value="${requestScope.endTime}">
+                <input type="hidden" name="date" value="${requestScope.date}">
                 
                 
                 <c:forEach var="court" items="${requestScope.courtList}">
