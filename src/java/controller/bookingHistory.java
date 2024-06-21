@@ -5,26 +5,30 @@
 package controller;
 
 import DAO.accountDAO;
-import DAO.adminDAO;
+import DAO.bookingDAO;
 import DAO.customerDAO;
-import DAO.stadiumOwnerDAO;
+import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import model.Account;
-import model.Admin;
+import model.Booking;
 import model.Customer;
-import model.StadiumOwner;
+import model.Stadium;
 
 /**
  *
- * @author Admin
+ * @author WINDOWS
  */
-public class home extends HttpServlet {
+@WebServlet(name = "CustomerHistoryController", urlPatterns = {"/CustomerHistoryController"})
+public class bookingHistory extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +47,10 @@ public class home extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet home</title>");            
+            out.println("<title>Servlet CustomerHistoryController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet home at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerHistoryController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,43 +68,40 @@ public class home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //response.sendRedirect("view/common/CommonHome.jsp");
-                Cookie[] cookies = request.getCookies();
-        String token = null;
+        Cookie[] cookies = request.getCookies();
         String email = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equalsIgnoreCase("email")) {
                     email = cookie.getValue();
                 }
-                if (cookie.getName().equalsIgnoreCase("role")) {
-                    token = cookie.getValue();
-                }
+            }
+        }
+        accountDAO accDAO = new accountDAO();
+        customerDAO cusDAO = new customerDAO();
+        Account acc = accDAO.getAccountByEmail(email);
+        String accID = acc.getAcc_ID();
+        String customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
+        bookingDAO bookDAO = new bookingDAO();
+        List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
 
-            }
-            accountDAO accDAO = new accountDAO();
-            Account ac = accDAO.getAccountByEmail(email);
-            //get accout by email            
-            if (token.equalsIgnoreCase("Customer")) {
-                customerDAO cusDAO = new customerDAO();
-                Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-                request.setAttribute("name", cus.getCustomer_Name());
-                request.getRequestDispatcher("view/customer/cusDashBoard.jsp").forward(request, response);
-            } else if (token.equalsIgnoreCase("StadiumOwner")) {
-                stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-                StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
-                request.setAttribute("name", sto.getOwner_name());
-                request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jspp").forward(request, response);
+        //seperate accepted and not accpeted
+        List<Booking> acceptedBookings = new ArrayList<>();
+        List<Booking> notAccpetedBookings = new ArrayList<>();
+
+        for (Booking booking : bookingList) {
+            if (booking.isBookingAccepted()) {
+                acceptedBookings.add(booking);
+                request.setAttribute("bookingID", booking.getBooking_ID());
             } else {
-                adminDAO aDAO = new adminDAO();
-                Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
-                request.setAttribute("name", ad.getAdmin_name());
-                request.getRequestDispatcher("view/admin/AdDashBoard.jsp").forward(request, response);
+                notAccpetedBookings.add(booking);
+                request.setAttribute("bookingID", booking.getBooking_ID());
             }
-        } else {
-            request.getRequestDispatcher("view/common/CommonHome.jsp").forward(request, response);
         }
 
+        request.setAttribute("acceptedBookings", acceptedBookings);
+        request.setAttribute("notAccpetedBookings", notAccpetedBookings);
+        request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
     }
 
     /**
