@@ -95,60 +95,33 @@
                 box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.4);
             }
 
+            /* Modal Styles */
             .modal {
-                display: none;
-                position: fixed;
-                z-index: 1;
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Sit on top */
                 left: 0;
                 top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.4);
-                border-radius: 5%;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
             }
 
-            .modal-content a {
-                display: inline-block;
-                margin-top: 20px;
-                padding: 10px 20px;
-                background-color: #022B3A;
-                color: white;
-                text-decoration: none;
-                font-size: 16px;
-                font-weight: bold;
-                border-radius: 6px;
-                transition: background-color 0.3s ease, transform 0.2s ease;
-            }
-
-            .modal-content a:hover {
-                background-color: #0056b3;
-                transform: scale(1.05);
-                opacity: 0.9;
-            }
-
-            .modal-content a:active {
-                background-color: #004494;
-                transform: scale(1.02);
-            }
-
-            .modal-content a:focus {
-                outline: none;
-                box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.4);
-            }
-
+            /* Modal Content Box */
             .modal-content {
                 background-color: #fefefe;
-                color: #004494;
-                margin: 15% auto;
+                margin: 15% auto; /* 15% from the top and centered */
                 padding: 20px;
                 border: 1px solid #888;
-                width: 80%;
-                max-width: 600px;
-                text-align: center;
-                border-radius: 5%;
+                width: 60%; /* Could be more or less, depending on screen size */
+                max-width: 500px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                border-radius: 10px;
+                animation: fadeIn 0.3s;
             }
 
+            /* Close Button */
             .close {
                 color: #aaa;
                 float: right;
@@ -163,49 +136,87 @@
                 cursor: pointer;
             }
 
-            .qr-code {
-                margin-top: 20px;
+            /* Heading */
+            .modal-content h2 {
+                margin-top: 0;
+                font-family: Arial, sans-serif;
             }
 
-            .qr-code img{
-                width: 80%;
-                max-width: 300px;
+            /* QR Code Container */
+            .qr-code img {
+                display: block;
+                margin: 0 auto;
+                max-width: 200px;
+                height: auto;
+                border: 1px solid #ccc;
+                border-radius: 10px;
             }
 
-            /* Custom file upload styles */
+            /* File Upload Container */
             .file-upload-container {
-                margin-top: 20px;
+                text-align: center;
+                margin: 20px 0;
             }
 
+            /* File Upload Label */
             .file-upload-label {
                 display: inline-block;
-                padding: 10px 20px;
-                background-color: #022B3A;
+                background-color: #4CAF50;
                 color: white;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
                 cursor: pointer;
-                border-radius: 6px;
-                transition: background-color 0.3s ease, transform 0.2s ease;
             }
 
             .file-upload-label:hover {
+                background-color: #0056b3;
+
+            }
+
+            /* File Upload Input */
+            .file-upload-input {
+                display: none;
+            }
+
+            /* File Name Display */
+            .file-upload-filename {
+                display: block;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            /* Confirm Button */
+            .confirm-button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #022B3A;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            .confirm-button:hover {
                 background-color: #0056b3;
                 transform: scale(1.05);
                 opacity: 0.9;
             }
 
-            .file-upload-label:active {
-                background-color: #004494;
-                transform: scale(1.02);
+            /* Keyframes for Modal Animation */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
             }
 
-            .file-upload-label:focus {
-                outline: none;
-                box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.4);
-            }
 
-            .file-upload-input {
-                display: none;
-            }
+
 
         </style>
     </head>
@@ -244,7 +255,7 @@
                     <input type="hidden" name="bookingTime" value="${requestScope.startTime}-${requestScope.endTime}"> <!-- comment -->
                     <p><span>Booking Time:</span> ${requestScope.startTime} - ${requestScope.endTime}</p>
 
-                    <input type="hidden" name="bookingDate" value="${requestScope.date}"> <!-- comment -->
+                    <input type="text" name="bookingDate" value="${requestScope.date}"> <!-- comment -->
                     <p><span>Booking Date:</span> ${requestScope.date}</p>
                 </div>
                 <div class="total">
@@ -259,18 +270,18 @@
                         <h2>Payment Information</h2>
                         <p>Please transfer the amount to the following account:</p>
                         <div class="qr-code">
-                            <img src="<%=request.getContextPath()%>/${st.QRcode}"
-                                 alt="QR Code" />
+                            <img src="<%=request.getContextPath()%>/${st.QRcode}" alt="QR Code" />
                         </div>
                         <div class="file-upload-container">
                             <label for="bankingImage" class="file-upload-label">Upload Banking Image</label>
-                            <!-- comment -->
                             <input type="file" id="bankingImage" name="bankingImage" class="file-upload-input" accept="image/*" required>
+                            <span id="file-name" class="file-upload-filename"></span>
                         </div>
                         <br>
                         <button type="submit" class="confirm-button">DONE</button>
                     </div>
                 </div>
+
             </form>
         </div>
 
@@ -283,10 +294,11 @@
                 document.getElementById("myModal").style.display = "none";
             }
 
-            // JavaScript to handle custom file upload button
-            document.querySelector('.file-upload-label').addEventListener('click', function () {
-                document.querySelector('.file-upload-input').click();
+            document.getElementById('bankingImage').addEventListener('change', function () {
+                var fileName = this.files[0].name;
+                document.getElementById('file-name').textContent = fileName;
             });
+
 
         </script>
 

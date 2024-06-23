@@ -80,7 +80,7 @@ public class bookingCourt extends HttpServlet {
             }
 
             String[] times = request.getParameterValues("time");
-            if (times == null || times.length == 0) {
+            if (times == null || times.length == 1) {
                 request.setAttribute("stadium_ID", stadium_ID);
                 request.setAttribute("error", "Please select a time for booking!!!");
                 request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
@@ -107,10 +107,10 @@ public class bookingCourt extends HttpServlet {
             List<Court> freeCourt = courtDAO.getCourtListByStadiumID(stadium_ID);
 
             for (Booking book : bookList) {
-                if ((startTimeOfCus.before(book.getEndTime()) && startTimeOfCus.after(book.getStartTime()))
-                        || (endTimeOfCus.before(book.getEndTime()) && endTimeOfCus.after(book.getStartTime()))
-                        || (startTimeOfCus.before(book.getStartTime()) && endTimeOfCus.after(book.getEndTime()))) {
-
+                if (startTimeOfCus.after(book.getEndTime()) || startTimeOfCus.equals(book.getEndTime())) {
+                    // thoa dieu kien
+                    break;
+                    /*
                     // Sử dụng Iterator để duyệt và xóa phần tử
                     Iterator<Court> iterator = freeCourt.iterator();
                     while (iterator.hasNext()) {
@@ -119,6 +119,38 @@ public class bookingCourt extends HttpServlet {
                             if (crt.getCourt_ID().equals(bookedCourt.getCourt_ID())) {
                                 iterator.remove();
                                 break;
+                            }
+                        }
+                    }
+                     */
+                } else {
+                    if (endTimeOfCus.after(book.getEndTime()) || endTimeOfCus.equals(book.getEndTime())) {
+                        // ko thoa
+                        Iterator<Court> iterator = freeCourt.iterator();
+                        while (iterator.hasNext()) {
+                            Court crt = iterator.next();
+                            for (Court bookedCourt : book.getCourtList()) {
+                                if (crt.getCourt_ID().equals(bookedCourt.getCourt_ID())) {
+                                    iterator.remove();
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        if (endTimeOfCus.before(book.getStartTime()) || endTimeOfCus.equals(book.getStartTime())) {
+                            // thoe
+                            break;
+                        } else {
+                            // ko thoa
+                            Iterator<Court> iterator = freeCourt.iterator();
+                            while (iterator.hasNext()) {
+                                Court crt = iterator.next();
+                                for (Court bookedCourt : book.getCourtList()) {
+                                    if (crt.getCourt_ID().equals(bookedCourt.getCourt_ID())) {
+                                        iterator.remove();
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

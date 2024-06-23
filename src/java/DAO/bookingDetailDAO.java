@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Court;
 
-
 /**
  *
  * @author nhanPH
@@ -26,24 +25,23 @@ public class bookingDetailDAO {
     PreparedStatement ps;
     ResultSet rs;
     DBContext db = new DBContext();
-    
+
     public List<Court> getCourtListByBookingID(String bookingID) {
         List<Court> courtList = new ArrayList<>();
-        
+
         String sql = "select * from BookingDetail where booking_ID = ? ";
-        
+
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, bookingID);
             rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
 
-                
                 // get court
                 courtDAO courtDAO = new courtDAO();
                 Court crt = courtDAO.getCourtByID(rs.getString("court_ID"));
-                
+
                 // add to court list
                 courtList.add(crt);
             }
@@ -65,11 +63,88 @@ public class bookingDetailDAO {
                 e.printStackTrace();
             }
         }
-        
+
         return courtList;
     }
-    
+
+    public List<String> getAllBookingDetailID() {
+        List<String> bookDetID = new ArrayList<>();
+
+        String sql = "select bookingDetail_ID from BookingDetail";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                bookDetID.add(rs.getString("bookingDetail_ID"));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bookDetID;
+    }
+
+    public int AddNewBookingDetail(String bookingDetail_ID, String booking_ID, String court_ID) {
+        int index = 0;
+        String sql = "INSERT INTO [dbo].[BookingDetail]\n"
+                + "           ([bookingDetail_ID]\n"
+                + "           ,[booking_ID]\n"
+                + "           ,[court_ID])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?)";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, bookingDetail_ID);
+            ps.setString(2, booking_ID);
+            ps.setString(3, court_ID);
+            index = ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return index;
+    }
+
     public static void main(String[] args) {
+        bookingDetailDAO detDAO = new bookingDetailDAO();
+        List<String> bookDetID = detDAO.getAllBookingDetailID();
         
+        System.out.println(bookDetID.size());
     }
 }

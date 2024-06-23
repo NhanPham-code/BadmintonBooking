@@ -21,7 +21,7 @@ public class Booking {
     private Date date;
     private int total;
     private String bankingImage;
-    private boolean bookingAccepted;
+    private String bookingAccepted;
     private Customer customer;
     private Stadium stadium;
     private List<Court> courtList;
@@ -29,7 +29,7 @@ public class Booking {
     public Booking() {
     }
 
-    
+    /*
     public Booking(String booking_ID, int courtQuantity, Time startTime, Time endTime, java.sql.Date date, int total, boolean bookingAccepted, Customer customer, Stadium stadium, List<Court> courtList) {
         this.booking_ID = booking_ID;
         this.courtQuantity = courtQuantity;
@@ -37,6 +37,20 @@ public class Booking {
         this.endTime = endTime;
         this.date = date;
         this.total = total;
+        this.bookingAccepted = bookingAccepted;
+        this.customer = customer;
+        this.stadium = stadium;
+        this.courtList = courtList;
+    }
+     */
+    public Booking(String booking_ID, int courtQuantity, Time startTime, Time endTime, Date date, int total, String bankingImage, String bookingAccepted, Customer customer, Stadium stadium, List<Court> courtList) {
+        this.booking_ID = booking_ID;
+        this.courtQuantity = courtQuantity;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.date = date;
+        this.total = total;
+        this.bankingImage = bankingImage;
         this.bookingAccepted = bookingAccepted;
         this.customer = customer;
         this.stadium = stadium;
@@ -91,11 +105,11 @@ public class Booking {
         this.total = total;
     }
 
-    public boolean isBookingAccepted() {
+    public String getBookingAccepted() {
         return bookingAccepted;
     }
 
-    public void setBookingAccepted(boolean bookingAccepted) {
+    public void setBookingAccepted(String bookingAccepted) {
         this.bookingAccepted = bookingAccepted;
     }
 

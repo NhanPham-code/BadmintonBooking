@@ -54,7 +54,7 @@ public class bookingDAO {
                 book.setDate(rs.getDate("date"));
                 book.setTotal(rs.getInt("total"));
                 book.setBankingImage(rs.getString("bankingImage"));
-                book.setBookingAccepted(rs.getBoolean("bookingAccepted"));
+                book.setBookingAccepted(rs.getString("bookingAccepted"));
 
                 // get customer of booking
                 customerDAO cusDAO = new customerDAO();
@@ -95,7 +95,8 @@ public class bookingDAO {
 
         return bookList;
     }
-       public Booking getBookingByBookingID(String bookingID) {
+
+    public Booking getBookingByBookingID(String bookingID) {
         bookingDetailDAO bookDetailDAO = new bookingDetailDAO();
         customerDAO cusDAO = new customerDAO();
         stadiumDAO staDAO = new stadiumDAO();
@@ -113,10 +114,10 @@ public class bookingDAO {
                 booking.setEndTime(rs.getTime("endTime"));
                 booking.setDate(rs.getDate("date"));
                 booking.setTotal(rs.getInt("total"));
-                booking.setBookingAccepted(rs.getBoolean("bookingAccepted"));
+                booking.setBookingAccepted(rs.getString("bookingAccepted"));
                 booking.setCustomer(cusDAO.getCustomerByID(rs.getString("customer_ID")));
                 booking.setStadium(staDAO.getStadiumByID(rs.getString("stadium_ID")));
-                
+
                 // Lấy danh sách Court từ bảng BookingDetail
                 List<Court> courtList = bookDetailDAO.getCourtListByBookingID(bookingID);
                 booking.setCourtList(courtList);
@@ -127,8 +128,8 @@ public class bookingDAO {
 
         return booking;
     }
-    
-        public List<Booking> getBookingByCustomerID(String customerID) {
+
+    public List<Booking> getBookingByCustomerID(String customerID) {
         List<Booking> bookingList = new ArrayList<>();
         String sql = "select * from Booking where customer_ID = ?";
 
@@ -144,9 +145,10 @@ public class bookingDAO {
                 Time endTime = rs.getTime(4);
                 Date date = rs.getDate(5);
                 int total = rs.getInt(6);
-                boolean bookingAccepted = rs.getBoolean(7);
-                customerID = rs.getString(8);
-                String stadiumID = rs.getString(9);
+                String bankingImage = rs.getString(7);
+                String bookingAccepted = rs.getString(8);
+                customerID = rs.getString(9);
+                String stadiumID = rs.getString(10);
 
                 customerDAO custDAO = new customerDAO();
                 Customer cust = custDAO.getCustomerByID(customerID);
@@ -158,8 +160,8 @@ public class bookingDAO {
                 List<Court> crtList = new ArrayList<>();
                 crtList = crtDAO.getCourtList(stadiumID);
 
-                bookingList.add(new Booking(bookingId, courtQuantity, startTime,
-                        endTime, date, total, bookingAccepted, cust, sta, crtList));
+                bookingList.add(new Booking(bookingId, courtQuantity, startTime, endTime, date, total, 
+                        bankingImage, bookingAccepted, cust, sta, crtList));
             }
 
         } catch (Exception e) {
@@ -168,9 +170,122 @@ public class bookingDAO {
         return bookingList;
     }
 
+    public List<Booking> getAllBooking() {
+        List<Booking> bookList = new ArrayList<>();  // Khởi tạo bookList
+
+        String sql = "select * from Booking";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Booking book = new Booking();
+                book.setBooking_ID(rs.getString("booking_ID"));
+                book.setCourtQuantity(rs.getInt("courtQuantity"));
+                book.setStartTime(rs.getTime("startTime"));
+                book.setEndTime(rs.getTime("endTime"));
+                book.setDate(rs.getDate("date"));
+                book.setTotal(rs.getInt("total"));
+                book.setBankingImage(rs.getString("bankingImage"));
+                book.setBookingAccepted(rs.getString("bookingAccepted"));
+
+                // get customer of booking
+                customerDAO cusDAO = new customerDAO();
+                Customer cus = cusDAO.getCustomerByID(rs.getString("customer_ID"));
+                book.setCustomer(cus);
+
+                // get stadium of booking
+                stadiumDAO staDAO = new stadiumDAO();
+                Stadium stadium = staDAO.getStadiumByID(rs.getString("stadium_ID"));
+                book.setStadium(stadium);
+
+                // get list court of booking by booking_ID in BookingDetail
+                bookingDetailDAO bookDetailDAO = new bookingDetailDAO();
+                List<Court> courtList = bookDetailDAO.getCourtListByBookingID(rs.getString("booking_ID"));
+                book.setCourtList(courtList);
+
+                // Thêm Booking vào bookList
+                bookList.add(book);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bookList;
+    }
+
+    public int AddNewBooking(Booking book) {
+        int index = 0;
+
+        String sql = "INSERT INTO [dbo].[Booking]\n"
+                + "           ([booking_ID]\n"
+                + "           ,[courtQuantity]\n"
+                + "           ,[startTime]\n"
+                + "           ,[endTime]\n"
+                + "           ,[date]\n"
+                + "           ,[total]\n"
+                + "           ,[bankingImage]\n"
+                + "           ,[bookingAccepted]\n"
+                + "           ,[customer_ID]\n"
+                + "           ,[stadium_ID])\n"
+                + "     VALUES\n"
+                + "           (?,?,?,?,?,?,?,?,?,?)";
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, book.getBooking_ID());
+            ps.setInt(2, book.getCourtList().size());
+            ps.setTime(3, book.getStartTime());
+            ps.setTime(4, book.getEndTime());
+            ps.setDate(5, (Date) book.getDate());
+            ps.setInt(6, book.getTotal());
+            ps.setString(7, book.getBankingImage());
+            ps.setString(8, book.getBookingAccepted());
+            ps.setString(9, book.getCustomer().getCustomer_ID());
+            ps.setString(10, book.getStadium().getStadium_ID());
+
+            index = ps.executeUpdate();
+            
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return index;
+    }
+
     public static void main(String[] args) {
         bookingDAO bookDAO = new bookingDAO();
 
+        /*
         // Tạo đối tượng Date giả lập
         Date date = Date.valueOf("2024-06-21"); // Thay đổi ngày phù hợp
 
@@ -218,5 +333,10 @@ public class bookingDAO {
             System.out.println(c.getCourt_ID());
             System.out.println(c.getNumber());
         }
+         */
+        List<Booking> list = bookDAO.getAllBooking();
+
+        System.out.println(list.size());
+
     }
 }

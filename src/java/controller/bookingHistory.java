@@ -90,7 +90,7 @@ public class bookingHistory extends HttpServlet {
         List<Booking> notAccpetedBookings = new ArrayList<>();
 
         for (Booking booking : bookingList) {
-            if (booking.isBookingAccepted()) {
+            if (booking.getBookingAccepted().equalsIgnoreCase("true")) {
                 acceptedBookings.add(booking);
                 request.setAttribute("bookingID", booking.getBooking_ID());
             } else {
@@ -98,7 +98,8 @@ public class bookingHistory extends HttpServlet {
                 request.setAttribute("bookingID", booking.getBooking_ID());
             }
         }
-
+        
+        request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
         request.setAttribute("acceptedBookings", acceptedBookings);
         request.setAttribute("notAccpetedBookings", notAccpetedBookings);
         request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
