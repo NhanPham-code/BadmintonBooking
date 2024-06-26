@@ -5,215 +5,156 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Badminton Stadium Booking System</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             body {
                 font-family: Arial, sans-serif;
                 background-color: #bfdbf7;
                 margin: 0;
                 padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
             }
-
-            .content {
-                padding: 20px;
-            }
-
             .container {
                 display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                padding: 40px;
+                justify-content: center;
+                flex-direction: column;
                 max-width: 1300px;
-                margin: auto;
                 background-color: #f5f5f5;
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+                margin-left: 60px;
             }
-
-            .left {
+            .top-container {
+                text-align: center;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+            }
+            .top-container img {
+                margin-top: 20px;
+                width: 80%;
+                height:300px;
+                border-radius: 5px;
+            }
+            .flex-container {
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 20px;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+            .left-container, .right-container {
                 flex: 1;
                 margin-right: 20px;
             }
-
-            .right {
-                flex: 2;
-                text-align: center;
+            .right-container {
+                margin-right: 0;
             }
-
-            .left img {
-                width: 60%;
-                height: 200px;
-                background-color: #ccc;
-                display: block;
+            .table-container{
+                background-color: #022B3A;
+                padding: 20px;
+                border-radius: 5px;
                 margin-bottom: 20px;
-                
-            }
-
-            .right img {
-                width: 100%;
-                height: 300px;
-                background-color: #ccc;
-                display: block;
-                margin-bottom: 20px;
-            }
-
-            .table-container {
-                height: 200px;
-                max-height: 200px;
-                /* Đặt chiều cao tối đa cho bảng */
-                overflow-y: scroll;
-                border: 1px solid #ccc;
-                /* Thêm viền cho bảng */
-                padding: 10px;
-                /* Thêm padding để tạo khoảng cách */
-            }
-
-            .table-container table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            .table-container th,
-            .table-container td {
-                border: 2px solid #000000;
-                padding: 8px;
-                text-align: center;
-            }
-
-            .table-container th {
-                background-color: #f2f2f2;
-            }
-
-            .table-container button {
-                padding: 5px 10px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                outline: none;
-
-            }
-
-            .table-container button.delete {
-                text-decoration: none; /* Remove underline */
-
-                justify-content: center;
-                display: inline-block;
-                margin: 0 auto;
-            }
-
-            .table-container button:hover {
-                opacity: 0.8;
-            }
-
-            .table-container .new-court-btn {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .table-container th:nth-child(4),
-            .table-container td:nth-child(4) {
-                border: none;
-            }
-
-
-            .new-court-btn {
-                margin-bottom: 10px;
-                margin-top: 48px;
-                margin-left: 670px;
-                padding: 10px 10px;
-                /* Thêm padding để tạo kích thước cho nút */
-                background-color: #4CAF50;
-                /* Màu nền ban đầu */
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-                /* Tạo hiệu ứng chuyển đổi màu mượt mà */
-                outline: none;
-            }
-
-            .new-court-btn:hover {
-                background-color: #45a049;
-                /* Màu nền khi hover */
-            }
-
-            .new-court-btn:active {
-                background-color: #367e3a;
-                /* Màu nền khi active (khi nhấn vào nút) */
-                outline: none;
+                height: 530px;
             }
 
             .feedback-container {
-                width: 400px;
-                height: 200px;
-                overflow-y: scroll;
+                height: 550px; /* Set a max height for scrollbar to appear */
+                /* Enable vertical scrollbar */
                 border: 1px solid #ccc;
                 padding: 10px;
+                border-radius: 5px;
+                background-color: #022B3A;
+                display: block;
             }
-
-            .feedback-item {
-                display: flex;
+            .table-container table {
+                width: 100%;
+                border-collapse: collapse;
+                max-height: 200px;
+                border-radius: 5px;
+            }
+            .table-container th{
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #1F7A8C;
+            }
+            .table-container td {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #ffffff;
+            }
+            .stadium-info{
+                display:flex;
+            }
+            .stadium-info img{
+                margin-right: 40px;
+                margin-left: 40px;
+                width: 200px;
+                height: 200px;
+                background-color: #ccc;
+                display: block;
                 margin-bottom: 20px;
-                align-items: center;
-                /* Canh chỉnh dọc các phần tử */
             }
-
-            .feedback-item-image {
-                width: 50px !important;
-                height: 50px !important;
+            .feedback-item {
                 border: 1px solid #ccc;
+                padding: 10px;
+                margin: 20px 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border-radius: 5px;
+            }
+            .feedback-item i {
+                font-size: 50px;
                 margin-right: 10px;
-                border-radius: 50%;
-                /* Chuyển hình ảnh thành hình tròn */
             }
-
-
-
+            .feedback-item.selected {
+                background-color: #b5eaff;
+            }
             .feedback-content {
-                flex-grow: 1;
+                flex-grow: 2;
             }
-
             .feedback-rating {
-                font-weight: bold;
-            }
-
-            .feedback-name {
                 font-size: 14px;
+            }
+            .feedback-name {
+                font-size: 16px;
                 font-weight: bold;
                 margin-bottom: 5px;
             }
-
             .feedback-description {
                 margin-bottom: 5px;
             }
+            .feedback-list{
+                overflow-y: scroll;
+                height:450px;
+                background-color: #0d4b64;
+                margin:0px 15px;
 
+            }
             .filter-container {
                 display: flex;
                 align-items: center;
-                margin-bottom: 10px;
-
-
+                margin-left: 55%;
             }
-
-            
-            .filter-label {
-                margin-right: 10px;
-
-            }
-
             .filter-button {
                 padding: 5px 10px;
                 font-size: 14px;
@@ -222,109 +163,169 @@
                 cursor: pointer;
                 background-color: #f0f0f0;
                 outline: none;
+                margin-left: 10px;
             }
-
-            .title {
-                text-align: center;
-                /* Canh giữa nội dung */
-                margin-top: 20px;
-                /* Khoảng cách trên cùng */
+            .filter-dropdown select {
+                padding: 5px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 5px;
             }
-
-            /* Change background color and text color when button is active (clicked) */
-            .filter-button:active {
-                background-color: #ccc;
-                color: #000;
-                /* Change text color to black */
+            .delete-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #f0f0f0;
                 outline: none;
+                margin-left: 20px;
+                margin-top:10px;
             }
-
-            .filter-button:focus {
-                outline: none;
-            }
-
-            .update-btn {
+            .booking-btn {
                 display: block;
-                width: 100px;
+                width: 200px;
                 padding: 10px;
-                background-color: #004d40;
+                background-color: #1F7A8C;
                 color: white;
                 text-align: center;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
-                margin: 0 auto;
-                margin-left: 150px;
-                margin-top: 50px;
+                margin: 20px auto;
+            }
+            .booking-btn:hover {
+                background-color: #145569;
+            }
+            .rating {
+                display: flex;
+                align-items: center;
+            }
+            .rating .fa-star {
+                font-size: 20px;
+                color: gold;
+                margin-left: 5px;
+            }
+            .footer {
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
             }
         </style>
-
     </head>
-
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>
+        <jsp:include page="HeaderStadiumOwner.jsp" flush="true" />
         <div class="container">
-
-            <div class="left">
-                <img src="<%=request.getContextPath()%>\img\QRCode\qr.png" alt="Stadium Background">
-                <p>Name Badminton Stadium: Sân Đại Á</p>
-                <p>Address: 298 Mậu Thân, An Hòa, Ninh Kiều, Cần Thơ</p>
-                <p>Phone Number: 0893129217</p>
-                <p>Price per hours</p>
-                <div class="filter-container">
-                    <button id="filter-button" class="filter-button">Filter</button>
-                    <div class="filter-dropdown">
-                        <select id="rating-filter">
-                            <option value="all">All</option>
-                            <option value="5">5 stars</option>
-                            <option value="4">4 stars</option>
-                            <option value="3">3 stars</option>
-                            <option value="2">2 stars</option>
-                            <option value="1">1 star</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="feedback-container">
-                    <div class="feedback-item" data-rating="5">
-                        <img src="path_to_image1.jpg" alt="Image 1" class="feedback-image feedback-item-image">
-
-                        <div class="feedback-content">
-                            <p class="feedback-name">John Doe</p>
-                            <p class="feedback-description">Description for Feedback 1</p>
-                            <p class="feedback-rating">Rating: 5 stars</p>
+            <div class="top-container">
+                <c:set var="st" value="${requestScope.stadium}"></c:set>
+                <img src="${st.stadium_image}" alt="Picture">
+            </div>
+            <div class="flex-container">
+                <div class="left-container">
+                    <div class="table-container">
+                        <h1 style="text-align: center;color: white;">${st.stadium_name}</h1>
+                        <div class="stadium-info">
+                            <img src="${st.QRcode}" alt="Stadium Background">
+                            <div>
+                                <p style="margin-top: 60px; color: white;">Address: ${st.stadium_address}</p>
+                                <p style="color: white;">Phone Number: ${st.stadium_phone}</p>
+                                <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
+                            </div>
                         </div>
+                        <h2 style="color: white;margin-top: 30px;">Court List</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="color: white;">Court Number</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="c" items="${requestScope.courtList}">
+                                    <tr>
+                                        <td>${c.number}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+                <div class="right-container">
+                    <div class="feedback-container">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h2 style="color: white;">Feedback</h2>
+                            <form class="filter-container" action="feedbackFilter" method="GET">
+                                <div class="filter-dropdown">
+                                    <select id="rating-filter" name="rating">
+                                        <option value="all">All</option>
+                                        <option value="5">5 stars</option>
+                                        <option value="4">4 stars</option>
+                                        <option value="3">3 stars</option>
+                                        <option value="2">2 stars</option>
+                                        <option value="1">1 star</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
+                                <button id="filter-button" type="submit" class="filter-button">Filter</button>
+                            </form>
+                        </div>
+                        <form id="deleteFeedbackForm" action="deleteFeedback" method="POST">
+                            <div class="feedback-list">
+                                <c:forEach var="fb" items="${requestScope.feedbackList}">
+                                    <div class="feedback-item" data-feedback-id="${fb.customer.customer_ID}" data-rating="${fb.ratingScore}">
+                                        <i class="fas fa-user-circle"></i>
+                                        <div class="feedback-content">
+                                            <p class="feedback-name">${fb.customer.customer_Name}</p>
+                                            <p class="feedback-description">${fb.description}</p>
+                                            <div class="rating">
+                                                <p class="feedback-rating">Rating Score: ${fb.ratingScore}</p>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </form>
 
-                    <!-- Thêm các phản hồi khác nếu cần -->
+                        <script>
+                            function deleteSelectedFeedback() {
+                                var selectedFeedbackIds = [];
+                                document.querySelectorAll('.feedback-item.selected').forEach(function (item) {
+                                    selectedFeedbackIds.push(item.getAttribute('data-feedback-id'));
+                                });
+
+                                if (selectedFeedbackIds.length === 0) {
+                                    alert('Please select at least one feedback item to delete.');
+                                    return;
+                                }
+
+                                if (confirm('Are you sure you want to delete the selected feedback?')) {
+                                    var selectedFeedbackString = selectedFeedbackIds.join('_');
+                                    document.getElementById('selectedFeedback').value = selectedFeedbackString;
+                                    document.getElementById('deleteFeedbackForm').submit();
+                                }
+                            }
+
+                            document.querySelectorAll('.feedback-item').forEach(function (item) {
+                                item.addEventListener('click', function () {
+                                    this.classList.toggle('selected');
+                                });
+                            });
+                        </script>
+                    </div>
                 </div>
             </div>
-
-            <div class="right">
-                <img src="<%=request.getContextPath()%>\img\court\c2.jpg" alt="Picture">
-                <button class="new-court-btn">Add New Court</button>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                
-                                <th>Number</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                
-                                <td></td>
-                                <td><button class="delete">Delete</button></td>
-                            </tr>
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <button class="update-btn">UPDATE</button>
-            </div>
+            <button class="booking-btn">Delete Stadium</button>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+        </div>
     </body>
-
 </html>
+
+

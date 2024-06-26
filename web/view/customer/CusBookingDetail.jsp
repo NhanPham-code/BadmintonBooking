@@ -125,7 +125,7 @@
                     </div>
                     <div class="stadium-inf">
                         <h1>Banking Image:</h1>
-                        <img src="${bk.bankingImage}" width="800" height="800" alt="bankingImage"/>
+                        <img src="${bk.bankingImage}" width="300px" height="450px" alt="bankingImage"/>
                     </div>
                     <div class="total">
                         <h1>Total:</h1>

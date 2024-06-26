@@ -90,15 +90,13 @@ public class bookingHistory extends HttpServlet {
         List<Booking> notWaitingBookings = new ArrayList<>();
 
         for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting") || booking.getBookingAccepted().equalsIgnoreCase("rejected")) {
+            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
                 waitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            } else if(booking.getBookingAccepted().equalsIgnoreCase("accepted")) {
+            } else {
                 notWaitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
             }
         }
-        
+
         request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
         request.setAttribute("waitingBookings", waitingBookings);
         request.setAttribute("notWaitingBookings", notWaitingBookings);

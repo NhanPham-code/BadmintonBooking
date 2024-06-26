@@ -5,11 +5,13 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>StadiumOwner View Booking Detail</title>
+        <title>Booking Detail</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
             .stadium-bg {
                 flex-grow: 1;
@@ -76,9 +78,9 @@
             <div class="stadium-board">
                 <div class="stadium-detail">
                     <c:set var="bk" value="${requestScope.booking}"></c:set>
-                    <div class="stadium-inf">
-                        <h1>Customer name:</h1>
-                        <p>${bk.customer.customer_Name}</p>
+                        <div class="stadium-inf">
+                            <h1>Customer name:</h1>
+                            <p>${bk.customer.customer_Name}</p>
                     </div>
                     <div class="stadium-inf">
                         <h1>Customer phone:</h1>
@@ -121,12 +123,18 @@
                         <h1>Price per hour:</h1>
                         <p>${bk.stadium.pricePerHour}</p>
                     </div>
+                    <div class="stadium-inf">
+                        <h1>Banking Image:</h1>
+                        <img src="${bk.bankingImage}" width="300px" height="450px" alt="bankingImage"/>
+                    </div>
                     <div class="total">
                         <h1>Total:</h1>
-                        <h1>${bk.total}</h1>
+                        <h1>${bk.total}.000 VND</h1>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+    <jsp:include page="CusFooter.jsp" flush="true" />     
+</body>
 </html>

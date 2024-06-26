@@ -3,11 +3,10 @@
     Created on : Jun 7, 2024, 12:12:06 PM
     Author     : ADMIN
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Customer HomePage</title>
@@ -21,103 +20,101 @@
                 flex-direction: column;
                 min-height: 100vh;
             }
+            .footer {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
 
-            .add {
-                background: #E3E6ED;
-
+            .banner {
+                width: 100%;
+                height: 149px;
+                background: url('<%=request.getContextPath()%>/img/background/bg1.jpg') no-repeat center center;
+                background-size: cover;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: black;
+                font-size: 32px;
+                font-weight: 700;
+                border-bottom: 1px solid black;
             }
 
             .stadium-list {
                 width: 100%;
-                background: #E3E6ED;
                 padding: 20px;
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
                 flex-grow: 1;
-                /* Make the stadium list take the available space */
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
             }
-
             .stadium-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 background: #FFFFFF;
                 padding: 20px;
-                /* Increase padding for larger appearance */
-                border: 1px solid black;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                font-size: 18px;
-                /* Increase font size */
-                position: relative;
-                /* Position for the overlay effect */
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
                 cursor: pointer;
-                transition: transform 0.3s ease;
-                /* Smooth transform transition */
             }
-
             .stadium-item:hover {
-                transform: scale(1.005);
-                /* Slightly enlarge the stadium item */
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             }
-
             .stadium-item img {
                 width: 80px;
-                /* Increase image size */
                 height: 80px;
-                /* Increase image size */
-                border-radius: 50%;
+                border-radius: 8px;
+                object-fit: cover;
             }
-
             .stadium-details {
                 flex-grow: 1;
                 margin-left: 20px;
             }
-
             .stadium-details div {
                 margin: 5px 0;
             }
-
             .stadium-actions {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
                 gap: 5px;
             }
-
             .stadium-actions a {
-                text-decoration: none; /* Remove underline */
-                padding: 5px 10px;
-                margin-left: 10px;
-                background-color: #4CAF50;
+                background: #1F7A8C;
+                width: 50px;
                 color: white;
-                border: none;
+                padding: 5px 10px;
                 border-radius: 4px;
+                text-decoration: none;
                 cursor: pointer;
-                outline: none;
-                display: flex;
-                justify-content: center
             }
-
             .stadium-actions a:hover {
-                opacity: 0.8;
+                background: #145569;
             }
-
             .footer {
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                /* Reduce padding to make footer smaller */
                 margin-top: auto;
-                /* Push the footer to the bottom */
             }
-
             .footer div {
                 margin: 5px 0;
             }
-
             .rating {
                 display: flex;
                 align-items: center;
@@ -128,22 +125,30 @@
                 margin-left: 5px;
             }
 
+            .error-message {
+                color: brown;
+                font-weight: bold;
+                margin: 20px 0;
+                text-align: center;
+            }
+
+            .add {
+                background: #E3E6ED;
+                display: flex;
+                justify-content: flex-end;
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
+
             #add-new-btn {
                 background-color: #5f88e6;
                 color: #E3E6ED;
                 border: none;
-
                 width: 150px;
-                /* Chiều rộng */
                 height: 30px;
-                /* Chiều cao */
                 font-size: 18px;
-                /* Kích thước chữ */
                 cursor: pointer;
-                margin-left: 1340px;
                 transition: background-color 0.3s;
-                /* Hiệu ứng hover */
-                margin-top: 10px;
             }
 
             #add-new-btn:hover {
@@ -151,39 +156,40 @@
             }
         </style>
     </head>
-
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>      
-        <div class="add">
-            <button id="add-new-btn">New Stadium</button>
-        </div>
+        <jsp:include page="HeaderStadiumOwner.jsp" flush="true" />
+
+
 
         <div class="stadium-list">
-            <div class="stadium-item" onclick="window.location.href = '#';">
-                <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
-                <div class="stadium-details">
-                    <div>Sân vận động TAINTAY</div>
-                    <div>222/66 Nguyễn Văn Cừ, An Hòa, Ninh Kiều, CT</div>
-                    <div class="rating">
-                        Rating: 4/5
-                        <i class="fas fa-star"></i>
+
+            
+                <button id="add-new-btn" onclick="window.location.href = 'addNewStadium.jsp';">New Stadium</button>
+            
+            <div class="error-message"><h1>${requestScope.err}</h1></div>
+
+            <c:forEach var="st" items="${requestScope.stList}">
+                <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
+                    <img src="${st.stadium_image}" alt="Stadium">
+                    <div class="stadium-details">
+                        <div>${st.stadium_name}</div>
+                        <div>${st.stadium_address}</div>
+                        <div class="rating">
+                            Rating: ${st.avg_ratingScore}
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stadium-actions">
+                        <a href="deleteStadium?stadiumID=${st.stadium_ID}">Delete</a>
+                        <a href="stadiumDetail?stadiumID=${st.stadium_ID}">Details</a>
                     </div>
                 </div>
-                <div class="stadium-actions">
-                    <a href="">Delete</a>
-                    <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-                </div>
-
-                <div class="stadium-actions">
-                    <a href="">Details</a>
-                    <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-                </div>
-                <!-- Details button removed, click on item for details -->
-            </div>
-            <!-- Repeat the above stadium-item div for each stadium entry -->
+            </c:forEach>
         </div>
 
-
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
+        </div>
     </body>
-
 </html>

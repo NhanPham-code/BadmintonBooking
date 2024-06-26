@@ -20,10 +20,11 @@
             body {
                 margin: 0;
                 font-family: "Inter", sans-serif;
-                background: white;
+                
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
             }
             .header {
                 width: 100%;
@@ -192,7 +193,7 @@
         </div>
 
         <div class="nav">
-            <a href="<%=request.getContextPath()%>#">STADIUM MANAGEMENT</a>
+            <a href="<%=request.getContextPath()%>/stadiumList">STADIUM MANAGEMENT</a>
             <a href="<%=request.getContextPath()%>/bookingListManage">BOOKING MANAGEMENT</a>
         </div>
     </body>

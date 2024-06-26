@@ -4,8 +4,12 @@
  */
 package controller;
 
+import DAO.accountDAO;
+import DAO.adminDAO;
 import DAO.bookingDetailDAO;
 import DAO.bookingDAO;
+import DAO.customerDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,6 +23,10 @@ import model.Court;
 import java.sql.Time;
 import java.util.List;
 import java.util.Date;
+import model.Account;
+import model.Admin;
+import model.Customer;
+import model.StadiumOwner;
 
 /**
  *
@@ -78,25 +86,44 @@ public class bookingDetail extends HttpServlet {
         bookingDAO bookDAO = new bookingDAO(); // Assume you have a DAO class for Booking
         Booking booking = bookDAO.getBookingByBookingID(bookingID);
         request.setAttribute("booking", booking);
-        request.setAttribute("name", booking.getCustomer().getCustomer_Name());
 
         List<Court> chooseCourt = booking.getCourtList();
         request.setAttribute("chooseCourt", chooseCourt);
 
         // Check cookie de lay role chuyen trang
         Cookie[] cookies = request.getCookies();
-        String token = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equalsIgnoreCase("role")) {
-                token = cookie.getValue();
+        String token = "";
+        String email = "";
+        if (cookies != null && cookies.length > 1) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equalsIgnoreCase("email")) {
+                    email = cookie.getValue();
+                }
+                if (cookie.getName().equalsIgnoreCase("role")) {
+                    token = cookie.getValue();
+                }
+
             }
         }
+        accountDAO accDAO = new accountDAO();
+        Account ac = accDAO.getAccountByEmail(email);
         // Chuyen trang jsp        
         if (token.equalsIgnoreCase("Customer")) {
+            customerDAO cusDAO = new customerDAO();
+            Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+            request.setAttribute("name", cus.getCustomer_Name());
             request.getRequestDispatcher("view/customer/CusBookingDetail.jsp").forward(request, response);
+
         } else if (token.equalsIgnoreCase("StadiumOwner")) {
+            stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+            StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+            request.setAttribute("name", sto.getOwner_name());
             request.getRequestDispatcher("view/stadiumowner/BookingDetail.jsp").forward(request, response);
         } else {
+
+            adminDAO aDAO = new adminDAO();
+            Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
+            request.setAttribute("name", ad.getAdmin_name());
             request.getRequestDispatcher("view/admin/AdBookingDetail.jsp").forward(request, response);
         }
 

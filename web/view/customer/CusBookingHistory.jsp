@@ -120,7 +120,7 @@
                     <div class="head">BOOKING HISTORY</div>
                     <div class="booking-detail">
                         <c:forEach items="${notWaitingBookings}" var="booking">
-                            <a href="bookingDetail?bookingID=${bookingID}">
+                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
                                 <div class="booking-inf">
                                     <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
                                     <div class="stadium-details">
@@ -145,7 +145,7 @@
                     <div class="head">BOOKING HISTORY (Waiting / Rejected)</div>
                     <div class="booking-detail">
                         <c:forEach items="${waitingBookings}" var="booking">
-                            <a href="bookingDetail?bookingID=${bookingID}"">
+                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
                                 <div class="booking-inf">
                                     <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
                                     <div class="stadium-details">

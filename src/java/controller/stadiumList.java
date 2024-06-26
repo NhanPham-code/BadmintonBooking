@@ -8,6 +8,7 @@ import DAO.accountDAO;
 import DAO.adminDAO;
 import DAO.customerDAO;
 import DAO.stadiumDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,7 @@ import model.Account;
 import model.Admin;
 import model.Customer;
 import model.Stadium;
+import model.StadiumOwner;
 
 /**
  *
@@ -98,6 +100,12 @@ public class stadiumList extends HttpServlet {
                     Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
                     request.setAttribute("name", ad.getAdmin_name());
                     destinationJSP = "view/admin/AdStaManage.jsp";
+                    break;
+                case "stadiumowner":
+                    stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+                    StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                    request.setAttribute("name", sto.getOwner_name());
+                    destinationJSP = "view/stadiumowner/StadiumManagement.jsp";
                     break;
                 default:
                     // Handle unknown roles or unexpected situations

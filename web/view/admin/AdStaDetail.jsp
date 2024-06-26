@@ -1,9 +1,4 @@
 <%-- 
-    Document   : AdStaDetail
-    Created on : Jun 5, 2024, 4:04:19 PM
-    Author     : ADMIN
---%>
-<%-- 
     Document   : AdStaManage
     Created on : Jun 6, 2024, 12:21:07 PM
     Author     : ADMIN
