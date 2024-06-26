@@ -122,7 +122,7 @@
                         <c:forEach items="${notWaitingBookings}" var="booking">
                             <a href="bookingDetail?bookingID=${bookingID}">
                                 <div class="booking-inf">
-                                    <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
+                                    <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
                                     <div class="stadium-details">
                                         <div>Stadium: ${booking.stadium.stadium_name}</div>
                                         <div>Court amount: ${booking.courtQuantity}</div>
@@ -142,25 +142,19 @@
                     </div>
                 </div>
                 <div class="cus-book">
-                    <div class="head">BOOKING HISTORY (Waiting)</div>
+                    <div class="head">BOOKING HISTORY (Waiting / Rejected)</div>
                     <div class="booking-detail">
                         <c:forEach items="${waitingBookings}" var="booking">
                             <a href="bookingDetail?bookingID=${bookingID}"">
                                 <div class="booking-inf">
-                                    <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
+                                    <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
                                     <div class="stadium-details">
                                         <div>Stadium: ${booking.stadium.stadium_name}</div>
                                         <div>Court amount: ${booking.courtQuantity}</div>
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="stadium-status">
-                                        <c:choose>
-                                            <c:when test="${booking.bookingAccepted}">
-                                                waiting
-                                            </c:when>
-                                        </c:choose>
-                                    </div>
+                                    <div class="stadium-status">${booking.bookingAccepted}</div>
                                 </div>
                             </a>
                         </c:forEach>

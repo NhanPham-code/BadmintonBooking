@@ -90,10 +90,10 @@ public class bookingHistory extends HttpServlet {
         List<Booking> notWaitingBookings = new ArrayList<>();
 
         for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
+            if (booking.getBookingAccepted().equalsIgnoreCase("waiting") || booking.getBookingAccepted().equalsIgnoreCase("rejected")) {
                 waitingBookings.add(booking);
                 request.setAttribute("bookingID", booking.getBooking_ID());
-            } else {
+            } else if(booking.getBookingAccepted().equalsIgnoreCase("accepted")) {
                 notWaitingBookings.add(booking);
                 request.setAttribute("bookingID", booking.getBooking_ID());
             }

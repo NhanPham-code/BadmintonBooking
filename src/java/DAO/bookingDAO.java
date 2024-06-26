@@ -217,6 +217,7 @@ public class bookingDAO {
                 booking.setEndTime(rs.getTime("endTime"));
                 booking.setDate(rs.getDate("date"));
                 booking.setTotal(rs.getInt("total"));
+                booking.setBankingImage(rs.getString("bankingImage"));
                 booking.setBookingAccepted(rs.getString("bookingAccepted"));
                 booking.setCustomer(cusDAO.getCustomerByID(rs.getString("customer_ID")));
                 booking.setStadium(staDAO.getStadiumByID(rs.getString("stadium_ID")));

@@ -123,9 +123,13 @@
                         <h1>Price per hour:</h1>
                         <p>${bk.stadium.pricePerHour}</p>
                     </div>
+                    <div class="stadium-inf">
+                        <h1>Banking Image:</h1>
+                        <img src="${bk.bankingImage}" width="800" height="800" alt="bankingImage"/>
+                    </div>
                     <div class="total">
                         <h1>Total:</h1>
-                        <h1>${bk.total}</h1>
+                        <h1>${bk.total}.000 VND</h1>
                     </div>
                 </div>
             </div>

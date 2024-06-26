@@ -69,7 +69,8 @@ public class logout extends HttpServlet {
             }
         }
 
-        response.sendRedirect("view/common/CommonHome.jsp");
+        //response.sendRedirect("view/common/CommonHome.jsp");
+        request.getRequestDispatcher("view/common/CommonHome.jsp").forward(request, response);
     }
 
 

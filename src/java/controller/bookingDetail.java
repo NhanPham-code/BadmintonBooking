@@ -78,6 +78,7 @@ public class bookingDetail extends HttpServlet {
         bookingDAO bookDAO = new bookingDAO(); // Assume you have a DAO class for Booking
         Booking booking = bookDAO.getBookingByBookingID(bookingID);
         request.setAttribute("booking", booking);
+        request.setAttribute("name", booking.getCustomer().getCustomer_Name());
 
         List<Court> chooseCourt = booking.getCourtList();
         request.setAttribute("chooseCourt", chooseCourt);
