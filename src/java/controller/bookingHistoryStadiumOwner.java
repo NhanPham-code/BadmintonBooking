@@ -6,8 +6,8 @@ package controller;
 
 import DAO.accountDAO;
 import DAO.bookingDAO;
-import DAO.customerDAO;
 import DAO.stadiumDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,18 +17,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import model.Account;
 import model.Booking;
-import model.Customer;
-import model.Stadium;
 
 /**
  *
  * @author WINDOWS
  */
-@WebServlet(name = "CustomerHistoryController", urlPatterns = {"/CustomerHistoryController"})
-public class bookingHistory extends HttpServlet {
+@WebServlet(name = "ViewBookingHistoryStadiumOwner", urlPatterns = {"/bookingHistoryStadiumOwner"})
+public class bookingHistoryStadiumOwner extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +47,10 @@ public class bookingHistory extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerHistoryController</title>");
+            out.println("<title>Servlet ViewBookingHistoryStadiumOwner</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerHistoryController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ViewBookingHistoryStadiumOwner at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,6 +68,11 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        accountDAO accDAO = new accountDAO();
+        stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
+        stadiumDAO staDAO = new stadiumDAO();
+        bookingDAO bookDAO = new bookingDAO();
+
         Cookie[] cookies = request.getCookies();
         String email = null;
         if (cookies != null) {
@@ -77,32 +82,32 @@ public class bookingHistory extends HttpServlet {
                 }
             }
         }
-        accountDAO accDAO = new accountDAO();
-        customerDAO cusDAO = new customerDAO();
+
         Account acc = accDAO.getAccountByEmail(email);
         String accID = acc.getAcc_ID();
-        String customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
-        bookingDAO bookDAO = new bookingDAO();
-        List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
 
-        //seperate accepted and not accpeted
-        List<Booking> waitingBookings = new ArrayList<>();
-        List<Booking> notWaitingBookings = new ArrayList<>();
+//        List<Booking> bookingList = bookDAO.getBookingByStadiumID(stadiumID);
+//        Collections.reverse(bookingList);
+        Stack<Booking> bookingStack = new Stack<>();
+        List<Booking> acceptedBookings = new ArrayList<>();
+        List<Booking> rejectedBookings = new ArrayList<>();
 
-        for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
-                waitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            } else {
-                notWaitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
+        String stadiumID = request.getParameter("StadiumID");
+        bookingStack.addAll(bookDAO.getBookingByStadiumID(stadiumID));
+
+        while (!bookingStack.isEmpty()) {
+            Booking booking = bookingStack.pop();
+            if (booking.getBookingAccepted().equalsIgnoreCase("accepted")) {
+                acceptedBookings.add(booking);
+            } else if (booking.getBookingAccepted().equalsIgnoreCase("rejected")) {
+                rejectedBookings.add(booking);
             }
         }
-        
-        request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
-        request.setAttribute("waitingBookings", waitingBookings);
-        request.setAttribute("notWaitingBookings", notWaitingBookings);
-        request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
+
+        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
+        request.setAttribute("acceptedBookings", acceptedBookings);
+        request.setAttribute("rejectedBookings", rejectedBookings);
+        request.getRequestDispatcher("view/stadiumowner/StadiumHistory.jsp").forward(request, response);
     }
 
     /**
@@ -116,7 +121,7 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**

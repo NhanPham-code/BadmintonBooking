@@ -156,7 +156,7 @@ public class bookingConfirm extends HttpServlet {
         String relativePath = "img/banking/" + filename; // day la duong dan se luu trong DB
         
         // add booking
-        Booking book = new Booking(booking_ID, total, startTime, endTime, date, total, relativePath, "false", cus, sta, courtList);
+        Booking book = new Booking(booking_ID, total, startTime, endTime, date, total, relativePath, "waiting", cus, sta, courtList);
         bookDAO.AddNewBooking(book);
         
         // add boking detail

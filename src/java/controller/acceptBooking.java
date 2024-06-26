@@ -4,31 +4,22 @@
  */
 package controller;
 
-import DAO.accountDAO;
 import DAO.bookingDAO;
-import DAO.customerDAO;
-import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Account;
 import model.Booking;
-import model.Customer;
-import model.Stadium;
 
 /**
  *
- * @author WINDOWS
+ * @author ADMIN
  */
-@WebServlet(name = "CustomerHistoryController", urlPatterns = {"/CustomerHistoryController"})
-public class bookingHistory extends HttpServlet {
+@WebServlet(name = "acceptBooking", urlPatterns = {"/acceptBooking"})
+public class acceptBooking extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +38,10 @@ public class bookingHistory extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerHistoryController</title>");
+            out.println("<title>Servlet acceptBooking</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerHistoryController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet acceptBooking at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,41 +59,12 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String email = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equalsIgnoreCase("email")) {
-                    email = cookie.getValue();
-                }
-            }
-        }
-        accountDAO accDAO = new accountDAO();
-        customerDAO cusDAO = new customerDAO();
-        Account acc = accDAO.getAccountByEmail(email);
-        String accID = acc.getAcc_ID();
-        String customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
-        bookingDAO bookDAO = new bookingDAO();
-        List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
-
-        //seperate accepted and not accpeted
-        List<Booking> waitingBookings = new ArrayList<>();
-        List<Booking> notWaitingBookings = new ArrayList<>();
-
-        for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
-                waitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            } else {
-                notWaitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            }
-        }
+        String BookingID = request.getParameter("BookingID");
+        bookingDAO bDAO = new bookingDAO();
+        bDAO.acceptBooking(BookingID);
+        Booking booking = bDAO.getBookingByBookingID(BookingID);
+        response.sendRedirect("bookingManage?stadiumID="+booking.getStadium().getStadium_ID());
         
-        request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
-        request.setAttribute("waitingBookings", waitingBookings);
-        request.setAttribute("notWaitingBookings", notWaitingBookings);
-        request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
     }
 
     /**
@@ -116,7 +78,7 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

@@ -135,7 +135,7 @@ public class stadiumDAO {
     }
 
     public boolean deleteStadium(String stadium_ID) {
-       String deleteFeedbacksSql = "DELETE FROM Feedback WHERE stadium_ID = ?";
+        String deleteFeedbacksSql = "DELETE FROM Feedback WHERE stadium_ID = ?";
         String deleteBookingDetailsSql = "DELETE FROM BookingDetail WHERE booking_ID IN (SELECT booking_ID FROM Booking WHERE stadium_ID = ?)";
         String deleteBookingsSql = "DELETE FROM Booking WHERE stadium_ID = ?";
         String deleteCourtsSql = "DELETE FROM Court WHERE stadium_ID = ?";
@@ -170,14 +170,14 @@ public class stadiumDAO {
             // Xóa sân vận động
             ps = conn.prepareStatement(deleteStadiumSql);
             ps.setString(1, stadium_ID);
-            
+
             int affectedRows = ps.executeUpdate();
 
             // Commit transaction
             conn.commit();
 
             return affectedRows > 0;
-            
+
         } catch (Exception ex) {
             try {
                 // Rollback transaction nếu có lỗi xảy ra
@@ -194,17 +194,51 @@ public class stadiumDAO {
                 System.out.println(autoCommitEx);
             }
         }
+
     }
-    
+
+    public List<Stadium> getStadiumByStadiumOwnerID(String ownerID) {
+        stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+        List<Stadium> stadiumList = new ArrayList<>();
+        String sql = "select * from Stadium where owner_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, ownerID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Stadium st = new Stadium();
+                st.setStadium_ID(rs.getString("stadium_ID"));
+                st.setStadium_name(rs.getString("stadium_name"));
+                st.setStadium_address(rs.getString("stadium_address"));
+                st.setStadium_phone(rs.getString("stadium_phone"));
+                st.setOpentime(rs.getString("opentime"));
+                st.setStadium_image(rs.getString("stadium_image"));
+                st.setAvg_ratingScore(rs.getDouble("avg_ratingScore"));
+                st.setPricePerHour(rs.getInt("pricePerHour"));
+                st.setQRcode(rs.getString("QRCode"));
+                // get stadium owner of stadium
+                StadiumOwner sto = stoDAO.getStadiumOwnerById(rs.getString("owner_ID"));
+                st.setOwner(sto);
+
+                stadiumList.add(st);
+            }
+        } catch (Exception ex) {
+            System.out.println();
+        }
+
+        return stadiumList;
+    }
+
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
-
+        String ownerID = "OWNER1";
         List<Stadium> stList = new ArrayList<>();
-        stList = stDAO.getAllStadium();
+        stList = stDAO.getStadiumByStadiumOwnerID(ownerID);
 
         for (int i = 0; i < stList.size(); i++) {
             Stadium st = stList.get(i);
-            System.out.println(st.getStadium_name());
+            System.out.println(st.getStadium_ID());
             System.out.println(st.getAvg_ratingScore());
         }
     }

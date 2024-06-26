@@ -18,11 +18,13 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
         <style>
+
             .cus-book-his {
-                background-image: url('<%=request.getContextPath()%>/img/background/bg2.jpg');
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
                 width: 100%;
-/*                background: #e3e6ed;*/
+                /*                background: #e3e6ed;*/
                 padding: 3%;
+                height:563px;
                 box-sizing: border-box;
                 display: flex;
                 gap: 20px;
@@ -100,71 +102,71 @@
                 }
                 .cus-book {
                     min-height: 200px;
-            }
-            
-/*            @media (min-width: 768px) {
-                .cus-book {
-                    min-height: 400px;
                 }
-            }*/
 
-        </style>
-    </head>
-    <body>
-        <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
+                /*            @media (min-width: 768px) {
+                                .cus-book {
+                                    min-height: 400px;
+                                }
+                            }*/
 
-        <div class="cus-book-his">
-            <div class="cus-book">
-                <div class="head">BOOKING HISTORY (Accepted)</div>
-                <div class="booking-detail">
-                    <c:forEach items="${acceptedBookings}" var="booking">
-                        <a href="bookingDetail?bookingID=${bookingID}"">
-                            <div class="booking-inf">
-                                <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
-                                <div class="stadium-details">
-                                    <div>Stadium: ${booking.stadium.stadium_name}</div>
-                                    <div>Court amount: ${booking.courtQuantity}</div>
-                                    <div>Date: ${booking.date}</div>
-                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
+            </style>
+        </head>
+        <body>
+            <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
+
+            <div class="cus-book-his">
+                <div class="cus-book">
+                    <div class="head">BOOKING HISTORY</div>
+                    <div class="booking-detail">
+                        <c:forEach items="${notWaitingBookings}" var="booking">
+                            <a href="bookingDetail?bookingID=${bookingID}">
+                                <div class="booking-inf">
+                                    <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
+                                    <div class="stadium-details">
+                                        <div>Stadium: ${booking.stadium.stadium_name}</div>
+                                        <div>Court amount: ${booking.courtQuantity}</div>
+                                        <div>Date: ${booking.date}</div>
+                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
+                                    </div>
+                                    <div class="stadium-status">
+
+
+                                        <div>${booking.bookingAccepted}</div>
+
+
+                                    </div>
                                 </div>
-                                <div class="stadium-status">
-                                    <c:choose>
-                                        <c:when test="${booking.bookingAccepted}">
-                                            accepted
-                                        </c:when>
-                                    </c:choose>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
+                <div class="cus-book">
+                    <div class="head">BOOKING HISTORY (Waiting)</div>
+                    <div class="booking-detail">
+                        <c:forEach items="${waitingBookings}" var="booking">
+                            <a href="bookingDetail?bookingID=${bookingID}"">
+                                <div class="booking-inf">
+                                    <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
+                                    <div class="stadium-details">
+                                        <div>Stadium: ${booking.stadium.stadium_name}</div>
+                                        <div>Court amount: ${booking.courtQuantity}</div>
+                                        <div>Date: ${booking.date}</div>
+                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
+                                    </div>
+                                    <div class="stadium-status">
+                                        <c:choose>
+                                            <c:when test="${booking.bookingAccepted}">
+                                                waiting
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </c:forEach>
+                            </a>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
-            <div class="cus-book">
-                <div class="head">BOOKING HISTORY (Waiting)</div>
-                <div class="booking-detail">
-                    <c:forEach items="${notAccpetedBookings}" var="booking">
-                        <a href="bookingDetail?bookingID=${bookingID}"">
-                            <div class="booking-inf">
-                                <img src="<%=request.getContextPath()%>/img/court/c8.jpg" alt="Stadium">
-                                <div class="stadium-details">
-                                    <div>Stadium: ${booking.stadium.stadium_name}</div>
-                                    <div>Court amount: ${booking.courtQuantity}</div>
-                                    <div>Date: ${booking.date}</div>
-                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
-                                </div>
-                                <div class="stadium-status">
-                                    <c:choose>
-                                        <c:when test="${!booking.bookingAccepted}">
-                                            waiting
-                                        </c:when>
-                                    </c:choose>
-                                </div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </div>
-            </div>
-        </div>
-        <jsp:include page="CusFooter.jsp" flush="true" />
-    </body>
-</html>
+            <jsp:include page="CusFooter.jsp" flush="true" />
+        </body>
+    </html>

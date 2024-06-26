@@ -5,9 +5,11 @@
 package controller;
 
 import DAO.accountDAO;
+import DAO.bookingDetailDAO;
 import DAO.bookingDAO;
 import DAO.customerDAO;
 import DAO.stadiumDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,15 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Account;
 import model.Booking;
-import model.Customer;
+import model.Court;
 import model.Stadium;
 
 /**
  *
- * @author WINDOWS
+ * @author ADMIN
  */
-@WebServlet(name = "CustomerHistoryController", urlPatterns = {"/CustomerHistoryController"})
-public class bookingHistory extends HttpServlet {
+@WebServlet(name = "BookingListManage", urlPatterns = {"/bookingListManage"})
+public class bookingListManage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,10 +49,10 @@ public class bookingHistory extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CustomerHistoryController</title>");
+            out.println("<title>Servlet BookingManage</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CustomerHistoryController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet BookingManage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,41 +70,32 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         Cookie[] cookies = request.getCookies();
+        String role = null;
         String email = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equalsIgnoreCase("email")) {
-                    email = cookie.getValue();
-                }
+        // get role
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("role")) {
+                role = ck.getValue();
+            }
+            if (ck.getName().equalsIgnoreCase("email")) {
+                email = ck.getValue();
             }
         }
         accountDAO accDAO = new accountDAO();
-        customerDAO cusDAO = new customerDAO();
-        Account acc = accDAO.getAccountByEmail(email);
-        String accID = acc.getAcc_ID();
-        String customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
-        bookingDAO bookDAO = new bookingDAO();
-        List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
+        stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
+        stadiumDAO stdDAO = new stadiumDAO();
 
-        //seperate accepted and not accpeted
-        List<Booking> waitingBookings = new ArrayList<>();
-        List<Booking> notWaitingBookings = new ArrayList<>();
+        Account ac = accDAO.getAccountByEmail(email);
+        String accID = ac.getAcc_ID();
+        String ownerID = ownerDAO.getStadimOwnerByAccID(accID).getOwner_ID();
 
-        for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
-                waitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            } else {
-                notWaitingBookings.add(booking);
-                request.setAttribute("bookingID", booking.getBooking_ID());
-            }
-        }
-        
-        request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
-        request.setAttribute("waitingBookings", waitingBookings);
-        request.setAttribute("notWaitingBookings", notWaitingBookings);
-        request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
+        List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
+
+        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
+        request.setAttribute("listStd", listStd);
+        request.getRequestDispatcher("view/stadiumowner/BookingListManagement.jsp").forward(request, response);
     }
 
     /**

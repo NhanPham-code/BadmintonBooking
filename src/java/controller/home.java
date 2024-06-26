@@ -91,7 +91,7 @@ public class home extends HttpServlet {
                 stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
                 StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
                 request.setAttribute("name", sto.getOwner_name());
-                request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jspp").forward(request, response);
+                request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
             } else {
                 adminDAO aDAO = new adminDAO();
                 Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());

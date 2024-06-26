@@ -39,17 +39,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 z-index: -1;
             }
             .footer {
+                position: absolute;
+                bottom: 0;
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
                 background: #022B3A;
                 color: white;
-                display: flex;
-                
-                justify-content: center;
-                align-items: end;
-                padding: 10px;
-                box-sizing: border-box;
             }
-
-
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -74,7 +77,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             });
         </script>
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
         </div>
     </body>
 
