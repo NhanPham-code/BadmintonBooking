@@ -17,6 +17,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import model.Account;
 import model.Admin;
@@ -86,34 +87,38 @@ public class stadiumList extends HttpServlet {
         Account ac = aDAO.getAccountByEmail(email);
 
         String destinationJSP = "view/common/CommonStaList.jsp";
+        List<Stadium> stList = new ArrayList<>();
+        stList = new stadiumDAO().getAllStadium();
+        
 
         if (role != null) {
             switch (role.toLowerCase()) {
                 case "customer":
                     customerDAO cusDAO = new customerDAO();
                     Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+                    stList = new stadiumDAO().getAllStadium();                    
                     request.setAttribute("name", cus.getCustomer_Name());
                     destinationJSP = "view/customer/CusStaList.jsp";
                     break;
                 case "admin":
                     adminDAO adDAO = new adminDAO();
                     Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
+                    stList = new stadiumDAO().getAllStadium();                   
                     request.setAttribute("name", ad.getAdmin_name());
                     destinationJSP = "view/admin/AdStaManage.jsp";
                     break;
                 case "stadiumowner":
                     stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
                     StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                    stList = new stadiumDAO().getStadiumByStadiumOwnerID(sto.getOwner_ID());
                     request.setAttribute("name", sto.getOwner_name());
                     destinationJSP = "view/stadiumowner/StadiumManagement.jsp";
                     break;
                 default:
-                    // Handle unknown roles or unexpected situations
                     break;
             }
         }
-
-        List<Stadium> stList = new stadiumDAO().getAllStadium();
+        
         request.setAttribute("stList", stList);
         request.getRequestDispatcher(destinationJSP).forward(request, response);
     }

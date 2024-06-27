@@ -179,10 +179,26 @@
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 cursor: pointer;
-                background-color: #f0f0f0;
+                background-color: #1F7A8C;
                 outline: none;
-                margin-left: 20px;
+
                 margin-top:10px;
+                color: white;
+            }
+            .delete-button:hover, .add-button:hover {
+                 background-color: #145569;
+            }
+            .add-button{
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #1F7A8C;
+                outline: none;
+
+                
+                color: white;
             }
             .booking-btn {
                 display: block;
@@ -238,21 +254,27 @@
                                 <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
                             </div>
                         </div>
-                        <h2 style="color: white;margin-top: 30px;">Court List</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="color: white;">Court Number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="c" items="${requestScope.courtList}">
+                        <h2 style="color: white;;">Court List</h2>
+                        <a class="add-button" >Add New Court</a>
+                        <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td>${c.number}</td>
+                                        <th style="color: white;">Court Number</th>
+                                        <th style="color: white;">Action</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="c" items="${requestScope.courtList}">
+                                        <tr>
+                                            <td>${c.number}</td>
+                                            <td><a class="delete-button">Delete</a></td>
+                                        </tr>
+
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="right-container">
