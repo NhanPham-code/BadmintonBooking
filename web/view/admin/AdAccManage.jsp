@@ -5,121 +5,120 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Account Management</title>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <style>
-            .stadium-function{
-                font-size: 18px;
+            body {
+                font-family: 'Inter', Times, serif;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
             }
-            .stadium-list {
-                width: 100%;
-                background: #e3e6ed;
+            .account-management-container {
+                font-size: 16px;
+                max-width: 800px;
+                margin: 20px auto;
                 padding: 20px;
                 box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                flex-grow: 1; /* Make the stadium list take the available space */
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                background-color: #f9f9f9;
             }
-            .stadium-filter {
-                display: flex;
-                background: white;
-                width: 120px;
-                height: 42px;
-                position: relative;
-            }
-            .role {
-                padding: 10px;
-                color: #000000;
-                text-align: left;
-                font-family: "Inter-Medium", sans-serif;
-                font-size: 16px;
-                font-weight: 500;
-                position: relative;
+            .account-filter-form, .search-bar {
+                margin-bottom: 20px;
                 display: flex;
                 align-items: center;
-                justify-content: left;
+            }
+            .filter-role {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .role-label {
+                font-weight: bold;
             }
             .dropdown {
                 position: relative;
-                display: inline-block;
-                margin: 10px 20px;
             }
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                min-width: 160px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
+            select[name="role"] {
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background: white;
+                color: #333;
+                width: 200px;
             }
-
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
+            .search-bar input[type="email"] {
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                width: 250px;
             }
-            .dropdown:hover .dropdown-content {
-                display: block;
+            .search-bar button {
+                background: #1f7a8c;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin: 5px;
             }
-            .stadium-item {
+            .search-bar button:hover {
+                background: #145569;
+            }
+            .error {
+                margin-bottom: 10px;
+            }
+            .account-list {
+                padding: 20px;
+                box-sizing: border-box;
+                background-color: white;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+            }
+            .account-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                background: #ffffff;
-                padding: 20px; /* Increase padding for larger appearance */
-                border: 1px solid black;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                font-size: 18px; /* Increase font size */
-                position: relative; /* Position for the overlay effect */
+                padding: 15px;
+                border: 1px solid #eee;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                transition: transform 0.3s ease;
                 cursor: pointer;
-                transition: transform 0.3s ease; /* Smooth transform transition */
             }
-            .stadium-item:hover {
-                transform: scale(1.05); /* Slightly enlarge the stadium item */
-            }
-            .stadium-item i {
-                margin: 7px 0px;
-                font-size: 60px;
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
+            .account-item:hover {
+                transform: scale(1.02);
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
             }
             .avatar {
-                text-align: center;
                 background: #d9d9d9;
                 border-radius: 50%;
-                border-style: solid;
-                border-color: #000000;
-                border-width: 1px;
-                width: 80px; /* Increase image size */
-                height: 80px; /* Increase image size */
-                position: relative;
-            }
-            .stadium-details {
-                flex-grow: 1;
-                margin-left: 20px;
-            }
-            .stadium-details div {
-                margin: 5px 0;
-            }
-            .stadium-actions {
+                width: 60px;
+                height: 60px;
                 display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 5px;
+                justify-content: center;
+                align-items: center;
+                margin-right: 15px;
             }
-            .stadium-actions a {
+            .account-details {
+                flex-grow: 1;
+            }
+            .account-details div {
+                margin-bottom: 5px;
+            }
+            .account-actions a {
                 background: #1f7a8c;
                 color: white;
                 padding: 5px 10px;
@@ -127,45 +126,58 @@
                 text-decoration: none;
                 cursor: pointer;
             }
-            .stadium-actions a:hover {
+            .account-actions a:hover {
                 background: #145569;
             }
-
         </style>
     </head>
     <body>
-        <jsp:include page = "AdHeader.jsp" flush = "true" />
+        <%-- Include header --%>
+        <jsp:include page="AdHeader.jsp" flush="true" />
 
-        <div class="stadium-list">
-            <div class="stadium-filter">
-                <div class="role">Role</div>
-                <div class="dropdown">
-                    <button class="dropbt">
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="#">Customers</a>
-                        <a href="#">Stadium Owners</a>
+        <div class="account-management-container">
+            <form class="account-filter-form" action="filterAcc" method="post">
+                <input type="hidden" name="name" value="${requestScope.name}">
+                <div class="filter-role">
+                    <div class="role-label">Role:</div>
+                    <div class="dropdown">
+                        <select name="role" onchange="this.form.submit()">
+                            <option value="All" ${requestScope.role eq 'All' ? 'selected' : ''}>All</option>
+                            <option value="Customer" ${requestScope.role eq 'Customer' ? 'selected' : ''}>Customers</option>
+                            <option value="StadiumOwner" ${requestScope.role eq 'StadiumOwner' ? 'selected' : ''}>Stadium Owners</option>
+                            <option value="Admin" ${requestScope.role eq 'Admin' ? 'selected' : ''}>Admin</option>
+                        </select>
                     </div>
                 </div>
+            </form>
+            <form class="search-bar" action="searchAcc" method="post">
+                <input type="hidden" name="name" value="${requestScope.name}">
+                <input type="email" name="email" placeholder="Email" value="${requestScope.email}"/>
+                <button type="submit">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </form>
+            <div class="error">
+                <h2 style="color: red">${requestScope.error}</h2>
             </div>
-            <div class="stadium-item" onclick="window.location.href = 'AdCusAcc.jsp';">
-                <div class="avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
+            <div class="account-list">
+                <h2>${requestScope.notify}</h2>
+                <c:forEach var="acc" items="${requestScope.accList}">
+                    <div class="account-item" onclick="window.location.href = 'accountDetail';">
+                        <div class="avatar">
+                            <i class="fas fa-user-circle" style="font-size: 40px;"></i>
+                        </div>
+                        <div class="account-details">
+                            <div>Email: ${acc.email}</div>
+                            <div>Role: ${acc.role}</div>
+                        </div>
+                        <div class="account-actions">
+                            <a href="#">Delete</a>
+                        </div>
+                    </div>
+                </c:forEach>
             </div>
-            <div class="stadium-details">
-                <div>Username</div>
-                <div>Phone number</div>
-            </div>
-            <div class="stadium-actions">
-                <a href="bookingPage.jsp">Delete</a>
-                <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
-            </div>
-            <!-- Details button removed, click on item for details -->
         </div>
-        <!-- Repeat the above stadium-item div for each stadium entry -->
-    </div>
-</body>
+    </body>
 </html>
-

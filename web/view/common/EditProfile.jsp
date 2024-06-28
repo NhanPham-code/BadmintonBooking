@@ -15,6 +15,10 @@
                 height: 100vh;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
                 margin: 0;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
             }
 
             .edit-profile-container {

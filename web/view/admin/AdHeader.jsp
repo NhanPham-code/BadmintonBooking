@@ -185,7 +185,7 @@
 
         <div class="nav">
             <a href="<%=request.getContextPath()%>/stadiumList">STADIUM MANAGEMENT</a>
-            <a href="<%=request.getContextPath()%>/CustomerHistoryController">ACCOUNT MANAGEMENT</a>
+            <a href="<%=request.getContextPath()%>/accountList?name=${requestScope.name}">ACCOUNT MANAGEMENT</a>
         </div>
     </body>
 </html>

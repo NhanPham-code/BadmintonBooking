@@ -30,6 +30,10 @@
                 flex-direction: column;
                 gap: 20px;
                 flex-grow: 1; /* Make the stadium list take the available space */
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
             }
 
             .cus-inf {
@@ -130,6 +134,17 @@
                 text-align: center;
                 margin-bottom: 20px;
             }
+            
+            .footer {
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -166,7 +181,8 @@
 
         </div>
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
         </div>
     </body>
 </html>

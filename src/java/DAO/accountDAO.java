@@ -115,6 +115,55 @@ public class accountDAO {
         return ac;
     }
 
+    /**
+     * Author: nhanPH
+     *
+     * @param role from user
+     * @return list account by role
+     */
+    public List<Account> getAccountByRole(String role) {
+        List<Account> accList = new ArrayList<>();
+        String sql = "select * from Account where role = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, role);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account ac = new Account();
+                ac.setAcc_ID(rs.getString("acc_ID"));
+                ac.setEmail(rs.getString("email"));
+                ac.setPassword(rs.getString("password"));
+                ac.setRole(rs.getString("role"));
+                accList.add(ac);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return accList;
+    }
+
+    /**
+     * Author: nhanPH
+     *
+     * @return account list in DB
+     */
     public List<Account> getAllAccount() {
         List<Account> accountList = new ArrayList<>();
         String sql = "select * from account";
@@ -132,8 +181,22 @@ public class accountDAO {
             }
         } catch (Exception ex) {
             System.out.println();
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return accountList;
     }
 
@@ -176,8 +239,8 @@ public class accountDAO {
         }
         return check;
     }
-    
-    public void updateEmail(String newEmail, String accID){
+
+    public void updateEmail(String newEmail, String accID) {
         String sql = "update account set email = ? where acc_ID = ?";
         try {
             conn = db.getConnection();
@@ -201,10 +264,10 @@ public class accountDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }     
+        }
     }
-    
-    public void updatePassword(String email, String newPassword){
+
+    public void updatePassword(String email, String newPassword) {
 
         String sql = "update account set password = ? where email = ?";
         try {
@@ -236,15 +299,11 @@ public class accountDAO {
     public static void main(String[] args) {
         accountDAO dao = new accountDAO();
 
-        Account ac = new Account();
-        ac.setAcc_ID("ACC8");
-        ac.setEmail("nhan4@gmail.com");
-        ac.setPassword("37e7897f62e8d91b1ce60515829ca282");
-        ac.setRole("Customer");
+        List<Account> accList = dao.getAccountByRole("admin");
 
-        int check = dao.addNewAcc(ac);
-
-        System.out.println(check);
+        for (Account ac : accList) {
+            System.out.println(ac.getEmail());
+        }
 
     }
 }
