@@ -230,6 +230,12 @@ public class stadiumDAO {
         return stadiumList;
     }
     
+    /**
+     * Author: PhuocDH
+     * @param stadium_ID
+     * @return 
+     */
+    
     public int getTimeOpenByStadiumID(String stadium_ID) {
         String sql = "select opentime from Stadium where stadium_ID = ?";
         String openTime = null;

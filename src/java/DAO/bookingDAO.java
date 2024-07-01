@@ -414,7 +414,13 @@ public class bookingDAO {
         }
 
     }
-
+    
+    /**
+     * Author: PhuocDH
+     * @param stadium_ID
+     * @param year
+     * @return 
+     */
     public List<Integer> getBookingTimeByStadiumIDandSelectedFactor(String stadium_ID, int year) {
         String sql = "SELECT startTime, endTime, courtQuantity, date FROM Booking WHERE stadium_ID = ? AND YEAR(date) = ?";
         List<Integer> freqList = Arrays.asList(new Integer[12]);
