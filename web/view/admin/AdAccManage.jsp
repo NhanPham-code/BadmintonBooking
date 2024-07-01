@@ -130,6 +130,13 @@
                 background: #145569;
             }
         </style>
+        <script>
+            function confirmDelete(url) {
+                if (confirm('Are you sure you want to delete this account?')) {
+                    window.location.href = url;
+                }
+            }
+        </script>
     </head>
     <body>
         <%-- Include header --%>
@@ -164,7 +171,8 @@
             <div class="account-list">
                 <h2>${requestScope.notify}</h2>
                 <c:forEach var="acc" items="${requestScope.accList}">
-                    <div class="account-item" onclick="window.location.href = 'accountDetail';">
+                    <div class="account-item" >
+                        <div style = "display:flex; width:100%"onclick="window.location.href = 'accountDetail?accID=${acc.acc_ID}&name=${requestScope.name}';">
                         <div class="avatar">
                             <i class="fas fa-user-circle" style="font-size: 40px;"></i>
                         </div>
@@ -172,8 +180,9 @@
                             <div>Email: ${acc.email}</div>
                             <div>Role: ${acc.role}</div>
                         </div>
+                        </div>
                         <div class="account-actions">
-                            <a href="#">Delete</a>
+                            <a href="javascript:void(0);" onclick="confirmDelete('deleteAccount?accID=${acc.acc_ID}&name=${requestScope.name}')">Delete</a>
                         </div>
                     </div>
                 </c:forEach>

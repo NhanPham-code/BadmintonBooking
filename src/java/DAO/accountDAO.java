@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Account;
+import model.Stadium;
 
 /**
  *
@@ -46,6 +47,59 @@ public class accountDAO {
         }
 
         return ac;
+    }
+
+    public void deleteAccount(String accID, String customerID, String ownerID) {
+        String sql = "Delete Account where acc_ID = ?";
+        if (customerID.equals("")) {
+
+            stadiumDAO sDAO = new stadiumDAO();
+
+            List<Stadium> stadiumList = new ArrayList<>();
+            stadiumList = sDAO.getStadiumByStadiumOwnerID(ownerID);
+            for (Stadium s : stadiumList) {
+                sDAO.deleteStadium(s.getStadium_ID());
+
+            }
+            stadiumOwnerDAO soDAO = new stadiumOwnerDAO();
+            soDAO.deleteStadiumOwner(accID);
+        } else if (ownerID.equals("")) {
+
+            bookingDetailDAO bdDAO = new bookingDetailDAO();
+            bdDAO.deleteBookingDetailCustomer(customerID);
+
+            bookingDAO bDAO = new bookingDAO();
+            bDAO.deleteBookingOfCustomer(customerID);
+
+            feedbackDAO fDAO = new feedbackDAO();
+            fDAO.deleteFeedbackCustomer(customerID);
+
+            customerDAO cDAO = new customerDAO();
+            cDAO.deteleCustomer(customerID);
+        }
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, accID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean checkLogin(String email, String password) {

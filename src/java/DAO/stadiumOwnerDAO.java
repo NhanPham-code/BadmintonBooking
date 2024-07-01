@@ -135,7 +135,7 @@ public class stadiumOwnerDAO {
     }
     
     public void updateProfile(String StdoID, String name, String phone){
-        String sql = "update customer set owner_name = ?, owner_phone = ? where owner_ID = ?";
+        String sql = "update StadiumOwner set owner_name = ?, owner_phone = ? where owner_ID = ?";
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
@@ -161,7 +161,18 @@ public class stadiumOwnerDAO {
             }
         }     
     }
-
+    
+    public void deleteStadiumOwner(String accID){
+        String sql = "DELETE StadiumOwner WHERE acc_ID=?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, accID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            System.out.println();
+        }
+    }
     public static void main(String[] args) {
         stadiumOwnerDAO dao = new stadiumOwnerDAO();
 

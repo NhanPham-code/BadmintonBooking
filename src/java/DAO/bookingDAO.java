@@ -336,6 +336,33 @@ public class bookingDAO {
 
         return bookList;
     }
+    
+    public void deleteBookingOfCustomer(String customerID){
+        String sql = "Delete Booking where customer_ID=?"; 
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, customerID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public int AddNewBooking(Booking book) {
         int index = 0;

@@ -148,7 +148,18 @@ public class feedbackDAO {
         } catch (Exception ex) {
             System.out.println();
         }
+    }
 
+    public void deleteFeedbackCustomer(String customer_ID) {
+        String sql = "DELETE Feedback WHERE customer_ID=?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, customer_ID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
