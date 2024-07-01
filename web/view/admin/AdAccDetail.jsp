@@ -28,7 +28,10 @@
             .cus-profile {
                 width: 100%;
                 background: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
-
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
                 padding: 55px 55px;
                 box-sizing: border-box;
                 display: flex;
