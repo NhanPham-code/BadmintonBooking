@@ -67,6 +67,33 @@ public class bookingDetailDAO {
         return courtList;
     }
 
+    
+    public void deleteBookingDetailCustomer(String customerID ){
+        String sql = "DELETE BookingDetail FROM BookingDetail JOIN Booking ON BookingDetail.booking_ID= Booking.booking_ID WHERE Booking.customer_ID=?"; 
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, customerID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public List<String> getAllBookingDetailID() {
         List<String> bookDetID = new ArrayList<>();
 

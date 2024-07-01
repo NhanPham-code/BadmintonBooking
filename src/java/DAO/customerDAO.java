@@ -160,6 +160,18 @@ public class customerDAO {
             }
         }     
     }
+    
+    public void deteleCustomer(String customer_ID){
+        String sql = "DELETE Customer WHERE customer_ID=?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, customer_ID);
+            rs = ps.executeQuery();
+        } catch (Exception ex) {
+            System.out.println();
+        }
+    }
 
     public static void main(String[] args) {
         customerDAO cDAO = new customerDAO();
