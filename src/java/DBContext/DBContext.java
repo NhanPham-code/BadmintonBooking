@@ -18,7 +18,7 @@ public class DBContext {
         return DriverManager.getConnection(url, userID, password);
     }
 
-    private final String serverName = "LAPTOP-LHN746VG\\NHANPH";
+    private final String serverName = "DESKTOP-HR11HUG";
     private final String dbName = "BadmintonDB";
     private final String portNumber = "1433";
     private final String instance = "";
