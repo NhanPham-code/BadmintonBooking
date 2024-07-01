@@ -11,8 +11,11 @@ import java.sql.ResultSet;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -412,6 +415,45 @@ public class bookingDAO {
 
     }
 
+    public List<Integer> getBookingTimeByStadiumIDandSelectedFactor(String stadium_ID, int year) {
+        String sql = "SELECT startTime, endTime, courtQuantity, date FROM Booking WHERE stadium_ID = ? AND YEAR(date) = ?";
+        List<Integer> freqList = Arrays.asList(new Integer[12]);
+        Collections.fill(freqList, 0);
+
+        String startTime = null;
+        String endTime = null;
+        int courtQuantity = 0;
+        Date date;
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadium_ID);
+            ps.setInt(2, year);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                startTime = rs.getString("startTime");
+                endTime = rs.getString("endTime");
+                courtQuantity = rs.getInt("courtQuantity");
+                date = rs.getDate("date");
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                
+                int month = Integer.parseInt(formatter.format(date).split("-")[1]);
+
+                int bookingHour = (Integer.parseInt(endTime.split(":")[0]) - Integer.parseInt(startTime.split(":")[0]))
+                        * courtQuantity;
+
+                freqList.set(month-1, freqList.get(month-1) + bookingHour);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return freqList;
+    }
+
     /*public static void main(String[] args) {
         bookingDAO bookDAO = new bookingDAO();
 
@@ -471,9 +513,13 @@ public class bookingDAO {
     }*/
     public static void main(String[] args) {
         bookingDAO bDAO = new bookingDAO();
-        String BookingID = "BOOK2";
-        List<Booking> bookings = bDAO.getBookingByStadiumID("STD2");
+//        String BookingID = "BOOK2";
+//        List<Booking> bookings = bDAO.getBookingByStadiumID("STD2");
+//
+//        System.out.println(bookings);
+//        System.out.println(bookings.get(1).getCourtList().get(0).getNumber());
 
-        System.out.println(bookings.get(1).getCourtList().get(0).getNumber());
+        List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD1", 2024);
+        System.out.println(freqList);
     }
 }

@@ -12,8 +12,8 @@
         <meta charset="UTF-8">
         <title>Sport Stadium Booking System</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <style>
 
+        <style>
             .booking-history {
                 padding-top: 3%;
                 padding-left: 3%;
@@ -183,28 +183,14 @@
 
 
             </style>
-
-            <script>
-                function filterAcceptedBookings() {
-                    var selectedDate = document.getElementById("selectedDate1").value;
-                    var bookingContainers = document.querySelectorAll(".accepted-booking-container");
-
-                    bookingContainers.forEach(function (container) {
-                        var bookingDate = container.getAttribute("data-date");
-                        if (selectedDate === bookingDate) {
-                            container.style.display = "flex";
-                        } else {
-                            container.style.display = "none";
-                        }
-                    });
-                }
-            </script>
         </head>
         <body>
             <%@ include file="HeaderStadiumOwner.jsp" %>
             <div class="cus-book-his">
                 <div class="booking-history">
                     <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}">Booking History</a>
+                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Booking Chart</a>
+                    <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}">Occupancy rate Chart</a>
                 </div>
                 <div class="table">
                     <!-- Pending Bookings -->
@@ -212,8 +198,7 @@
                         <div class="head"><b>PENDING BOOKINGS</b></div>
                         <div class="booking-detail">
                             <c:forEach items="${waitingBookings}" var="booking">
-
-                                <div class="booking-inf" onclick="window.location.href = 'bookingDetail?bookingID=${booking.booking_ID}';" style="cursor: pointer;">
+                                <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
                                         <div class="court-list-container">
@@ -234,6 +219,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Add more pending bookings as needed -->
                             </c:forEach>
                         </div>
                     </div>
@@ -243,13 +229,16 @@
                         <div class="head">
                             <b>ACCEPTED BOOKING ON DAY</b>
                             <div class="datePickerContainer">
-                                <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
-                                <button type="button" onclick="filterAcceptedBookings()">Filter</button>
+                                <form action="<%=request.getContextPath()%>acceptedBookFilter" method="GET">
+                                    <input type="hidden" name="command" value="filter">
+                                    <input type="date" id="selectedDate1" name="selectedDate">
+                                    <input type="submit" value="Filter">
+                                </form>
                             </div>
                         </div>
-                        <div class="booking-detail" id="acceptedBookingsContainer">
+                        <div class="booking-detail">
                             <c:forEach items="${acceptedBookings}" var="booking">
-                                <div class="booking-inf accepted-booking-container" data-date="${booking.date}">
+                                <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
                                         <div style="display: flex">
@@ -265,6 +254,7 @@
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>                           
+                                <!-- Add more accepted bookings as needed -->
                             </c:forEach>
                         </div>
                     </div>
@@ -272,4 +262,3 @@
             </div>
         </body>
     </html>
-

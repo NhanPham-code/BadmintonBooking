@@ -229,18 +229,45 @@ public class stadiumDAO {
 
         return stadiumList;
     }
+    
+    public int getTimeOpenByStadiumID(String stadium_ID) {
+        String sql = "select opentime from Stadium where stadium_ID = ?";
+        String openTime = null;
+        int time = 0;
+        
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadium_ID);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                openTime = rs.getString("opentime");
+            }
+            
+            time = Integer.parseInt(openTime.split("-")[0].split(":")[0]);
+
+        } catch (Exception ex) {
+            System.out.println();
+        }
+        return time;
+    }
 
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
-        String ownerID = "OWNER1";
-        List<Stadium> stList = new ArrayList<>();
-        stList = stDAO.getStadiumByStadiumOwnerID(ownerID);
+//        String ownerID = "OWNER1";
+//        List<Stadium> stList = new ArrayList<>();
+//        stList = stDAO.getStadiumByStadiumOwnerID(ownerID);
+//
+//        for (int i = 0; i < stList.size(); i++) {
+//            Stadium st = stList.get(i);
+//            System.out.println(st.getStadium_ID());
+//            System.out.println(st.getAvg_ratingScore());
+//        }
 
-        for (int i = 0; i < stList.size(); i++) {
-            Stadium st = stList.get(i);
-            System.out.println(st.getStadium_ID());
-            System.out.println(st.getAvg_ratingScore());
-        }
+        String stadium_ID = "STD3";
+        int time = stDAO.getTimeOpenByStadiumID(stadium_ID);
+        System.out.println(time);
     }
 
 }
