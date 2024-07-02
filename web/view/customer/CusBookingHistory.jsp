@@ -29,6 +29,10 @@
                 display: flex;
                 gap: 20px;
                 flex-wrap: wrap; /* Allows wrapping on smaller screens */
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
             }
 
             .cus-book {

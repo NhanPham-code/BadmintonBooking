@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Inter', sans-serif;
                 background-color: #bfdbf7;
                 margin: 0;
                 padding: 0;
@@ -273,7 +273,7 @@
                 align-items: center;
                 margin-left: 55%;
             }
-            
+
             .filter-button {
                 padding: 5px 10px;
                 font-size: 14px;
@@ -284,7 +284,7 @@
                 outline: none;
                 margin-left: 10px;
             }
-            
+
             .filter-dropdown select {
                 padding: 5px;
                 font-size: 14px;
@@ -451,7 +451,7 @@
                 </div>
 
             </div>
-            <button class="booking-btn">Book Now</button>
+            <a class="booking-btn" href="<%=request.getContextPath()%>/view/common/login.jsp">Book Now</a>
         </div>
 
         <div class="footer">

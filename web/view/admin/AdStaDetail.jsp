@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Inter', sans-serif;
                 background-color: #bfdbf7;
                 margin: 0;
                 padding: 0;
@@ -28,15 +28,14 @@
             }
             .container {
                 display: flex;
-                justify-content: center;
                 flex-direction: column;
                 max-width: 1300px;
+                margin: auto;
                 background-color: #f5f5f5;
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
                 margin-bottom: 20px;
-                margin-left: 60px;
             }
             .top-container {
                 text-align: center;
@@ -324,7 +323,8 @@
                     </div>
                 </div>
             </div>
-            <button class="booking-btn">Delete Stadium</button>
+            <a class="booking-btn" href="<%=request.getContextPath()%>/AcceptedRateBooking?stadiumID=${st.stadium_ID}&name=${requestScope.name}" style="text-decoration: none">Stadium's Booking Statistic</a>
+            <a class="booking-btn" href="" style="text-decoration: none">Stadium's Booking History</a>
         </div>
         <div class="footer">
             <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>

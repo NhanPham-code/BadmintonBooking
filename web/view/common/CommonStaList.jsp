@@ -238,7 +238,7 @@
                         </div>
                     </div>
                     <div class="stadium-actions">
-                        <a href="bookingPage.jsp">Booking</a>
+                        <a href="<%=request.getContextPath()%>/view/common/login.jsp">Booking</a>
                     </div>
                 </div>
             </c:forEach>

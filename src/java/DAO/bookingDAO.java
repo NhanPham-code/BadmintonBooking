@@ -496,8 +496,72 @@ public class bookingDAO {
 
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return freqList;
+    }
+    /**
+     * Author: NhanPH
+     * @param stadium_ID
+     * @return 
+     */
+    public List<Float> getAcceptedBookingRate(String stadium_ID) {
+        List<Float> result = new ArrayList<>();
+        String sql = "SELECT bookingAccepted FROM Booking WHERE stadium_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadium_ID);
+            rs = ps.executeQuery();
+            int bookingListSize = 0;
+            int accepetedBookingSize = 0;
+            int rejectedBookingSize = 0;
+            int waitingBookingSize = 0;
+            while (rs.next()) {
+                bookingListSize += 1; // increase list size 
+                String value = rs.getString("bookingAccepted");
+                if(value.equalsIgnoreCase("accepted")) {
+                    accepetedBookingSize += 1;
+                }else if(value.equalsIgnoreCase("rejected")){
+                    rejectedBookingSize += 1;
+                } else {
+                    waitingBookingSize += 1;
+                }
+            }
+            float acceptedRate = ( (float)accepetedBookingSize / (float)bookingListSize) * 100;
+            result.add(acceptedRate);
+            float rejectedRate = ( (float)rejectedBookingSize / (float)bookingListSize) * 100;
+            result.add(rejectedRate);
+            float waittingRate = ( (float) waitingBookingSize / (float)bookingListSize) * 100;
+            result.add(waittingRate);
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return result;
     }
 
     /*public static void main(String[] args) {
@@ -565,7 +629,9 @@ public class bookingDAO {
 //        System.out.println(bookings);
 //        System.out.println(bookings.get(1).getCourtList().get(0).getNumber());
 
-        List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD1", 2024);
-        System.out.println(freqList);
+        //List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD1", 2024);
+        //System.out.println(freqList);
+        List<Float> rs = bDAO.getAcceptedBookingRate("STD5");
+        System.out.println(rs);
     }
 }
