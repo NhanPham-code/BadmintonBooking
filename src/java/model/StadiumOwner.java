@@ -18,6 +18,13 @@ public class StadiumOwner {
     public StadiumOwner() {
     }
 
+    public StadiumOwner(String owner_ID, String owner_name, String owner_phone, String acc_ID) {
+        this.owner_ID = owner_ID;
+        this.owner_name = owner_name;
+        this.owner_phone = owner_phone;
+        this.acc_ID = acc_ID;
+    }
+
     public String getOwner_ID() {
         return owner_ID;
     }

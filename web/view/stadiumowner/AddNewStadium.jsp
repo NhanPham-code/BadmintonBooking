@@ -1,7 +1,7 @@
 <%-- 
     Document   : AddNewStadium
     Created on : Jun 7, 2024, 12:26:31 PM
-    Author     : ADMIN
+    Author     : NhanNQT
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -130,8 +130,9 @@
             }
 
             .confirm-button:hover {
-                background-color: #145569;
-                color: #ff0;
+                background: #145569;
+                border-radius: 4px;
+                color: white;
             }
 
             /* CSS mới để định dạng label start và end trên cùng một dòng */
@@ -183,35 +184,47 @@
                 display: none;
             }
 
-            .select-images-button {
-                background-color: #3f8aed;
-                color: #fff;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-                transition: background-color 0.3s;
-                width: 140px !important;
-            }
-
-            .select-images-button:hover {
-                background-color: #0056b3;
-            }
 
             /* Định dạng khoảng cách giữa nút chọn hình ảnh và các hình ảnh đã chọn */
             .space {
                 margin-top: 10px;
             }
 
-            /* Định dạng biểu tượng hoặc hình ảnh trong nút */
-            .add-image-icon {
-                width: 50px;
-                /* Điều chỉnh kích thước của biểu tượng */
-                height: auto;
-                margin-right: 5px;
-                /* Tạo khoảng cách giữa biểu tượng và văn bản */
+            /* File Upload Container */
+            .file-upload-container {
+                text-align: center;
+                margin: 20px 0;
+                padding: 0 120px;
             }
+
+            /* File Upload Label */
+            .file-upload-label {
+                display: inline-block;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .file-upload-label:hover {
+                background-color: #0056b3;
+                color: white;
+            }
+
+            /* File Upload Input */
+            .file-upload-input {
+                display: none;
+            }
+
+            /* File Name Display */
+            .file-upload-filename {
+                display: block;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
         </style>
     </head>
 
@@ -221,15 +234,15 @@
         <div class="container">
             <div class="form-container">
                 <h1>ADD NEW STADIUM INFORMATION</h1>
-                <form>
+                <form action="AddNewSta" method="POST" enctype="multipart/form-data">
                     <label for="stadium-name">Stadium name:<i class="fas fa-star"></i></label>
-                    <input type="text" id="stadium-name" name="stadium-name" required>
+                    <input type="text" id="stadium-name" name="stadium_name" required>
 
                     <label for="stadium-address">Stadium address:</label>
-                    <input type="text" id="stadium-address" name="stadium-address" required>
+                    <input type="text" id="stadium-address" name="stadium_address" required>
 
                     <label for="stadium-phone">Stadium Phone:</label>
-                    <input type="text" id="stadium-phone" name="stadium-phone" required>
+                    <input type="text" id="stadium-phone" name="stadium_phone" required>
 
                     <!-- Thêm một div để nhóm label start và end -->
                     <label for="stadium-name">Choose Time:</label>
@@ -238,16 +251,15 @@
                             <label for="startTime">Start</label>
                         </div>
                         <div class="select-container">
-                            <select id="startTime"></select>
+                            <select id="startTime" name="startTime"></select>
                         </div>
                         <div class="label-container">
                             <label for="endTime">End</label>
                         </div>
                         <div class="select-container">
-                            <select id="endTime"></select>
+                            <select id="endTime" name="endTime"></select>
                         </div>
                     </div>
-
 
 
 
@@ -277,30 +289,52 @@
                         });
                     </script>
 
-                    <label for="stadium-images">Stadium Images:</label>
-                    <div class="file-input-container">
-                        <input type="file" id="stadium-images" name="stadium-images" accept="image/*" required>
-                        <button class="select-images-button" onclick="document.getElementById('stadium-images').click()">
-                            <img class="add-image-icon" src="add_image_icon.png" alt="Add Image">
-                        </button>
-                    </div>
+
                     <div class="space"></div>
-                    <label for="stadium-images">QR Images:</label>
-                    <div class="file-input-container">
-                        <input type="file" id="stadium-images" name="stadium-images" accept="image/*" required>
-                        <button class="select-images-button" onclick="document.getElementById('stadium-images').click()">
-                            <img class="add-image-icon" src="add_image_icon.png" alt="Add Image">
-                        </button>
+                    <label for="stadium-images">Stadium Image:</label>
+                    <div class="file-upload-container">
+                        <label for="stadium-image" class="file-upload-label">Stadium Image</label>
+                        <input type="file" id="stadium-image" name="stadium_image" class="file-upload-input" accept="image/*" required>                        
+                        <span id="stadium-file-name" class="file-upload-filename"></span>
                     </div>
+                    <script>
+                        document.getElementById('stadium-image').addEventListener('change', function () {
+                            if (this.files.length > 0) {
+                                var fileName = this.files[0].name;
+                                document.getElementById('stadium-file-name').textContent = fileName;
+                            } else {
+                                document.getElemeopentimentById('stadium-file-name').textContent = "No file chosen";
+                            }
+                        });
+                    </script>
+
+                    <div class="space"></div>
+                    <label for="stadium-images">QR Code:</label>
+                    <div class="file-upload-container">
+                        <label for="QRCode" class="file-upload-label">QR Code Image</label>
+                        <input type="file" id="QRCode" name="QRCode" class="file-upload-input" accept="image/*" required>
+                        <span id="qr-file-name" class="file-upload-filename"></span>
+                    </div>
+
                     <div class="space"></div>
 
-                    <label for="price-per-hour">PricePerHour:</label>
-                    <input type="text" id="price-per-hour" name="price-per-hour" required>
+                    <script>
+                        document.getElementById('QRCode').addEventListener('change', function () {
+                            if (this.files.length > 0) {
+                                var fileName = this.files[0].name;
+                                document.getElementById('qr-file-name').textContent = fileName;
+                            } else {
+                                document.getElementById('qr-file-name').textContent = "No file chosen";
+                            }
+                        });
+                    </script>
+
+                    <label for="price-per-hour">Price Per Hour:</label>
+                    <input type="text" id="price-per-hour" name="price_per_hour" required>
 
                     <button type="submit" class="confirm-button">CONFIRM</button>
                 </form>
             </div>
         </div>
     </body>
-
 </html>

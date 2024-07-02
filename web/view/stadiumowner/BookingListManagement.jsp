@@ -1,7 +1,7 @@
 <%-- 
     Document   : StadiumMangement
     Created on : Jun 7, 2024, 12:12:06 PM
-    Author     : ADMIN
+    Author     : NhanNQT
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -14,8 +14,6 @@
         <title>Customer HomePage</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
-            
-
             .add {
                 background: #E3E6ED;
 
@@ -24,6 +22,10 @@
             .stadium-list {
                 width: 100%;
                 background: url('<%=request.getContextPath()%>/img/background/bg3.jpg') no-repeat center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
                 padding: 20px;
                 box-sizing: border-box;
                 display: flex;
@@ -32,43 +34,33 @@
                 flex-grow: 1;
                 /* Make the stadium list take the available space */
             }
-
             .stadium-item {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 background: #FFFFFF;
                 padding: 20px;
-                /* Increase padding for larger appearance */
-                border: 1px solid black;
-                box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-                font-size: 18px;
-                /* Increase font size */
-                position: relative;
-                /* Position for the overlay effect */
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
                 cursor: pointer;
-                transition: transform 0.3s ease;
-                /* Smooth transform transition */
             }
 
             .stadium-item:hover {
-                transform: scale(1.005);
-                /* Slightly enlarge the stadium item */
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             }
-
             .stadium-item img {
                 width: 80px;
-                /* Increase image size */
                 height: 80px;
-                /* Increase image size */
-                border-radius: 50%;
+                border-radius: 8px;
+                object-fit: cover;
             }
-
             .stadium-details {
                 flex-grow: 1;
                 margin-left: 20px;
             }
-
             .stadium-details div {
                 margin: 5px 0;
             }
@@ -162,7 +154,7 @@
                         </div>
                     </div>
                     <div class="stadium-actions">
-                        <a href="">Booking</a>
+                        <a href="bookingManage?stadiumID=${st.stadium_ID}">Booking</a>
                         <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
                     </div>
                     <!-- Details button removed, click on item for details -->

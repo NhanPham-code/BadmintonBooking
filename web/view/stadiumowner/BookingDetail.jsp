@@ -1,7 +1,7 @@
 <%-- 
     Document   : BookingDetail
     Created on : Jun 19, 2024, 9:35:29 AM
-    Author     : ADMIN
+    Author     : NhiTCU
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

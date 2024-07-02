@@ -4,33 +4,21 @@
  */
 package controller;
 
-import DAO.accountDAO;
-import DAO.bookingDetailDAO;
-import DAO.bookingDAO;
-import DAO.customerDAO;
-import DAO.stadiumDAO;
-import DAO.stadiumOwnerDAO;
+import DAO.courtDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Account;
-import model.Booking;
-import model.Court;
-import model.Stadium;
 
 /**
  *
- * @author NhanNQT
+ * @author Hong Dang
  */
-@WebServlet(name = "BookingListManage", urlPatterns = {"/bookingListManage"})
-public class bookingListManage extends HttpServlet {
+@WebServlet(name = "AddCourtServlet", urlPatterns = {"/AddCourtServlet"})
+public class AddCourtServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,10 +37,10 @@ public class bookingListManage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BookingManage</title>");
+            out.println("<title>Servlet AddCourtServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BookingManage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddCourtServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -70,32 +58,6 @@ public class bookingListManage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Cookie[] cookies = request.getCookies();
-        String role = null;
-        String email = null;
-        // get role
-        for (Cookie ck : cookies) {
-            if (ck.getName().equalsIgnoreCase("role")) {
-                role = ck.getValue();
-            }
-            if (ck.getName().equalsIgnoreCase("email")) {
-                email = ck.getValue();
-            }
-        }
-        accountDAO accDAO = new accountDAO();
-        stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
-        stadiumDAO stdDAO = new stadiumDAO();
-
-        Account ac = accDAO.getAccountByEmail(email);
-        String accID = ac.getAcc_ID();
-        String ownerID = ownerDAO.getStadimOwnerByAccID(accID).getOwner_ID();
-
-        List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
-
-        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
-        request.setAttribute("listStd", listStd);
-        request.getRequestDispatcher("view/stadiumowner/BookingListManagement.jsp").forward(request, response);
     }
 
     /**
@@ -107,10 +69,31 @@ public class bookingListManage extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String stadiumID = request.getParameter("stadiumID");
+
+        courtDAO dao = new courtDAO();
+        boolean result = false;
+        String message = "";
+
+        try {
+            result = dao.addCourt(stadiumID); // Gọi hàm addCourt từ DAO để thêm sân vận động
+            if (result) {
+                message = "Court added successfully!";
+            } else {
+                message = "Failed to add court.";
+            }
+        } catch (Exception e) {
+            message = "Error: " + e.getMessage();
+            e.printStackTrace();
+        }
+
+        // Gửi phản hồi dưới dạng dữ liệu văn bản đơn giản
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(message);
     }
+
 
     /**
      * Returns a short description of the servlet.

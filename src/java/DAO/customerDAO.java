@@ -27,6 +27,12 @@ public class customerDAO {
     ResultSet rs;
     DBContext db = new DBContext();
 
+    /**
+     * Author: NhiTCU
+     *
+     * @param customerID
+     * @return
+     */
     public Customer getCustomerByID(String customerID) {
         Customer customer = new Customer();
         String sql = "Select * from Customer where customer_ID=?";
@@ -48,6 +54,11 @@ public class customerDAO {
         return customer;
     }
 
+    /**
+     * Author: NhiTCU
+     *
+     * @return
+     */
     public Customer getCustomerByAcc_ID(String accID) {
         Customer customer = null;
         String sql = "Select * from Customer where acc_ID=?";
@@ -70,6 +81,11 @@ public class customerDAO {
         return customer;
     }
 
+    /**
+     * Author: NhiTCU
+     *
+     * @return
+     */
     public List<Customer> getAllCustomer() {
         List<Customer> cusList = new ArrayList<>();
         String sql = "select * from Customer";
@@ -93,6 +109,11 @@ public class customerDAO {
         return cusList;
     }
 
+    
+    /**
+     * Author: NhiTCU
+     * @return 
+     */
     public int addNewCus(Customer cus) {
         int check = 0;
         String sql = "INSERT INTO [dbo].[customer]\n"
@@ -132,8 +153,8 @@ public class customerDAO {
         }
         return check;
     }
-    
-    public void updateProfile(String CusID, String name, String phone){
+
+    public void updateProfile(String CusID, String name, String phone) {
         String sql = "update customer set customer_name = ?, customer_phone = ? where customer_ID = ?";
         try {
             conn = db.getConnection();
@@ -158,10 +179,10 @@ public class customerDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }     
+        }
     }
-    
-    public void deteleCustomer(String customer_ID){
+
+    public void deteleCustomer(String customer_ID) {
         String sql = "DELETE Customer WHERE customer_ID=?";
         try {
             conn = db.getConnection();

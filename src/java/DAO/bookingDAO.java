@@ -98,6 +98,12 @@ public class bookingDAO {
         return bookList;
     }
 
+    /**
+     * Author: NhanNQT
+     *
+     * @param stadiumID
+     * @return
+     */
     public List<Booking> getBookingByStadiumID(String stadiumID) {
         List<Booking> bookingList = new ArrayList<>();
         String sql = "select * from Booking where stadium_ID = ?";
@@ -202,6 +208,12 @@ public class bookingDAO {
         return bookList;
     }
 
+    /**
+     * Author: NhiTCU
+     *
+     * @param bookingID
+     * @return
+     */
     public Booking getBookingByBookingID(String bookingID) {
         bookingDetailDAO bookDetailDAO = new bookingDetailDAO();
         customerDAO cusDAO = new customerDAO();
@@ -265,7 +277,7 @@ public class bookingDAO {
 
                 courtDAO crtDAO = new courtDAO();
                 List<Court> crtList = new ArrayList<>();
-                crtList = crtDAO.getCourtList(stadiumID);
+                crtList = crtDAO.getCourtListByStadiumID(stadiumID);
 
                 bookingList.add(new Booking(bookingId, courtQuantity, startTime, endTime, date, total,
                         bankingImage, bookingAccepted, cust, sta, crtList));
@@ -336,9 +348,9 @@ public class bookingDAO {
 
         return bookList;
     }
-    
-    public void deleteBookingOfCustomer(String customerID){
-        String sql = "Delete Booking where customer_ID=?"; 
+
+    public void deleteBookingOfCustomer(String customerID) {
+        String sql = "Delete Booking where customer_ID=?";
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
@@ -441,12 +453,13 @@ public class bookingDAO {
         }
 
     }
-    
+
     /**
      * Author: PhuocDH
+     *
      * @param stadium_ID
      * @param year
-     * @return 
+     * @return
      */
     public List<Integer> getBookingTimeByStadiumIDandSelectedFactor(String stadium_ID, int year) {
         String sql = "SELECT startTime, endTime, courtQuantity, date FROM Booking WHERE stadium_ID = ? AND YEAR(date) = ?";
@@ -472,13 +485,13 @@ public class bookingDAO {
                 date = rs.getDate("date");
 
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                
+
                 int month = Integer.parseInt(formatter.format(date).split("-")[1]);
 
                 int bookingHour = (Integer.parseInt(endTime.split(":")[0]) - Integer.parseInt(startTime.split(":")[0]))
                         * courtQuantity;
 
-                freqList.set(month-1, freqList.get(month-1) + bookingHour);
+                freqList.set(month - 1, freqList.get(month - 1) + bookingHour);
             }
 
         } catch (Exception ex) {

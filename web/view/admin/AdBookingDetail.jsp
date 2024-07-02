@@ -1,7 +1,7 @@
 <%-- 
     Document   : AdBookDetail
     Created on : Jun 19, 2024, 9:28:21 AM
-    Author     : ADMIN
+    Author     : NhiTCU
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -120,6 +120,10 @@
                     <div class="stadium-inf">
                         <h1>Price per hour:</h1>
                         <p>${bk.stadium.pricePerHour}</p>
+                    </div>
+                    <div class="stadium-inf">
+                        <h1>Banking Image:</h1>
+                        <img src="${bk.bankingImage}" width="300px" height="450px" alt="bankingImage"/>
                     </div>
                     <div class="total">
                         <h1>Total:</h1>

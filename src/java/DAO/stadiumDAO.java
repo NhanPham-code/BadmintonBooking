@@ -8,8 +8,11 @@ import DBContext.DBContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Stadium;
 import model.StadiumOwner;
 
@@ -197,6 +200,12 @@ public class stadiumDAO {
 
     }
 
+    /**
+     * Author: NhiTCU
+     *
+     * @param ownerID
+     * @return
+     */
     public List<Stadium> getStadiumByStadiumOwnerID(String ownerID) {
         stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
         List<Stadium> stadiumList = new ArrayList<>();
@@ -229,28 +238,140 @@ public class stadiumDAO {
 
         return stadiumList;
     }
-    
+
+    /**
+     * Author: NhanNQT
+     *
+     * @param stadium_name
+     * @param stadium_address
+     * @param stadium_phone
+     * @param opentime
+     * @param relativeStadiumPath
+     * @param pricePerHour
+     * @param relativeQRCodePath
+     * @param stadium_ID
+     */
+    public void updateStadium(String stadium_name, String stadium_address, String stadium_phone, String opentime, String relativeStadiumPath, int pricePerHour, String relativeQRCodePath, String stadium_ID) {
+        String sql = "UPDATE Stadium SET stadium_name=?, stadium_address=?, stadium_phone=?, opentime=?, stadium_image=?,  pricePerHour=?, QRCode=? WHERE stadium_ID=?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            // Set parameters for the prepared statement
+            ps.setString(1, stadium_name);
+            ps.setString(2, stadium_address);
+            ps.setString(3, stadium_phone);
+            ps.setString(4, opentime);
+            ps.setString(5, relativeStadiumPath);
+            ps.setInt(6, pricePerHour);
+            ps.setString(7, relativeQRCodePath);
+            ps.setString(8, stadium_ID);
+            // Execute the update statemen
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+
+    /**
+     * Author: NhanNQT
+     *
+     * @param stadium
+     * @return
+     */
+    public int addNewStadium(Stadium stadium) {
+        int check = 0;
+        String sql = "INSERT INTO [dbo].[Stadium]\n"
+                + "           ([stadium_ID]\n"
+                + "           ,[stadium_name]\n"
+                + "           ,[stadium_address]\n"
+                + "           ,[stadium_phone]\n"
+                + "           ,[opentime]\n"
+                + "           ,[stadium_image]\n"
+                + "           ,[avg_ratingScore]\n"
+                + "           ,[pricePerHour]\n"
+                + "           ,[QRCode]\n"
+                + "           ,[owner_ID])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?)";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadium.getStadium_ID());
+            ps.setString(2, stadium.getStadium_name());
+            ps.setString(3, stadium.getStadium_address());
+            ps.setString(4, stadium.getStadium_phone());
+            ps.setString(5, stadium.getOpentime());
+            ps.setString(6, stadium.getStadium_image());
+            ps.setDouble(7, stadium.getAvg_ratingScore());
+            ps.setInt(8, stadium.getPricePerHour());
+            ps.setString(9, stadium.getQRcode());
+            ps.setString(10, stadium.getOwner().getOwner_ID());
+            check = ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(customerDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return check;
+    }
+
     /**
      * Author: PhuocDH
+     *
      * @param stadium_ID
-     * @return 
+     * @return
      */
-    
     public int getTimeOpenByStadiumID(String stadium_ID) {
         String sql = "select opentime from Stadium where stadium_ID = ?";
         String openTime = null;
         int time = 0;
-        
+
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, stadium_ID);
             rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 openTime = rs.getString("opentime");
             }
-            
+
             time = Integer.parseInt(openTime.split("-")[0].split(":")[0]);
 
         } catch (Exception ex) {

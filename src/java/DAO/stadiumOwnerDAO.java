@@ -26,6 +26,12 @@ public class stadiumOwnerDAO {
     ResultSet rs;
     DBContext db = new DBContext();
 
+    /**
+     * Author: NhiTCU
+     * 
+     * @param id
+     * @return 
+     */
     public StadiumOwner getStadiumOwnerById(String id) {
         StadiumOwner sto = new StadiumOwner();
         accountDAO acDAO = new accountDAO();
@@ -47,6 +53,12 @@ public class stadiumOwnerDAO {
         return sto;
     }
 
+    /**
+     * Author: NhiTCU
+     * 
+     * @param accID
+     * @return 
+     */
     public StadiumOwner getStadimOwnerByAccID(String accID) {
         StadiumOwner sto = null;
         accountDAO acDAO = new accountDAO();

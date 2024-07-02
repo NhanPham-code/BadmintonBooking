@@ -1,7 +1,7 @@
 <%-- 
     Document   : BookingDetail
     Created on : Jun 7, 2024, 9:45:00 AM
-    Author     : ADMIN
+    Author     : Dang
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -29,13 +29,13 @@
                 display: flex;
                 justify-content: center;
                 flex-direction: column;
-                max-width: 1300px;
+                width: 85%;
                 background-color: #f5f5f5;
                 color: black;
                 border-radius: 5px;
                 margin-top: 20px;
                 margin-bottom: 20px;
-                margin-left: 60px;
+                margin-left: 115px;
             }
             .top-container {
                 text-align: center;
@@ -186,7 +186,7 @@
                 color: white;
             }
             .delete-button:hover, .add-button:hover {
-                 background-color: #145569;
+                background-color: #145569;
             }
             .add-button{
                 padding: 5px 10px;
@@ -197,7 +197,7 @@
                 background-color: #1F7A8C;
                 outline: none;
 
-                
+
                 color: white;
             }
             .booking-btn {
@@ -225,13 +225,18 @@
                 margin-left: 5px;
             }
             .footer {
+                bottom: 0;
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
                 background: #022B3A;
                 color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                box-sizing: border-box;
+            }
+            .footer div {
+                margin: 5px 0;
             }
         </style>
     </head>
@@ -255,7 +260,30 @@
                             </div>
                         </div>
                         <h2 style="color: white;;">Court List</h2>
-                        <a class="add-button" >Add New Court</a>
+                        <!-- Đăng ADD new court -->
+                        <a class="add-button" href="#" onclick="addNewCourt('${st.stadium_ID}');">Add New Court</a> 
+                        <script>
+                            function addNewCourt(stadiumID) {
+                                var xhr = new XMLHttpRequest();
+                                var url = 'AddCourtServlet'; // URL mà servlet đã được ánh xạ
+                                xhr.open('POST', url, true);
+                                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                xhr.onreadystatechange = function () {
+                                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                                        if (xhr.status === 200) {
+                                            var response = xhr.responseText;
+                                            alert(response); // Hiển thị thông điệp từ servlet
+                                            location.reload(); // Reload lại trang sau khi thêm sân thành công
+                                        } else {
+                                            alert('Failed to add court.');
+                                        }
+                                    }
+                                };
+                                var params = 'stadiumID=' + encodeURIComponent(stadiumID);
+                                xhr.send(params);
+                            }
+                        </script>
+
                         <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
                             <table>
                                 <thead>
@@ -266,12 +294,47 @@
                                 </thead>
                                 <tbody>
                                     <c:forEach var="c" items="${requestScope.courtList}">
-                                        <tr>
+                                        <tr id="court_${c.court_ID}">
                                             <td>${c.number}</td>
-                                            <td><a class="delete-button">Delete</a></td>
+                                            <!-- Đăng ADD delete court -->
+                                            <td>
+                                                <button type="button" class="delete-button" onclick="deleteCourt('${c.court_ID}')">Delete</button>
+                                            </td>
                                         </tr>
 
-                                    </c:forEach>
+
+                                    <script>
+                                        function deleteCourt(courtID) {
+                                            if (confirm('Are you sure you want to delete this court?')) {
+                                                // Create XMLHttpRequest object
+                                                var xhr = new XMLHttpRequest();
+                                                var url = 'DeleteCourtServlet?courtID=' + encodeURIComponent(courtID);
+
+                                                // Configure xhr
+                                                xhr.open('POST', url, true);
+
+                                                // Set up onload function
+                                                xhr.onload = function () {
+                                                    if (xhr.status === 200) {
+                                                        // Xóa thành công, cập nhật giao diện
+                                                        document.getElementById('court_' + courtID).remove();
+                                                        alert('Court deleted successfully.');
+                                                    } else {
+                                                        alert('Error deleting court.');
+                                                    }
+                                                };
+
+                                                // Set up onerror function
+                                                xhr.onerror = function () {
+                                                    alert('Request failed.');
+                                                };
+
+                                                // Send request
+                                                xhr.send();
+                                            }
+                                        }
+                                    </script>
+                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -339,13 +402,29 @@
                                 });
                             });
                         </script>
+
                     </div>
                 </div>
             </div>
-            <button class="booking-btn">Delete Stadium</button>
+            <div style=" display: flex">
+                <a href='deleteStadium?stadiumID=${st.stadium_ID}' class="booking-btn">Delete Stadium</a>
+                <style>
+                    a {
+                        text-decoration: none; /* loại bỏ gạch dưới cho tất cả các thẻ a */
+                    }
+                </style>
+                <a href='updateStadium?stadiumID=${st.stadium_ID}' class="booking-btn">Update Information</a>
+                <style>
+                    a {
+                        text-decoration: none; /* loại bỏ gạch dưới cho tất cả các thẻ a */
+                    }
+                </style>
+            </div>
+
         </div>
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
         </div>
     </body>
 </html>

@@ -26,6 +26,11 @@ public class bookingDetailDAO {
     ResultSet rs;
     DBContext db = new DBContext();
 
+    /**
+     * Author: NhiTCU
+     * @param bookingID
+     * @return 
+     */
     public List<Court> getCourtListByBookingID(String bookingID) {
         List<Court> courtList = new ArrayList<>();
 

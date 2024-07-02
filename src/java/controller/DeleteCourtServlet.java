@@ -4,34 +4,22 @@
  */
 package controller;
 
-import DAO.accountDAO;
-import DAO.bookingDetailDAO;
-import DAO.bookingDAO;
-import DAO.customerDAO;
-import DAO.stadiumDAO;
-import DAO.stadiumOwnerDAO;
+import DAO.courtDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import model.Account;
-import model.Booking;
-import model.Court;
-import model.Stadium;
 
 /**
  *
- * @author NhanNQT
+ * @author Hong Dang
  */
-@WebServlet(name = "BookingListManage", urlPatterns = {"/bookingListManage"})
-public class bookingListManage extends HttpServlet {
-
+@WebServlet(name = "DeleteCourtServlet", urlPatterns = {"/DeleteCourtServlet"})
+public class DeleteCourtServlet extends HttpServlet {
+private static final long serialVersionUID = 1L;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,10 +37,10 @@ public class bookingListManage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet BookingManage</title>");
+            out.println("<title>Servlet DeleteCourtServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet BookingManage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteCourtServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -70,32 +58,16 @@ public class bookingListManage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String courtID = request.getParameter("courtID");
+        String stadiumID = request.getParameter("stadiumID"); // Lấy stadiumID từ request
+        courtDAO cDAO = new courtDAO();
+        boolean result = cDAO.deleteCourt(courtID);
 
-        Cookie[] cookies = request.getCookies();
-        String role = null;
-        String email = null;
-        // get role
-        for (Cookie ck : cookies) {
-            if (ck.getName().equalsIgnoreCase("role")) {
-                role = ck.getValue();
-            }
-            if (ck.getName().equalsIgnoreCase("email")) {
-                email = ck.getValue();
-            }
-        }
-        accountDAO accDAO = new accountDAO();
-        stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
-        stadiumDAO stdDAO = new stadiumDAO();
+        // Đặt thuộc tính deleteResult để truyền kết quả
+        request.setAttribute("deleteResult", result ? "success" : "error");
 
-        Account ac = accDAO.getAccountByEmail(email);
-        String accID = ac.getAcc_ID();
-        String ownerID = ownerDAO.getStadimOwnerByAccID(accID).getOwner_ID();
-
-        List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
-
-        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
-        request.setAttribute("listStd", listStd);
-        request.getRequestDispatcher("view/stadiumowner/BookingListManagement.jsp").forward(request, response);
+        // Chuyển hướng đến servlet stadiumDetail với stadiumID
+        request.getRequestDispatcher("stadiumDetail?stadiumID=" + stadiumID).forward(request, response);
     }
 
     /**
@@ -106,11 +78,25 @@ public class bookingListManage extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    
+    // Nhận courtID từ request
+    String courtID = request.getParameter("courtID");
+    
+    // Xóa Court từ database
+    courtDAO cDAO = new courtDAO();
+    boolean isDeleted = cDAO.deleteCourt(courtID);
+    
+    if (isDeleted) {
+        // Chuyển hướng về trang StadiumDetail.jsp sau khi xử lý xong
+        response.sendRedirect(request.getContextPath() + "/view/stadiumowner/StadiumDetail.jsp");
+    } else {
+        // Xử lý khi không xóa được (nếu cần)
+        // Ví dụ: có thể hiển thị thông báo lỗi
+        response.getWriter().println("Không thể xóa sân vận động.");
     }
+}
 
     /**
      * Returns a short description of the servlet.

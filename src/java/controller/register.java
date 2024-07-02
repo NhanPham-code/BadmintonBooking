@@ -21,7 +21,7 @@ import model.hashPasswordMD5;
 
 /**
  *
- * @author PC
+ *  @author NhiTCU
  */
 @WebServlet(name = "register", urlPatterns = {"/register"})
 public class register extends HttpServlet {

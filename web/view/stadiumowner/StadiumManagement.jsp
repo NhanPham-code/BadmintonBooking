@@ -1,7 +1,7 @@
 <%-- 
     Document   : StadiumMangement
     Created on : Jun 7, 2024, 12:12:06 PM
-    Author     : ADMIN
+    Author     : NhiTCU
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -70,6 +70,7 @@
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
                 cursor: pointer;
             }
+
             .stadium-item:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -106,11 +107,16 @@
                 background: #145569;
             }
             .footer {
+                position: absolute;
+                bottom: 0;
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
-                padding: 10px;
-                margin-top: auto;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
+                background: #022B3A;
+                color: white;
             }
             .footer div {
                 margin: 5px 0;
@@ -141,32 +147,27 @@
             }
 
             #add-new-btn {
-                background-color: #5f88e6;
-                color: #E3E6ED;
+                background: #4CAF50;
                 border: none;
-                width: 150px;
-                height: 30px;
-                font-size: 18px;
+                width: 10%;
+                color: white;
+                font-size: 16px;
+                padding: 12px 10px;
+                border-radius: 4px;
+                text-decoration: none;
                 cursor: pointer;
-                transition: background-color 0.3s;
             }
 
             #add-new-btn:hover {
-                opacity: 0.8;
+                background-color: #0056b3;
             }
         </style>
     </head>
     <body>
         <jsp:include page="HeaderStadiumOwner.jsp" flush="true" />
 
-
-
-        <div class="stadium-list">
-
-            
-                <button id="add-new-btn" onclick="window.location.href = 'addNewStadium.jsp';">New Stadium</button>
-            
-            <div class="error-message"><h1>${requestScope.err}</h1></div>
+        <div class="stadium-list">           
+            <button id="add-new-btn" onclick="window.location.href = 'AddNewSta';">New Stadium</button>
 
             <c:forEach var="st" items="${requestScope.stList}">
                 <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
@@ -181,7 +182,7 @@
                     </div>
                     <div class="stadium-actions">
                         <a href="deleteStadium?stadiumID=${st.stadium_ID}">Delete</a>
-                        <a href="stadiumDetail?stadiumID=${st.stadium_ID}">Details</a>
+                        <a href="updateStadium?stadiumID=${st.stadium_ID}">Update</a>
                     </div>
                 </div>
             </c:forEach>
