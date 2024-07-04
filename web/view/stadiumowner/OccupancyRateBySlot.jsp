@@ -10,40 +10,28 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             body {
-                background: #E6FDE1;
+                background: #E6FDE1; /**/
                 padding: 16px;
-                font-family: Arial, sans-serif;
             }
 
             .datePickerContainer {
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
                 width: 100%;
                 flex-wrap: wrap;
-                gap: 10px;
             }
 
-            .datePickerContainer select,
-            .datePickerContainer button {
-                flex: 1;
+            .datePickerContainer select {
+                flex-grow: 1;
                 padding: 8px 12px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 font-size: 16px;
-                min-width: 150px;
+                margin-right: 10px;
+                margin-bottom: 10px;
             }
 
-            .datePickerContainer button {
-                background-color: #D3E4F5;
-                color: #000;
-                border: none;
-                cursor: pointer;
-                transition: background-color 0.3s, color 0.3s;
-            }
-
-            .datePickerContainer select:hover,
-            .datePickerContainer button:hover {
+            .datePickerContainer select:hover {
                 border-color: #999;
             }
 
@@ -61,13 +49,13 @@
                 position: relative;
                 margin: auto;
                 height: 80vh;
-                width: 95vw;
+                width: 95vw; /**/
             }
         </style>
     </head>
 
     <body>
-        <form id="chartForm" action="OccupancyRateController" method="get">
+        <form id="chartForm" action="OccupancyRateBySlotController" method="get">
             <div class="datePickerContainer">
                 <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}">
                 <select id="yearSelector" name="year" onchange="submitForm()">
@@ -94,11 +82,16 @@
                     <option value="12" ${requestScope.selectedMonth eq '12' ? 'selected' : ''}>December</option>
                 </select>
 
+                <select id="daySelector" name="day" onchange="submitForm()" disabled>
+                    <option value="">Select Day</option>
+                </select>
+
                 <select id="chartTypeSelector" name="chartType" onchange="updateChartType()">
                     <option value="bar">Bar Chart (Vertical)</option>
                     <option value="line">Line Chart</option>
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
                 </select>
+
             </div>
         </form>
 
@@ -108,46 +101,35 @@
 
         <script>
             var freqList = [
-            <c:forEach var="item" items="${freqList}" varStatus="itemStatus">
+            <c:forEach var="item" items="${requestScope.freqList}" varStatus="itemStatus">
             "${item}"<c:if test="${!itemStatus.last}">,</c:if>
             </c:forEach>
             ];
 
-            function processYearData() {
-                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                return {
-                    labels: months,
-                    data: freqList.map(Number)
-                };
-            }
+            var slotList = [
+            <c:forEach var="item" items="${requestScope.slotList}" varStatus="itemStatus">
+            "${item}"<c:if test="${!itemStatus.last}">,</c:if>
+            </c:forEach>
+            ];
 
-            function processMonthData() {
-                var days = Array.from({length: 31}, (_, i) => (i + 1).toString());
+            function processData() {
                 return {
-                    labels: days,
-                    data: freqList.map(Number)
+                    labels: slotList,
+                    data: freqList.map(Number) // Convert element to int
                 };
             }
 
             function showChart() {
                 var chartType = document.getElementById('chartTypeSelector').value;
-                var processedData;
-                var monthSelector = document.getElementById('monthSelector');
-
-                if (monthSelector.disabled || monthSelector.value === "") {
-                    processedData = processYearData();
-                } else {
-                    processedData = processMonthData();
-                }
-
+                var processedData = processData();
                 var data = {
                     labels: processedData.labels,
                     datasets: [{
-                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking of each month" : "Booking of each day",
-                            backgroundColor: "rgba(255,99,132,0.2)",
-                            borderColor: "rgba(255,99,132,1)",
-                            borderWidth: 2,
-                            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                            label: "Booking slot count",
+                            backgroundColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,0.2)",
+                            borderColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,1)",
+                            borderWidth: chartType === 'pie' ? 1 : 2,
+                            hoverBackgroundColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,0.4)",
                             hoverBorderColor: "rgba(255,99,132,1)",
                             data: processedData.data,
                             tension: 0.4
@@ -180,6 +162,13 @@
                     }
                 };
 
+                if (chartType === 'pie') {
+                    options = {
+                        responsive: true,
+                        maintainAspectRatio: false // Set pie chart to full page
+                    };
+                }
+
                 if (isHorizontal) {
                     options.indexAxis = 'y';
                 } else {
@@ -197,9 +186,21 @@
                 });
             }
 
+            function generateColors(count) {
+                const colors = [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                    '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF9F40',
+                    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+                    '#7FDBFF', '#FDCB6E', '#778BEB', '#786FA6', '#F8A5C2',
+                    '#63CDDA', '#CF6A87', '#786FA6', '#FDA7DF'
+                ];
+                return colors.slice(0, count); // Cut the array to the desired length
+            }
+
             function updateMonthSelector() {
                 var yearSelector = document.getElementById('yearSelector');
                 var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
 
                 if (yearSelector.value) {
                     monthSelector.disabled = false;
@@ -207,21 +208,46 @@
                     monthSelector.disabled = true;
                     monthSelector.selectedIndex = 0;
                 }
+                daySelector.disabled = true;
+                daySelector.selectedIndex = 0;
+                updateDaySelector();
+            }
+
+            function updateDaySelector() {
+                var yearSelector = document.getElementById('yearSelector');
+                var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
+
+                daySelector.innerHTML = '<option value="">Select Day</option>';
+                daySelector.disabled = true;
+
+                if (yearSelector.value && monthSelector.value) {
+                    var year = parseInt(yearSelector.value);
+                    var month = parseInt(monthSelector.value);
+                    var daysInMonth = new Date(year, month, 0).getDate(); //lấy số ngày trong tháng
+
+                    for (var i = 1; i <= daysInMonth; i++) {
+                        var option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        if ('${requestScope.selectedDay}' == i) {
+                            option.selected = true;
+                        }
+                        daySelector.appendChild(option);
+                    } //lấy ngày cho thẻ day
+
+                    daySelector.disabled = false;
+                }
+            }
+
+            function isValidDate(year, month, day) {
+                var d = new Date(year, month - 1, day);
+                return d.getFullYear() == year && d.getMonth() == month - 1 && d.getDate() == day;
             }
 
             function updateChartType() {
                 showChart();
             }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                updateMonthSelector();
-                showChart();
-
-                //khi chọn year
-                document.getElementById('yearSelector').addEventListener('change', function () {
-                    updateMonthSelector();
-                });
-            });
 
             function submitForm() {
                 var yearSelector = document.getElementById('yearSelector');
@@ -234,6 +260,22 @@
                     monthSelector.selectedIndex = 0; // Reset to "Select Month"
                 }
             }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                updateMonthSelector();
+                showChart();
+
+                //khi chọn year
+                document.getElementById('yearSelector').addEventListener('change', function () {
+                    updateMonthSelector();
+                });
+
+                //khi chọn month 
+                document.getElementById('monthSelector').addEventListener('change', function () {
+                    updateDaySelector();
+                });
+            });
+
         </script>
     </body>
 </html>

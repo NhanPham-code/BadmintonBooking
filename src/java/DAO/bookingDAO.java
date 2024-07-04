@@ -12,7 +12,9 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import model.Booking;
 import model.Court;
 import model.Customer;
 import model.Stadium;
+import java.time.YearMonth;
 
 /**
  *
@@ -415,21 +418,112 @@ public class bookingDAO {
 
     }
 
-    public List<Integer> getBookingTimeByStadiumIDandSelectedFactor(String stadium_ID, int year) {
-        String sql = "SELECT startTime, endTime, courtQuantity, date FROM Booking WHERE stadium_ID = ? AND YEAR(date) = ?";
-        List<Integer> freqList = Arrays.asList(new Integer[12]);
+    //PhuocDH
+    public List<Integer> getBookingTimeByStadiumIDandSelectedFactor(String stadiumId, int year, int month) {
+        List<Integer> bookingHours = new ArrayList<>();
+        LocalDate date;
+        StringBuilder sqlBuilder = new StringBuilder("SELECT startTime, endTime, courtQuantity, date "
+                + "FROM Booking WHERE stadium_ID = ? AND bookingAccepted = 'accepted'");
+        if (month != -1 && year != -1) {
+            sqlBuilder.append(" AND YEAR(date) = ? AND MONTH(date) = ?");
+        } else if (year != -1) {
+            sqlBuilder.append(" AND YEAR(date) = ?");
+        }
+        String sql = sqlBuilder.toString();
+
+        try ( Connection conn = db.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, stadiumId);
+            int paramIndex = 2;
+            if (year != -1) {
+                ps.setInt(paramIndex++, year);
+            }
+            if (month != -1) {
+                ps.setInt(paramIndex, month);
+            }
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (month == -1) {
+                    bookingHours = new ArrayList<>(Collections.nCopies(12, 0));
+                } else {
+                    int daysInMonth = YearMonth.of(year, month).lengthOfMonth();
+                    bookingHours = new ArrayList<>(Collections.nCopies(daysInMonth, 0));
+                }
+
+                while (rs.next()) {
+                    String startTime = rs.getString("startTime");
+                    String endTime = rs.getString("endTime");
+                    int courtQuantity = rs.getInt("courtQuantity");
+                    date = rs.getDate("date").toLocalDate();
+
+                    int bookingHour = (Integer.parseInt(endTime.split(":")[0]) - Integer.parseInt(startTime.split(":")[0]))
+                            * courtQuantity;
+
+                    if (month == -1) {
+                        int monthIndex = date.getMonthValue() - 1;
+                        bookingHours.set(monthIndex, bookingHours.get(monthIndex) + bookingHour);
+                    } else {
+                        int dayIndex = date.getDayOfMonth() - 1;
+                        bookingHours.set(dayIndex, bookingHours.get(dayIndex) + bookingHour);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            // Xử lý ngoại lệ một cách cụ thể hơn
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error querying booking data", ex);
+            throw new RuntimeException("Error querying booking data", ex);
+        } catch (Exception ex) {
+            Logger.getLogger(bookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bookingHours;
+    }
+
+    //get day with year and month
+    public int getDaysInMonth(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        return yearMonth.lengthOfMonth();
+    }
+
+    //PhuocDH
+    public List<Integer> getBookingOfEachHourByStadiumIDandSelectedFactor(String stadium_ID, int year, int month, int day) {
+        stadiumDAO staDAO = new stadiumDAO();
+        List<Integer> freqList = Arrays.asList(new Integer[staDAO.getTimeScheduleByStadiumID(stadium_ID)]);
         Collections.fill(freqList, 0);
+        int openTime = staDAO.getTimeOpenByStadiumID(stadium_ID);
 
         String startTime = null;
         String endTime = null;
         int courtQuantity = 0;
         Date date;
 
+        StringBuilder sqlBuilder = new StringBuilder("SELECT startTime, endTime, courtQuantity, date "
+                + "FROM Booking WHERE stadium_ID = ? AND bookingAccepted = 'accepted'");
+
+        if (day != -1 && month != -1 && year != -1) {
+            sqlBuilder.append(" AND YEAR(date) = ? AND MONTH(date) = ? AND DAY(date) = ?");
+        } else if (month != -1 && year != -1) {
+            sqlBuilder.append(" AND YEAR(date) = ? AND MONTH(date) = ?");
+        } else if (year != -1) {
+            sqlBuilder.append(" AND YEAR(date) = ?");
+        }
+
+        String sql = sqlBuilder.toString();
+
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, stadium_ID);
-            ps.setInt(2, year);
+            int paramIndex = 2;
+            if (year != -1) {
+                ps.setInt(paramIndex, year);
+                paramIndex++;
+            }
+            if (month != -1) {
+                ps.setInt(paramIndex, month);
+                paramIndex++;
+            }
+            if (day != -1) {
+                ps.setInt(paramIndex, day);
+            }
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -438,14 +532,12 @@ public class bookingDAO {
                 courtQuantity = rs.getInt("courtQuantity");
                 date = rs.getDate("date");
 
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                
-                int month = Integer.parseInt(formatter.format(date).split("-")[1]);
+                int startTimeInList = Integer.parseInt(startTime.split(":")[0]) - openTime;
+                int endTimeInList = Integer.parseInt(endTime.split(":")[0]) - openTime;
 
-                int bookingHour = (Integer.parseInt(endTime.split(":")[0]) - Integer.parseInt(startTime.split(":")[0]))
-                        * courtQuantity;
-
-                freqList.set(month-1, freqList.get(month-1) + bookingHour);
+                for (int i = startTimeInList; i < endTimeInList; i++) {
+                    freqList.set(i, freqList.get(i) + courtQuantity);
+                }
             }
 
         } catch (Exception ex) {
@@ -454,72 +546,11 @@ public class bookingDAO {
         return freqList;
     }
 
-    /*public static void main(String[] args) {
-        bookingDAO bookDAO = new bookingDAO();
-
-        /*
-        // Tạo đối tượng Date giả lập
-        Date date = Date.valueOf("2024-06-21"); // Thay đổi ngày phù hợp
-
-        // Tạo stadium_ID giả lập
-        String stadium_ID = "STD2"; // Thay đổi ID phù hợp
-
-        // Gọi phương thức getBookingByDateAndStadiumID
-        List<Booking> bookList = bookDAO.getBookingByDateAndStadiumID(date, stadium_ID);
-
-        System.out.println(bookList.size());
-        System.out.println(bookList.get(0).getBooking_ID());
-        List<Court> courtInBook = bookList.get(0).getCourtList();
-        for (Court c : courtInBook) {
-            System.out.println(c.getCourt_ID());
-        }
-
-        Booking book = bookList.get(0);
-
-        System.out.println(book.getStartTime());
-        System.out.println(book.getEndTime());
-
-        courtDAO cDAO = new courtDAO();
-        List<Court> clist = cDAO.getCourtListByStadiumID(stadium_ID);
-
-        Time startTime = Time.valueOf("17:00:00");
-        Time endTime = Time.valueOf("19:00:00");
-
-        Iterator<Court> iterator = clist.iterator();
-        while (iterator.hasNext()) {
-            Court c = iterator.next();
-            boolean check = false;
-            for (Court cInBook : courtInBook) {
-                if (c.getCourt_ID().equals(cInBook.getCourt_ID())) {
-                    check = true;
-                    break;
-                }
-            }
-            if (check) {
-                iterator.remove();
-            }
-        }
-
-        System.out.println("List sau khi xoas");
-        for (Court c : clist) {
-            System.out.println(c.getCourt_ID());
-            System.out.println(c.getNumber());
-        }
-         
-        List<Booking> list = bookDAO.getAllBooking();
-
-        System.out.println(list.size());
-
-    }*/
     public static void main(String[] args) {
         bookingDAO bDAO = new bookingDAO();
-//        String BookingID = "BOOK2";
-//        List<Booking> bookings = bDAO.getBookingByStadiumID("STD2");
-//
-//        System.out.println(bookings);
-//        System.out.println(bookings.get(1).getCourtList().get(0).getNumber());
 
-        List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD1", 2024);
+        int month = -1;
+        List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD3", 2024, month);
         System.out.println(freqList);
     }
 }

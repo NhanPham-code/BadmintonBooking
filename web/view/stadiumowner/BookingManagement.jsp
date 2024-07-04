@@ -191,6 +191,7 @@
                     <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}">Booking History</a>
                     <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Booking Chart</a>
                     <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}">Occupancy rate Chart</a>
+                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}">Occupancy by Slot</a>
                 </div>
                 <div class="table">
                     <!-- Pending Bookings -->
