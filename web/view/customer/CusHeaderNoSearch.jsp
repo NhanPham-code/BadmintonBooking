@@ -172,7 +172,7 @@
         </div>
         <div class="nav">
             <a href="<%=request.getContextPath()%>/stadiumList">STADIUM LIST</a>
-            <a href="<%=request.getContextPath()%>/#">POPULAR</a>
+            <a href="<%=request.getContextPath()%>/Popular">POPULAR</a>
             <a href="<%=request.getContextPath()%>/CustomerHistoryController">BOOKING HISTORY</a>
         </div>
     </body>
