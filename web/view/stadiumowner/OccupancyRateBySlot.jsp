@@ -10,7 +10,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>
             body {
-                background: #E6FDE1; /**/
+                background: #E6FDE1;
                 padding: 16px;
             }
 
@@ -49,21 +49,57 @@
                 position: relative;
                 margin: auto;
                 height: 80vh;
-                width: 95vw; /**/
+                width: 95vw;
+            }
+            
+            .exit-button {
+                margin-bottom: 2%;
+            }
+
+            .exit-button a {
+                font-family: cursive;
+                font-size: 120%;
+                color: blue;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                position: relative;
+            }
+
+            .exit-button a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: blue;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .exit-button a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
             }
         </style>
     </head>
 
     <body>
+        <div class = "exit-button">
+            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
+        </div> 
+        
         <form id="chartForm" action="OccupancyRateBySlotController" method="get">
             <div class="datePickerContainer">
                 <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}">
                 <select id="yearSelector" name="year" onchange="submitForm()">
-                    <option value="">Select Year</option>
-                    <option value="2025" ${requestScope.selectedYear eq '2025' ? 'selected' : ''}>2025</option>
-                    <option value="2024" ${requestScope.selectedYear eq '2024' ? 'selected' : ''}>2024</option>
-                    <option value="2023" ${requestScope.selectedYear eq '2023' ? 'selected' : ''}>2023</option>
-                    <option value="2022" ${requestScope.selectedYear eq '2022' ? 'selected' : ''}>2022</option>
+                    <option value="">Select Year (reset param)</option>
+                    <option value="2025" ${requestScope.selectedYear == 2025 ? 'selected' : ''}>2025</option>
+                    <option value="2024" ${requestScope.selectedYear == 2024 ? 'selected' : ''}>2024</option>
+                    <option value="2023" ${requestScope.selectedYear == 2023 ? 'selected' : ''}>2023</option>
+                    <option value="2022" ${requestScope.selectedYear == 2022 ? 'selected' : ''}>2022</option>
                 </select>
 
                 <select id="monthSelector" name="month" onchange="submitForm()" disabled>
@@ -90,8 +126,8 @@
                     <option value="bar">Bar Chart (Vertical)</option>
                     <option value="line">Line Chart</option>
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
+<!--                    <option value="pie">Pie chart</option>-->
                 </select>
-
             </div>
         </form>
 
@@ -115,7 +151,7 @@
             function processData() {
                 return {
                     labels: slotList,
-                    data: freqList.map(Number) // Convert element to int
+                    data: freqList.map(Number)
                 };
             }
 
@@ -165,7 +201,7 @@
                 if (chartType === 'pie') {
                     options = {
                         responsive: true,
-                        maintainAspectRatio: false // Set pie chart to full page
+                        maintainAspectRatio: false
                     };
                 }
 
@@ -194,7 +230,7 @@
                     '#7FDBFF', '#FDCB6E', '#778BEB', '#786FA6', '#F8A5C2',
                     '#63CDDA', '#CF6A87', '#786FA6', '#FDA7DF'
                 ];
-                return colors.slice(0, count); // Cut the array to the desired length
+                return colors.slice(0, count);
             }
 
             function updateMonthSelector() {
@@ -202,16 +238,23 @@
                 var monthSelector = document.getElementById('monthSelector');
                 var daySelector = document.getElementById('daySelector');
 
+                // Lưu trữ tháng đã chọn trước khi cập nhật
+                var selectedMonth = monthSelector.value;
+
                 if (yearSelector.value) {
                     monthSelector.disabled = false;
+                    // Không reset selectedIndex nếu đã chọn tháng
+                    if (!selectedMonth) {
+                        monthSelector.selectedIndex = 0; // Reset month to default
+                    }
                 } else {
                     monthSelector.disabled = true;
                     monthSelector.selectedIndex = 0;
                 }
                 daySelector.disabled = true;
                 daySelector.selectedIndex = 0;
-                updateDaySelector();
             }
+
 
             function updateDaySelector() {
                 var yearSelector = document.getElementById('yearSelector');
@@ -224,7 +267,7 @@
                 if (yearSelector.value && monthSelector.value) {
                     var year = parseInt(yearSelector.value);
                     var month = parseInt(monthSelector.value);
-                    var daysInMonth = new Date(year, month, 0).getDate(); //lấy số ngày trong tháng
+                    var daysInMonth = new Date(year, month, 0).getDate();
 
                     for (var i = 1; i <= daysInMonth; i++) {
                         var option = document.createElement('option');
@@ -234,15 +277,13 @@
                             option.selected = true;
                         }
                         daySelector.appendChild(option);
-                    } //lấy ngày cho thẻ day
+                    }
 
                     daySelector.disabled = false;
                 }
-            }
 
-            function isValidDate(year, month, day) {
-                var d = new Date(year, month - 1, day);
-                return d.getFullYear() == year && d.getMonth() == month - 1 && d.getDate() == day;
+                // Call showChart() to update the chart without submitting the form
+                showChart();
             }
 
             function updateChartType() {
@@ -252,30 +293,67 @@
             function submitForm() {
                 var yearSelector = document.getElementById('yearSelector');
                 var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
+                var chartTypeSelector = document.getElementById('chartTypeSelector');
+                var stadiumID = document.getElementById('stadiumID').value;
+
+                var url = 'OccupancyRateBySlotController?StadiumID=' + stadiumID;
 
                 if (yearSelector.value) {
-                    document.getElementById("chartForm").submit();
-                } else {
-                    monthSelector.disabled = true; // Disable month selector
-                    monthSelector.selectedIndex = 0; // Reset to "Select Month"
+                    url += '&year=' + yearSelector.value;
+
+                    if (monthSelector.value) {
+                        url += '&month=' + monthSelector.value;
+                        if (daySelector.value) {
+                            url += '&day=' + daySelector.value;
+                        }
+                    }
                 }
+
+                // Include chartType in the URL so it can be preserved
+                url += '&chartType=' + chartTypeSelector.value;
+
+                window.location.href = url;
             }
 
             document.addEventListener('DOMContentLoaded', function () {
                 updateMonthSelector();
-                showChart();
+                updateDaySelector();
+                //showChart();
 
-                //khi chọn year
                 document.getElementById('yearSelector').addEventListener('change', function () {
                     updateMonthSelector();
+                    //showChart(); // Update the chart without submitting the form
                 });
 
-                //khi chọn month 
                 document.getElementById('monthSelector').addEventListener('change', function () {
                     updateDaySelector();
+                    //showChart(); // Update the chart without submitting the form
                 });
+
+                document.getElementById('daySelector').addEventListener('change', function () {
+                    //showChart(); // Update the chart without submitting the form
+                });
+
+                document.getElementById('chartTypeSelector').addEventListener('change', function () {
+                    updateChartType();
+                });
+
+                // Preserve chartType on page load
+                var urlParams = new URLSearchParams(window.location.search);
+                var chartType = urlParams.get('chartType');
+                if (chartType) {
+                    document.getElementById('chartTypeSelector').value = chartType;
+                    showChart(); // Re-render chart with preserved chart type
+                }
             });
 
+            // Add event listener for the submit button to submit the form
+            document.getElementById('submitButton').addEventListener('click', function () {
+                submitForm();
+            });
         </script>
     </body>
 </html>
+
+

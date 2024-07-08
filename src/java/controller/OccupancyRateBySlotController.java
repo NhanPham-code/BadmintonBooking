@@ -89,6 +89,7 @@ public class OccupancyRateBySlotController extends HttpServlet {
         List<Integer> freqList = bookDAO.getBookingOfEachHourByStadiumIDandSelectedFactor(stadiumID, year, month, day);
         ArrayList<String> slotList = staDAO.convertToSlot(stadiumID);
 
+        request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("freqList", freqList);
         request.setAttribute("slotList", slotList);
         request.setAttribute("selectedYear", year);

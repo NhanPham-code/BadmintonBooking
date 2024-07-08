@@ -96,6 +96,7 @@ public class ChartDrawController extends HttpServlet {
             }
         }
 
+        request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
         request.setAttribute("acceptedBookings", acceptedBookings);
         request.getRequestDispatcher("view/stadiumowner/StadiumChartStatistic.jsp").forward(request, response);

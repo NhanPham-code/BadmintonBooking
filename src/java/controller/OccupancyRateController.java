@@ -88,6 +88,7 @@ public class OccupancyRateController extends HttpServlet {
         // Logging
         System.out.println("Year: " + year + ", StadiumID: " + stadiumID + ", FreqList size: " + freqList.size());
 
+        request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("freqList", freqList);
         request.setAttribute("selectedMonth", month);
         request.setAttribute("selectedYear", year);

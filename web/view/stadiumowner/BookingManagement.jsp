@@ -189,9 +189,9 @@
             <div class="cus-book-his">
                 <div class="booking-history">
                     <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}">Booking History</a>
-                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Booking Chart</a>
+                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Revenue Chart</a>
                     <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}">Occupancy rate Chart</a>
-                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}">Occupancy by Slot</a>
+                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}">Occupancy by Slot Chart</a>
                 </div>
                 <div class="table">
                     <!-- Pending Bookings -->

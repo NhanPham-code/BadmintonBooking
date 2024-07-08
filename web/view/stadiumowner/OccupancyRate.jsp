@@ -63,15 +63,51 @@
                 height: 80vh;
                 width: 95vw;
             }
+
+            .exit-button {
+                margin-bottom: 2%;
+            }
+
+            .exit-button a {
+                font-family: cursive;
+                font-size: 120%;
+                color: blue;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                position: relative;
+            }
+
+            .exit-button a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: blue;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .exit-button a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
         </style>
     </head>
 
     <body>
+        <div class = "exit-button">
+            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
+        </div> 
+
         <form id="chartForm" action="OccupancyRateController" method="get">
             <div class="datePickerContainer">
                 <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}">
                 <select id="yearSelector" name="year" onchange="submitForm()">
-                    <option value="">Select Year</option>
+                    <option value="">Select Year (reset param)</option>
                     <option value="2025" ${requestScope.selectedYear eq '2025' ? 'selected' : ''}>2025</option>
                     <option value="2024" ${requestScope.selectedYear eq '2024' ? 'selected' : ''}>2024</option>
                     <option value="2023" ${requestScope.selectedYear eq '2023' ? 'selected' : ''}>2023</option>
@@ -201,14 +237,20 @@
                 var yearSelector = document.getElementById('yearSelector');
                 var monthSelector = document.getElementById('monthSelector');
 
+                // Lưu trữ tháng đã chọn trước khi cập nhật
+                var selectedMonth = monthSelector.value;
+
                 if (yearSelector.value) {
                     monthSelector.disabled = false;
+                    // Không reset selectedIndex nếu đã chọn tháng
+                    if (!selectedMonth) {
+                        monthSelector.selectedIndex = 0; // Reset month to default
+                    }
                 } else {
                     monthSelector.disabled = true;
                     monthSelector.selectedIndex = 0;
                 }
             }
-
             function updateChartType() {
                 showChart();
             }
@@ -217,22 +259,54 @@
                 updateMonthSelector();
                 showChart();
 
-                //khi chọn year
                 document.getElementById('yearSelector').addEventListener('change', function () {
                     updateMonthSelector();
+                    //showChart(); // Update the chart without submitting the form
                 });
+
+                document.getElementById('monthSelector').addEventListener('change', function () {
+                    //showChart(); // Update the chart without submitting the form
+                });
+
+                document.getElementById('chartTypeSelector').addEventListener('change', function () {
+                    updateChartType();
+                });
+
+                // Preserve chartType on page load
+                var urlParams = new URLSearchParams(window.location.search);
+                var chartType = urlParams.get('chartType');
+                if (chartType) {
+                    document.getElementById('chartTypeSelector').value = chartType;
+                    showChart(); // Re-render chart with preserved chart type
+                }
+            });
+
+            // Add event listener for the submit button to submit the form
+            document.getElementById('submitButton').addEventListener('click', function () {
+                submitForm();
             });
 
             function submitForm() {
                 var yearSelector = document.getElementById('yearSelector');
                 var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
+                var chartTypeSelector = document.getElementById('chartTypeSelector');
+                var stadiumID = document.getElementById('stadiumID').value;
+
+                var url = 'OccupancyRateController?StadiumID=' + stadiumID;
 
                 if (yearSelector.value) {
-                    document.getElementById("chartForm").submit();
-                } else {
-                    monthSelector.disabled = true; // Disable month selector
-                    monthSelector.selectedIndex = 0; // Reset to "Select Month"
+                    url += '&year=' + yearSelector.value;
+
+                    if (monthSelector.value) {
+                        url += '&month=' + monthSelector.value;
+                    }
                 }
+
+                // Include chartType in the URL so it can be preserved
+                url += '&chartType=' + chartTypeSelector.value;
+
+                window.location.href = url;
             }
         </script>
     </body>

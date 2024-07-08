@@ -77,10 +77,46 @@
                 height: 90vh;
                 width: 95vw;
             }
+            
+            .exit-button {
+                margin-bottom: 2%;
+            }
+
+            .exit-button a {
+                font-family: cursive;
+                font-size: 120%;
+                color: blue;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                position: relative;
+            }
+
+            .exit-button a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: blue;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .exit-button a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
         </style>
     </head>
 
     <body>
+        <div class = "exit-button">
+            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
+        </div> 
+        
         <div class="datePickerContainer">
             <select id="yearSelector">
                 <option value="" disabled selected>Select Year</option>
