@@ -5,22 +5,23 @@
 package controller;
 
 import DAO.bookingDAO;
+import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
  * @author WINDOWS
  */
-@WebServlet(name = "OccupancyRateController", urlPatterns = {"/OccupancyRateController"})
-public class OccupancyRateController extends HttpServlet {
+@WebServlet(name = "OccupancyRateBySlotController", urlPatterns = {"/OccupancyRateBySlotController"})
+public class OccupancyRateBySlotController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,8 +32,6 @@ public class OccupancyRateController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    bookingDAO bookDAO = new bookingDAO();
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -41,10 +40,10 @@ public class OccupancyRateController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet OccupancyRateController</title>");
+            out.println("<title>Servlet OccupancyRateBySlotController</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet OccupancyRateController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet OccupancyRateBySlotController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,16 +62,20 @@ public class OccupancyRateController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         bookingDAO bookDAO = new bookingDAO();
+        stadiumDAO staDAO = new stadiumDAO();
 
         String yearString = request.getParameter("year");
         String monthString = request.getParameter("month");
-        int year, month = 0;
+        String dayString = request.getParameter("day");
+        int year, month = 0, day = 0;
         try {
             //lấy năm hiện tại
             year = (yearString != null) ? Integer.parseInt(yearString) : java.time.Year.now().getValue();
             month = (monthString != null) ? Integer.parseInt(monthString) : -1;
+            day = (dayString != null) ? Integer.parseInt(dayString) : -1;
+            
         } catch (NumberFormatException e) {
-            year = java.time.Year.now().getValue(); 
+            year = java.time.Year.now().getValue();
         }
 
         // Xử lý StadiumID
@@ -82,19 +85,18 @@ public class OccupancyRateController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "StadiumID is required");
             return;
         }
-
-        List<Integer> freqList = bookDAO.getBookingTimeByStadiumIDandSelectedFactor(stadiumID, year, month);
-
-        // Logging
-        System.out.println("Year: " + year + ", StadiumID: " + stadiumID + ", FreqList size: " + freqList.size());
+        
+        List<Integer> freqList = bookDAO.getBookingOfEachHourByStadiumIDandSelectedFactor(stadiumID, year, month, day);
+        ArrayList<String> slotList = staDAO.convertToSlot(stadiumID);
 
         request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("freqList", freqList);
-        request.setAttribute("selectedMonth", month);
+        request.setAttribute("slotList", slotList);
         request.setAttribute("selectedYear", year);
-        request.getRequestDispatcher("view/stadiumowner/OccupancyRate.jsp").forward(request, response);
+        request.setAttribute("selectedMonth", month);
+        request.setAttribute("selectedDay", day);
+        request.getRequestDispatcher("view/stadiumowner/OccupancyRateBySlot.jsp").forward(request, response);
     }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -106,7 +108,7 @@ public class OccupancyRateController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**

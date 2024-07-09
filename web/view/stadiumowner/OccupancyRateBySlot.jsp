@@ -12,38 +12,26 @@
             body {
                 background: #E6FDE1;
                 padding: 16px;
-                font-family: Arial, sans-serif;
             }
 
             .datePickerContainer {
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
                 width: 100%;
                 flex-wrap: wrap;
-                gap: 10px;
             }
 
-            .datePickerContainer select,
-            .datePickerContainer button {
-                flex: 1;
+            .datePickerContainer select {
+                flex-grow: 1;
                 padding: 8px 12px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 font-size: 16px;
-                min-width: 150px;
+                margin-right: 10px;
+                margin-bottom: 10px;
             }
 
-            .datePickerContainer button {
-                background-color: #D3E4F5;
-                color: #000;
-                border: none;
-                cursor: pointer;
-                transition: background-color 0.3s, color 0.3s;
-            }
-
-            .datePickerContainer select:hover,
-            .datePickerContainer button:hover {
+            .datePickerContainer select:hover {
                 border-color: #999;
             }
 
@@ -63,7 +51,7 @@
                 height: 80vh;
                 width: 95vw;
             }
-
+            
             .exit-button {
                 margin-bottom: 2%;
             }
@@ -102,16 +90,16 @@
         <div class = "exit-button">
             <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
         </div> 
-
-        <form id="chartForm" action="OccupancyRateController" method="get">
+        
+        <form id="chartForm" action="OccupancyRateBySlotController" method="get">
             <div class="datePickerContainer">
                 <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}">
                 <select id="yearSelector" name="year" onchange="submitForm()">
                     <option value="">Select Year (reset param)</option>
-                    <option value="2025" ${requestScope.selectedYear eq '2025' ? 'selected' : ''}>2025</option>
-                    <option value="2024" ${requestScope.selectedYear eq '2024' ? 'selected' : ''}>2024</option>
-                    <option value="2023" ${requestScope.selectedYear eq '2023' ? 'selected' : ''}>2023</option>
-                    <option value="2022" ${requestScope.selectedYear eq '2022' ? 'selected' : ''}>2022</option>
+                    <option value="2025" ${requestScope.selectedYear == 2025 ? 'selected' : ''}>2025</option>
+                    <option value="2024" ${requestScope.selectedYear == 2024 ? 'selected' : ''}>2024</option>
+                    <option value="2023" ${requestScope.selectedYear == 2023 ? 'selected' : ''}>2023</option>
+                    <option value="2022" ${requestScope.selectedYear == 2022 ? 'selected' : ''}>2022</option>
                 </select>
 
                 <select id="monthSelector" name="month" onchange="submitForm()" disabled>
@@ -130,10 +118,15 @@
                     <option value="12" ${requestScope.selectedMonth eq '12' ? 'selected' : ''}>December</option>
                 </select>
 
+                <select id="daySelector" name="day" onchange="submitForm()" disabled>
+                    <option value="">Select Day</option>
+                </select>
+
                 <select id="chartTypeSelector" name="chartType" onchange="updateChartType()">
                     <option value="bar">Bar Chart (Vertical)</option>
                     <option value="line">Line Chart</option>
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
+<!--                    <option value="pie">Pie chart</option>-->
                 </select>
             </div>
         </form>
@@ -144,46 +137,35 @@
 
         <script>
             var freqList = [
-            <c:forEach var="item" items="${freqList}" varStatus="itemStatus">
+            <c:forEach var="item" items="${requestScope.freqList}" varStatus="itemStatus">
             "${item}"<c:if test="${!itemStatus.last}">,</c:if>
             </c:forEach>
             ];
 
-            function processYearData() {
-                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                return {
-                    labels: months,
-                    data: freqList.map(Number)
-                };
-            }
+            var slotList = [
+            <c:forEach var="item" items="${requestScope.slotList}" varStatus="itemStatus">
+            "${item}"<c:if test="${!itemStatus.last}">,</c:if>
+            </c:forEach>
+            ];
 
-            function processMonthData() {
-                var days = Array.from({length: 31}, (_, i) => (i + 1).toString());
+            function processData() {
                 return {
-                    labels: days,
+                    labels: slotList,
                     data: freqList.map(Number)
                 };
             }
 
             function showChart() {
                 var chartType = document.getElementById('chartTypeSelector').value;
-                var processedData;
-                var monthSelector = document.getElementById('monthSelector');
-
-                if (monthSelector.disabled || monthSelector.value === "") {
-                    processedData = processYearData();
-                } else {
-                    processedData = processMonthData();
-                }
-
+                var processedData = processData();
                 var data = {
                     labels: processedData.labels,
                     datasets: [{
-                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking of each month" : "Booking of each day",
-                            backgroundColor: "rgba(255,99,132,0.2)",
-                            borderColor: "rgba(255,99,132,1)",
-                            borderWidth: 2,
-                            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                            label: "Booking slot count",
+                            backgroundColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,0.2)",
+                            borderColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,1)",
+                            borderWidth: chartType === 'pie' ? 1 : 2,
+                            hoverBackgroundColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,0.4)",
                             hoverBorderColor: "rgba(255,99,132,1)",
                             data: processedData.data,
                             tension: 0.4
@@ -216,6 +198,13 @@
                     }
                 };
 
+                if (chartType === 'pie') {
+                    options = {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    };
+                }
+
                 if (isHorizontal) {
                     options.indexAxis = 'y';
                 } else {
@@ -233,9 +222,21 @@
                 });
             }
 
+            function generateColors(count) {
+                const colors = [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                    '#FF9F40', '#FF6384', '#C9CBCF', '#4BC0C0', '#FF9F40',
+                    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+                    '#7FDBFF', '#FDCB6E', '#778BEB', '#786FA6', '#F8A5C2',
+                    '#63CDDA', '#CF6A87', '#786FA6', '#FDA7DF'
+                ];
+                return colors.slice(0, count);
+            }
+
             function updateMonthSelector() {
                 var yearSelector = document.getElementById('yearSelector');
                 var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
 
                 // Lưu trữ tháng đã chọn trước khi cập nhật
                 var selectedMonth = monthSelector.value;
@@ -250,14 +251,75 @@
                     monthSelector.disabled = true;
                     monthSelector.selectedIndex = 0;
                 }
+                daySelector.disabled = true;
+                daySelector.selectedIndex = 0;
             }
+
+
+            function updateDaySelector() {
+                var yearSelector = document.getElementById('yearSelector');
+                var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
+
+                daySelector.innerHTML = '<option value="">Select Day</option>';
+                daySelector.disabled = true;
+
+                if (yearSelector.value && monthSelector.value) {
+                    var year = parseInt(yearSelector.value);
+                    var month = parseInt(monthSelector.value);
+                    var daysInMonth = new Date(year, month, 0).getDate();
+
+                    for (var i = 1; i <= daysInMonth; i++) {
+                        var option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        if ('${requestScope.selectedDay}' == i) {
+                            option.selected = true;
+                        }
+                        daySelector.appendChild(option);
+                    }
+
+                    daySelector.disabled = false;
+                }
+
+                // Call showChart() to update the chart without submitting the form
+                showChart();
+            }
+
             function updateChartType() {
                 showChart();
             }
 
+            function submitForm() {
+                var yearSelector = document.getElementById('yearSelector');
+                var monthSelector = document.getElementById('monthSelector');
+                var daySelector = document.getElementById('daySelector');
+                var chartTypeSelector = document.getElementById('chartTypeSelector');
+                var stadiumID = document.getElementById('stadiumID').value;
+
+                var url = 'OccupancyRateBySlotController?StadiumID=' + stadiumID;
+
+                if (yearSelector.value) {
+                    url += '&year=' + yearSelector.value;
+
+                    if (monthSelector.value) {
+                        url += '&month=' + monthSelector.value;
+                        if (daySelector.value) {
+                            url += '&day=' + daySelector.value;
+                        }
+                    }
+                }
+
+                // Include chartType in the URL so it can be preserved
+                url += '&chartType=' + chartTypeSelector.value;
+
+                window.location.href = url;
+            }
+
             document.addEventListener('DOMContentLoaded', function () {
                 updateMonthSelector();
-                showChart();
+                updateDaySelector();
+                //showChart();
 
                 document.getElementById('yearSelector').addEventListener('change', function () {
                     updateMonthSelector();
@@ -265,6 +327,11 @@
                 });
 
                 document.getElementById('monthSelector').addEventListener('change', function () {
+                    updateDaySelector();
+                    //showChart(); // Update the chart without submitting the form
+                });
+
+                document.getElementById('daySelector').addEventListener('change', function () {
                     //showChart(); // Update the chart without submitting the form
                 });
 
@@ -285,29 +352,8 @@
             document.getElementById('submitButton').addEventListener('click', function () {
                 submitForm();
             });
-
-            function submitForm() {
-                var yearSelector = document.getElementById('yearSelector');
-                var monthSelector = document.getElementById('monthSelector');
-                var daySelector = document.getElementById('daySelector');
-                var chartTypeSelector = document.getElementById('chartTypeSelector');
-                var stadiumID = document.getElementById('stadiumID').value;
-
-                var url = 'OccupancyRateController?StadiumID=' + stadiumID;
-
-                if (yearSelector.value) {
-                    url += '&year=' + yearSelector.value;
-
-                    if (monthSelector.value) {
-                        url += '&month=' + monthSelector.value;
-                    }
-                }
-
-                // Include chartType in the URL so it can be preserved
-                url += '&chartType=' + chartTypeSelector.value;
-
-                window.location.href = url;
-            }
         </script>
     </body>
 </html>
+
+

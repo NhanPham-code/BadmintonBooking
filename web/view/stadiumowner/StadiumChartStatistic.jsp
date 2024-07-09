@@ -14,10 +14,15 @@
         <meta charset="UTF-8">
         <title>Sport Stadium Booking System</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            />
         <style>
             body {
-                background: #1D1F20;
-                padding: 16px;
+                background: #E6FDE1 !important;
             }
 
             .datePickerContainer {
@@ -69,14 +74,48 @@
             .chart-container {
                 position: relative;
                 margin: auto;
-                height: 80vh;
-                width: 80vw;
+                height: 90vh;
+                width: 95vw;
+            }
+            
+            .exit-button {
+                margin-bottom: 2%;
+            }
+
+            .exit-button a {
+                font-family: cursive;
+                font-size: 120%;
+                color: blue;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                position: relative;
+            }
+
+            .exit-button a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: blue;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .exit-button a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
             }
         </style>
     </head>
 
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>
+        <div class = "exit-button">
+            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
+        </div> 
         
         <div class="datePickerContainer">
             <select id="yearSelector">
@@ -197,48 +236,48 @@
 
                 var processedData = processData(filteredBookings, monthSelected ? parseInt(selectedMonth) : null);
 
-                    var data = {
-                        labels: processedData.labels,
-                        datasets: [{
-                                label: monthSelected ? "Avenue of day" : "Avenue of month",
-                                backgroundColor: "rgba(255,99,132,0.2)",
-                                borderColor: "rgba(255,99,132,1)",
-                                borderWidth: 2,
-                                hoverBackgroundColor: "rgba(255,99,132,0.4)",
-                                hoverBorderColor: "rgba(255,99,132,1)",
-                                data: processedData.data,
-                                tension: 0.4
+                var data = {
+                    labels: processedData.labels,
+                    datasets: [{
+                            label: monthSelected ? "Avenue of day" : "Avenue of month",
+                            backgroundColor: "rgba(255,99,132,0.2)",
+                            borderColor: "rgba(255,99,132,1)",
+                            borderWidth: 2,
+                            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                            hoverBorderColor: "rgba(255,99,132,1)",
+                            data: processedData.data,
+                            tension: 0.4
 
-                            }]
-                    };
+                        }]
+                };
 
-                    var chartType = selectedChartType;
-                    var isHorizontal = false;
+                var chartType = selectedChartType;
+                var isHorizontal = false;
 
-                    if (selectedChartType === 'horizontalBar') {
-                        chartType = 'bar';
-                        isHorizontal = true;
-                    }
+                if (selectedChartType === 'horizontalBar') {
+                    chartType = 'bar';
+                    isHorizontal = true;
+                }
 
 
-                    var options = {
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                stacked: true,
-                                grid: {
-                                    display: true,
-                                    color: "rgba(255,99,132,0.2)"
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
+                var options = {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stacked: true,
+                            grid: {
+                                display: true,
+                                color: "rgba(255,99,132,0.2)"
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
-                    };
+                    }
+                };
 
                 if (isHorizontal) {
                     options.indexAxis = 'y';
