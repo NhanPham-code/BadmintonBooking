@@ -380,6 +380,74 @@ public class stadiumDAO {
         return time;
     }
 
+    //PhuocDH
+    //Lấy độ dài của list thời gian
+    public int getTimeScheduleByStadiumID(String stadium_ID) {
+        String sql = "select opentime from Stadium where stadium_ID = ?";
+        String openTime = null;
+        int timeSchedule = 0;
+
+        try {
+            conn = db.getConnection();
+            if (conn == null) {
+                System.out.println("Connection is null");
+                return 0;
+            }
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadium_ID);
+            //System.out.println("Executing query for stadium_ID: " + stadium_ID);
+
+            rs = ps.executeQuery();
+
+            //get opentime (open-close) in database
+            if (rs.next()) {
+                openTime = rs.getString("opentime");
+            }
+
+            //get number element of list 
+            if (openTime != null && !openTime.isEmpty()) {
+                String[] times = openTime.split("-");
+                int openedTime = Integer.parseInt(times[0].split(":")[0]);
+                int closedTime = Integer.parseInt(times[1].split(":")[0]);
+
+                timeSchedule = closedTime - openedTime;
+
+            }
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            // Đóng các resource
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
+        }
+        return timeSchedule;
+    }
+
+    //PhuocDH
+    //list of each time slot
+    public ArrayList<String> convertToSlot(String stadium_ID) {
+        ArrayList<String> slotList = new ArrayList<>();
+        int schedule = getTimeOpenByStadiumID(stadium_ID);
+        for (int i = 0; i < getTimeScheduleByStadiumID(stadium_ID); i++) {
+            //add time and it's increment to list
+            slotList.add(i, schedule + ":00 - " + ++schedule + ":00");
+        }
+        return slotList;
+    }
+
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
 //        String ownerID = "OWNER1";
