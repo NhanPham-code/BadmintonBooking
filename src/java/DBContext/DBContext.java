@@ -18,12 +18,12 @@ public class DBContext {
         return DriverManager.getConnection(url, userID, password);
     }
 
-    private final String serverName = "MSI\\SQLEXPRESS";
-    private final String dbName = "DBBadminton";
+    private final String serverName = "DESKTOP-HR11HUG";
+    private final String dbName = "BadmintonDB";
     private final String portNumber = "1433";
     private final String instance = "";
     private final String userID = "sa";
-    private final String password = "12345";
+    private final String password = "123";
 
     public static void main(String[] args) {
         DBContext db = new DBContext();
