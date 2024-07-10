@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -294,7 +296,54 @@ public class stadiumDAO {
      * @return
      */
     public int addNewStadium(Stadium stadium) {
+        String getMaxStadiumID = "SELECT MAX(stadium_ID) FROM Stadium";
+        int maxNumber = 0;
+        String newStadiumID = null;
+
         int check = 0;
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(getMaxStadiumID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String maxStadiumID = rs.getString(1);
+                // Extract the numeric part from the maximum stadium_ID
+                maxNumber = Integer.parseInt(maxStadiumID.substring(3)); // Assuming "STD" prefix
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 1; i <= maxNumber + 1; i++) {
+            String proposedStadiumID = "STD" + i;
+            boolean stadiumIDExists = false;
+
+            // Check if proposedStadiumID already exists in the database
+            String checkStadiumIDExists = "SELECT COUNT(*) FROM Stadium WHERE stadium_ID = ?";
+            try {
+                ps = conn.prepareStatement(checkStadiumIDExists);
+                ps.setString(1, proposedStadiumID);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    if (rs.getInt(1) > 0) {
+                        stadiumIDExists = true;
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (!stadiumIDExists) {
+                newStadiumID = proposedStadiumID;
+                break;
+            }
+        }
+
+        if (newStadiumID == null) {
+            return check; //Không thể tạo mới stadium_ID!
+        }
+
         String sql = "INSERT INTO [dbo].[Stadium]\n"
                 + "           ([stadium_ID]\n"
                 + "           ,[stadium_name]\n"
@@ -320,7 +369,7 @@ public class stadiumDAO {
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, stadium.getStadium_ID());
+            ps.setString(1, newStadiumID);
             ps.setString(2, stadium.getStadium_name());
             ps.setString(3, stadium.getStadium_address());
             ps.setString(4, stadium.getStadium_phone());
@@ -331,6 +380,9 @@ public class stadiumDAO {
             ps.setString(9, stadium.getQRcode());
             ps.setString(10, stadium.getOwner().getOwner_ID());
             check = ps.executeUpdate();
+            courtDAO courtDAO = new courtDAO();
+            courtDAO.addCourt(newStadiumID);
+
         } catch (Exception ex) {
             Logger.getLogger(customerDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -446,6 +498,29 @@ public class stadiumDAO {
             slotList.add(i, schedule + ":00 - " + ++schedule + ":00");
         }
         return slotList;
+    }
+
+    /**
+     * Author: NhiTCU
+     *
+     * @return
+     */
+    public List<Stadium> sortStadiumByRating() {
+        stadiumDAO staDAO = new stadiumDAO();
+        List<Stadium> stadiumList = staDAO.getAllStadium();
+        Collections.sort(stadiumList, new Comparator<Stadium>() {
+            @Override
+            public int compare(Stadium s1, Stadium s2) {
+                // Sắp xếp giảm dần theo avg_ratingScore
+                return Double.compare(s2.getAvg_ratingScore(), s1.getAvg_ratingScore());
+            }
+        });
+        int index = 6;
+        // lấy 6 phần tử đầu tiên của stadiumList
+        //Math.min(numberOfStadiumsToTake, stadiumList.size()). Math.min() không vượt quá số lượng phần tử có trong danh sách
+        List<Stadium> popularStadium = stadiumList.subList(0, Math.min(index, stadiumList.size()));
+
+        return popularStadium;
     }
 
     public static void main(String[] args) {

@@ -135,7 +135,7 @@
                 setInterval(changeImage, 5000); // Chuy?n ??i ?nh sau m?i 5 giây
             });
         </script>
-    </head>
+    </head>      
     <body>
         <div class="header">
             <div class="logo">
@@ -151,7 +151,7 @@
 
         <div class="nav">
             <a href="stadiumList">STADIUM LIST</a>
-            <a href="#">POPULAR</a>
+            <a href="<%=request.getContextPath()%>/Popular">POPULAR</a>
         </div>
 
         <div class="banner" id="banner">

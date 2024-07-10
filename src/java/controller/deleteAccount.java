@@ -78,7 +78,7 @@ public class deleteAccount extends HttpServlet {
             customerID = c.getCustomer_ID();
         } else if (ac.getRole().equalsIgnoreCase("stadiumowner")) {
             stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-            StadiumOwner stadiumOwner = stoDAO.getStadimOwnerByAccID(accID);
+            StadiumOwner stadiumOwner = stoDAO.getStadiumOwnerByAccID(accID);
             ownerID = stadiumOwner.getOwner_ID();
         } else if (ac.getRole().equalsIgnoreCase("admin")) {
             String error = "You can not delete Admin's account";

@@ -179,7 +179,7 @@
                 var data = {
                     labels: processedData.labels,
                     datasets: [{
-                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking of each month" : "Booking of each day",
+                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking hours of each month" : "Booking hours of each day",
                             backgroundColor: "rgba(255,99,132,0.2)",
                             borderColor: "rgba(255,99,132,1)",
                             borderWidth: 2,

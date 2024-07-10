@@ -190,7 +190,7 @@
 
                     acceptedBookings.forEach(function (booking) {
                         var date = new Date(booking.date);
-                        var day = date.getDate() - 1;
+                        var day = date.getDate();
                         dailyData[day] += booking.total;
                     });
 

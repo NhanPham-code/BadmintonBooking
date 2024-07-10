@@ -1,7 +1,7 @@
 <%-- 
-    Document   : BookingMangementStadiumOwner
-    Created on : Jun 7, 2024, 6:28:37 AM
-    Author     : NhiTCU
+    Document   : AdStaBookDetail
+    Created on : Jul 2, 2024, 2:35:03 AM
+    Author     : NhanNQT
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -182,18 +182,11 @@
                     min-height: 200px;
                 }
 
-
             </style>
         </head>
         <body>
-            <%@ include file="HeaderStadiumOwner.jsp" %>
+            <jsp:include page="AdHeader.jsp" flush="true" />
             <div class="cus-book-his">
-                <div class="booking-history">
-                    <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}">Booking History</a>
-                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Revenue Chart</a>
-                    <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}">Occupancy rate Chart</a>
-                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}">Occupancy by Slot Chart</a>
-                </div>
                 <div class="table">
                     <!-- Pending Bookings -->
                     <div class="cus-book" id="pendingBooking">
@@ -212,15 +205,10 @@
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="action-buttons">
-                                        <a href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>
-                                        <a href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
-                                    </div>
                                     <div class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>
-
                                 <!-- Add more pending bookings as needed -->
                             </c:forEach>
                         </div>

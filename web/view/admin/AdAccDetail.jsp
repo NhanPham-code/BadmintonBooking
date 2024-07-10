@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -173,8 +174,8 @@
                     </div>
                     <h2> ${requestScope.accName}'s Profile</h2>
                     <div class="cus-details">
-                        
-                        <div>AccID: ${requestScope.accID}</div>
+
+                        <div>Acc ID: ${requestScope.accID}</div>
                         <div>${requestScope.roleID}</div>
 
                         <div class="phone">
@@ -185,8 +186,13 @@
                         <div>Role: ${requestScope.role}</div>
                     </div>
                     <div class="cus-actions">
-                        <a href="deleteAccount?accID=${requestScope.accID}&name=${requestScope.name}">Delete</a>
-                       
+                        <a href="deleteAccount?accID=${requestScope.accID}&name=${requestScope.name}">Delete Account</a>
+                        <c:if test="${requestScope.role == 'Customer'}">
+                            <a href="CustomerHistoryController?accID=${requestScope.accID}">Booking History</a>
+                        </c:if>
+                        <c:if test="${requestScope.role == 'StadiumOwner'}">
+                            <a href="bookingListManage?accID=${requestScope.accID}">List Stadiums</a>
+                        </c:if>
                         <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
                     </div>
                     <!-- Details button removed, click on item for details -->
@@ -194,9 +200,6 @@
                 <!-- Repeat the above stadium-item div for each stadium entry -->
             </div>
 
-        </div>
-        <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
         </div>
     </body>
 </html>

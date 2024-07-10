@@ -59,7 +59,7 @@ public class stadiumOwnerDAO {
      * @param accID
      * @return 
      */
-    public StadiumOwner getStadimOwnerByAccID(String accID) {
+    public StadiumOwner getStadiumOwnerByAccID(String accID) {
         StadiumOwner sto = null;
         accountDAO acDAO = new accountDAO();
         String sql = "select * from StadiumOwner where acc_ID = ?";
@@ -105,8 +105,61 @@ public class stadiumOwnerDAO {
         return ownerList;
     }
 
+    /**
+     * Author: NhiTCU
+     * 
+     * @param owner
+     * @return 
+     */
     public int addNewOwner(StadiumOwner owner) {
         int check = 0;
+        String getMaxOwnerID = "SELECT MAX(owner_ID) FROM StadiumOwner";
+        int maxNumber = 0;
+        String newOwnerID = null;
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(getMaxOwnerID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String maxOwnerID = rs.getString(1);
+                // Extract the numeric part from the maximum account_ID
+                maxNumber = Integer.parseInt(maxOwnerID.substring(5)); // Assuming "ACC" prefix
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 1; i <= maxNumber + 1; i++) {
+            String proposedOwnerID = "OWNER" + i;
+            boolean ownerIDExists = false;
+
+            // Check if proposedStadiumID already exists in the database
+            String checkOwnerIDExists = "SELECT COUNT(*) FROM StadiumOwner WHERE owner_ID = ?";
+            try {
+                ps = conn.prepareStatement(checkOwnerIDExists);
+                ps.setString(1, proposedOwnerID);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    if (rs.getInt(1) > 0) {
+                        ownerIDExists = true;
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (!ownerIDExists) {
+                newOwnerID = proposedOwnerID;
+                break;
+            }
+        }
+
+        if (newOwnerID == null) {
+            return check; //Không thể tạo mới Account_ID!
+        }
+
         String sql = "INSERT INTO [dbo].[StadiumOwner]\n"
                 + "           ([owner_ID]\n"
                 + "           ,[owner_name]\n"
@@ -120,7 +173,7 @@ public class stadiumOwnerDAO {
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, owner.getOwner_ID());
+            ps.setString(1, newOwnerID);
             ps.setString(2, owner.getOwner_name());
             ps.setString(3, owner.getOwner_phone());
             ps.setString(4, owner.getAcc_ID());

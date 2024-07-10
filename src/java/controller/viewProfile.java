@@ -102,7 +102,7 @@ public class viewProfile extends HttpServlet {
 
         } else if (ac.getRole().equals("StadiumOwner")) {
             stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
-            StadiumOwner stdo = owDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+            StadiumOwner stdo = owDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
 
             request.setAttribute("account", ac);
             request.setAttribute("owner", stdo);

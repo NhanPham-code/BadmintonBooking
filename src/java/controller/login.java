@@ -130,7 +130,7 @@ public class login extends HttpServlet {
             } else if (ac.getRole().equalsIgnoreCase("StadiumOwner")) {
                 // create stadiumOwnerDAO
                 stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-                StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());                
+                StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());                
                 request.setAttribute("name", sto.getOwner_name());
                 request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
             } else {

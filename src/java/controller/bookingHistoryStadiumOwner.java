@@ -104,7 +104,7 @@ public class bookingHistoryStadiumOwner extends HttpServlet {
             }
         }
 
-        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
+        request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
         request.setAttribute("acceptedBookings", acceptedBookings);
         request.setAttribute("rejectedBookings", rejectedBookings);
         request.getRequestDispatcher("view/stadiumowner/StadiumHistory.jsp").forward(request, response);

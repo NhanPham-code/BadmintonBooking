@@ -99,7 +99,7 @@ public class editProfile extends HttpServlet {
 
         } else if (ac.getRole().equals("StadiumOwner")) {
             stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
-            StadiumOwner stdo = owDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+            StadiumOwner stdo = owDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
 
             user_name = stdo.getOwner_name();
             user_phone = stdo.getOwner_phone();
@@ -161,7 +161,7 @@ public class editProfile extends HttpServlet {
                 stadiumOwnerDAO stdDAO = new stadiumOwnerDAO();
                 stdDAO.updateProfile(ID, name, phone);
 
-                StadiumOwner stdo = stdDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                StadiumOwner stdo = stdDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
                 request.setAttribute("owner", stdo);
                 request.setAttribute("name", stdo.getOwner_name());
                 //response.getWriter().println("StadiumOwner");

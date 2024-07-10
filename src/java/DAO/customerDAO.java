@@ -109,13 +109,60 @@ public class customerDAO {
         return cusList;
     }
 
-    
     /**
-     * Author: NhiTCU
-     * @return 
+     * Author: NhiTCU //CHUA SUA
+     *
+     * @return
      */
     public int addNewCus(Customer cus) {
         int check = 0;
+        String getMaxCusID = "SELECT MAX(customer_ID) FROM Customer";
+        int maxNumber = 0;
+        String newCustomerID = null;
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(getMaxCusID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String maxCusID = rs.getString(1);
+                // Extract the numeric part from the maximum account_ID
+                maxNumber = Integer.parseInt(maxCusID.substring(4)); // Assuming "ACC" prefix
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 1; i <= maxNumber + 1; i++) {
+            String proposedCusID = "CUST" + i;
+            boolean cusIDExists = false;
+
+            // Check if proposedCusID already exists in the database
+            String checkAccountIDExists = "SELECT COUNT(*) FROM Customer WHERE customer_ID = ?";
+            try {
+                ps = conn.prepareStatement(checkAccountIDExists);
+                ps.setString(1, proposedCusID);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    if (rs.getInt(1) > 0) {
+                        cusIDExists = true;
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (!cusIDExists) {
+                newCustomerID = proposedCusID;
+                break;
+            }
+        }
+
+        if (newCustomerID == null) {
+            return check; //Không thể tạo mới Account_ID!
+        }
+
         String sql = "INSERT INTO [dbo].[customer]\n"
                 + "           ([customer_ID]\n"
                 + "           ,[customer_name]\n"
@@ -129,7 +176,7 @@ public class customerDAO {
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, cus.getCustomer_ID());
+            ps.setString(1, newCustomerID);
             ps.setString(2, cus.getCustomer_Name());
             ps.setString(3, cus.getCustomer_Phone());
             ps.setString(4, cus.getAcc_ID());

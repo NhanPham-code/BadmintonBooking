@@ -101,14 +101,11 @@ public class AddNewSta extends HttpServlet {
         Account ac = aDAO.getAccountByEmail(email);
 
         stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
-        StadiumOwner owner = ownerDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+        StadiumOwner owner = ownerDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
 
         // Auto create stadiumID
         stadiumDAO staDAO = new stadiumDAO();
-        List<Stadium> staList = staDAO.getAllStadium();
-        int index = staList.size() + 1;
-        String stadium_ID = "STD" + index;
-
+        String stadium_ID = "";
         // get value from form       
         String stadium_name = request.getParameter("stadium_name");
         String stadium_address = request.getParameter("stadium_address");
@@ -162,30 +159,15 @@ public class AddNewSta extends HttpServlet {
 
         // Thêm sân vận động vào cơ sở dữ liệu
         int result = staDAO.addNewStadium(stadium);
-        
+
         // Xử lý kết quả và redirect hoặc forward đến trang kết quả
         if (result == 1) {
-            courtDAO dao = new courtDAO();
-        boolean adddCourt = false;
-        String message = "";
-
-        try {
-            adddCourt = dao.addCourt(stadium_ID); // Gọi hàm addCourt từ DAO để thêm sân vận động
-            if (adddCourt) {
-                message = "Court added successfully!";
-            } else {
-                message = "Failed to add court.";
-            }
-        } catch (Exception e) {
-            message = "Error: " + e.getMessage();
-            e.printStackTrace();
-        }
-           response.sendRedirect(request.getContextPath() + "/stadiumList");
+            response.sendRedirect(request.getContextPath() + "/stadiumList");
         } else {
             // Thất bại
             request.getRequestDispatcher("view/stadiumowner/AddNewStadium.jsp").forward(request, response);
         }
-       
+
     }
 
     /**

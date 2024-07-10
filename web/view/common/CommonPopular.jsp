@@ -1,6 +1,6 @@
 <%-- 
-    Document   : CusPopular
-    Created on : Jun 8, 2024, 11:18:08 AM
+    Document   : CommonPopular
+    Created on : Jul 1, 2024, 10:25:54 AM
     Author     : NhiTCU
 --%>
 
@@ -11,11 +11,86 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Popular Stadium</title>
-
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+            />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            />
         <style>
-            body{
-                min-height:100vh;
+            body {
+                font-family: 'Inter', sans-serif;
+                margin: 0;
+                padding: 0;
+
             }
+
+            .header {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
+
+            .header .logo {
+                display: flex;
+                align-items: center;
+            }
+
+            .header .logo img {
+                margin-right: 10px;
+            }
+
+            .header .auth-links {
+                display: flex;
+                gap: 10px;
+            }
+
+            .header .auth-links a {
+                background: none;
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 4px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .header .auth-links a:hover {
+                background: #145569;
+            }
+
+            .nav {
+                width: 100%;
+                background: #1F7A8C;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                color: white;
+                padding: 10px 0;
+            }
+
+            .nav a {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 18px;
+                text-decoration: none;
+                cursor: pointer;
+                padding: 10px 20px;
+            }
+
+            .nav a:hover {
+                background: #145569;
+                border-radius: 4px;
+            }
+
             .Pop-bg {
                 display: grid;
                 grid-template-columns: 32.5% 32.5% 32.5%;
@@ -32,6 +107,7 @@
                 background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center;
+                min-height: 80vh;
             }
             .SO-profile {
                 border: 1px solid;
@@ -81,11 +157,39 @@
             button:hover {
                 background: #145569;
             }
+            .footer {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                justify-content: space-around;
+                display: flex;
+                padding: 10px;
+                margin-top: auto;
+            }
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
-        <jsp:include page = "CusHeader.jsp" flush = "true" />
+        <div class="header">
+            <div class="logo">
+                <img src="<%=request.getContextPath()%>/img/logo/logo.png" alt="Logo" width="40px" height="40px">
+                <span>Badminton Stadium Popular</span>
+            </div>
+            <div class="auth-links">
+                <a href="<%=request.getContextPath()%>/view/common/login.jsp">Login</a>
+                <a href="<%=request.getContextPath()%>/view/common/register.jsp">Register</a>
+            </div>
+        </div>
 
+        <div class="nav">
+            <a href="stadiumList">STADIUM LIST</a>
+            <a href="<%=request.getContextPath()%>/Popular">POPULAR</a>
+        </div>
         <div class="Pop-bg">
             <c:forEach var="stadium" items="${requestScope.stadium}">
                 <div class="SO-profile">
@@ -116,6 +220,9 @@
 
             </c:forEach>
         </div>
-        <jsp:include page = "CusFooter.jsp" flush = "true" />
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
+        </div>
     </body>
 </html>

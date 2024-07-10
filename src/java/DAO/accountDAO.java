@@ -254,8 +254,61 @@ public class accountDAO {
         return accountList;
     }
 
+    /**
+     * Author: NhiTCU
+     *
+     * @param accNew
+     * @return
+     */
     public int addNewAcc(Account accNew) {
         int check = 0;
+        String getMaxAccountID = "SELECT MAX(acc_ID) FROM Account";
+        int maxNumber = 0;
+        String newAccountID = null;
+
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(getMaxAccountID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String maxAccountID = rs.getString(1);
+                // Extract the numeric part from the maximum account_ID
+                maxNumber = Integer.parseInt(maxAccountID.substring(3)); // Assuming "ACC" prefix
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (int i = 1; i <= maxNumber + 1; i++) {
+            String proposedAccountID = "ACC" + i;
+            boolean accountIDExists = false;
+
+            // Check if proposedAccountID already exists in the database
+            String checkAccountIDExists = "SELECT COUNT(*) FROM Account WHERE acc_ID = ?";
+            try {
+                ps = conn.prepareStatement(checkAccountIDExists);
+                ps.setString(1, proposedAccountID);
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    if (rs.getInt(1) > 0) {
+                        accountIDExists = true;
+                    }
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (!accountIDExists) {
+                newAccountID = proposedAccountID;
+                break;
+            }
+        }
+
+        if (newAccountID == null) {
+            return check; //Không thể tạo mới Account_ID!
+        }
+
         String sql = "INSERT INTO [dbo].[Account]\n"
                 + "           ([Acc_ID]\n"
                 + "           ,[Email]\n"
@@ -269,7 +322,7 @@ public class accountDAO {
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, accNew.getAcc_ID());
+            ps.setString(1, newAccountID);
             ps.setString(2, accNew.getEmail());
             ps.setString(3, accNew.getPassword());
             ps.setString(4, accNew.getRole());

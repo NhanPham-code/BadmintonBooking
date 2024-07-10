@@ -147,7 +147,7 @@ public class stadiumDetail extends HttpServlet {
                 request.getRequestDispatcher("view/admin/AdStaDetail.jsp").forward(request, response);
             } else if (role.equalsIgnoreCase("stadiumowner")) {
                 stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
-                StadiumOwner stdo = owDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                StadiumOwner stdo = owDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
 
                 request.setAttribute("name", stdo.getOwner_name());
                 request.getRequestDispatcher("view/stadiumowner/StadiumDetail.jsp").forward(request, response);

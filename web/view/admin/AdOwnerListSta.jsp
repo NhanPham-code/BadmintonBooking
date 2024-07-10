@@ -1,38 +1,63 @@
 <%-- 
-    Document   : StadiumMangement
-    Created on : Jun 7, 2024, 12:12:06 PM
+    Document   : AdOwnerListSta
+    Created on : Jul 2, 2024, 1:52:08 AM
     Author     : NhanNQT
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Customer HomePage</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <style>
-            .add {
-                background: #E3E6ED;
+            body {
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background: white;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .footer {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;       
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
 
+            .banner {
+                width: 100%;
+                height: 149px;
+                background: url('<%=request.getContextPath()%>/img/background/bg1.jpg') no-repeat center center;
+                background-size: cover;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: black;
+                font-size: 32px;
+                font-weight: 700;
+                border-bottom: 1px solid black;
             }
 
             .stadium-list {
                 width: 100%;
-                background: url('<%=request.getContextPath()%>/img/background/bg3.jpg') no-repeat center center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-position: center;
-                min-height: 100vh;
                 padding: 20px;
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
                 flex-grow: 1;
-                /* Make the stadium list take the available space */
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
             }
             .stadium-item {
                 display: flex;
@@ -64,46 +89,39 @@
             .stadium-details div {
                 margin: 5px 0;
             }
-
             .stadium-actions {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
                 gap: 5px;
             }
-
             .stadium-actions a {
-                text-decoration: none; /* Remove underline */
-                padding: 5px 10px;
-                margin-left: 10px;
-                background-color: #4CAF50;
+                background: #1F7A8C;
+                width: 50px;
                 color: white;
-                border: none;
+                padding: 5px 10px;
                 border-radius: 4px;
+                text-decoration: none;
                 cursor: pointer;
-                outline: none;
-                display: flex;
-                justify-content: center
             }
-
             .stadium-actions a:hover {
-                opacity: 0.8;
+                background: #145569;
             }
-
             .footer {
+                position: absolute;
+                bottom: 0;
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
-                padding: 10px;
-                /* Reduce padding to make footer smaller */
-                margin-top: auto;
-                /* Push the footer to the bottom */
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
+                background: #022B3A;
+                color: white;
             }
-
             .footer div {
                 margin: 5px 0;
             }
-
             .rating {
                 display: flex;
                 align-items: center;
@@ -114,36 +132,44 @@
                 margin-left: 5px;
             }
 
-            #add-new-btn {
-                background-color: #5f88e6;
-                color: #E3E6ED;
-                border: none;
+            .error-message {
+                color: brown;
+                font-weight: bold;
+                margin: 20px 0;
+                text-align: center;
+            }
 
-                width: 150px;
-                /* Chiều rộng */
-                height: 30px;
-                /* Chiều cao */
-                font-size: 18px;
-                /* Kích thước chữ */
+            .add {
+                background: #E3E6ED;
+                display: flex;
+                justify-content: flex-end;
+                padding: 10px 20px;
+                box-sizing: border-box;
+            }
+
+            #add-new-btn {
+                background: #4CAF50;
+                border: none;
+                width: 10%;
+                color: white;
+                font-size: 16px;
+                padding: 12px 10px;
+                border-radius: 4px;
+                text-decoration: none;
                 cursor: pointer;
-                margin-left: 1340px;
-                transition: background-color 0.3s;
-                /* Hiệu ứng hover */
-                margin-top: 10px;
             }
 
             #add-new-btn:hover {
-                opacity: 0.8;
+                background-color: #0056b3;
             }
         </style>
     </head>
-
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>      
+        <jsp:include page="AdHeader.jsp" flush="true" />
 
-        <div class="stadium-list">
-            <c:forEach items="${requestScope.listStd}" var="st">
-                <div class="stadium-item" onclick="window.location.href = 'bookingManage?stadiumID=${st.stadium_ID}';">
+        <div class="stadium-list">           
+            <c:forEach var="st" items="${requestScope.listStd}">
+                <div class="stadium-item" onclick="window.location.href = 'stadiumDetail?stadiumID=${st.stadium_ID}';">
                     <img src="${st.stadium_image}" alt="Stadium">
                     <div class="stadium-details">
                         <div>${st.stadium_name}</div>
@@ -154,14 +180,15 @@
                         </div>
                     </div>
                     <div class="stadium-actions">
-                        <a href="bookingManage?stadiumID=${st.stadium_ID}">Booking</a>
-                        <!-- Replace 'bookingPage.jsp' with the actual booking page URL -->
+                        <a href="deleteStadium?stadiumID=${st.stadium_ID}">Delete</a>
                     </div>
-                    <!-- Details button removed, click on item for details -->
                 </div>
-                <!-- Repeat the above stadium-item div for each stadium entry -->
             </c:forEach>
         </div>
-    </body>
 
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: group1@gmail.com</div>
+        </div>
+    </body>
 </html>

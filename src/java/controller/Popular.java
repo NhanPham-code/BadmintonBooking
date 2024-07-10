@@ -6,26 +6,35 @@ package controller;
 
 import DAO.accountDAO;
 import DAO.adminDAO;
+import DAO.courtDAO;
 import DAO.customerDAO;
+import DAO.feedbackDAO;
+import DAO.stadiumDAO;
 import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import model.Account;
 import model.Admin;
+import model.Court;
 import model.Customer;
+import model.Feedback;
+import model.Stadium;
 import model.StadiumOwner;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "accountDetail", urlPatterns = {"/accountDetail"})
-public class accountDetail extends HttpServlet {
+@WebServlet(name = "Popular", urlPatterns = {"/Popular"})
+public class Popular extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +53,10 @@ public class accountDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet accountDetail</title>");            
+            out.println("<title>Servlet Popular</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet accountDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Popular at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,48 +74,28 @@ public class accountDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String accID = request.getParameter("accID");
-        String accName = "";
-        String roleID="";
-        String phone="";
-        String email="";
-        String role="";
-        
-        accountDAO aDAO = new accountDAO();
-        Account acc = aDAO.getAccountById(accID);
-        email=acc.getEmail();
-        role=acc.getRole();
-        
-        if(acc.getRole().equalsIgnoreCase("customer")){
-            customerDAO cDAO = new customerDAO();
-            Customer c = cDAO.getCustomerByAcc_ID(accID);
-            accName=c.getCustomer_Name();
-            roleID="Customer: " + c.getCustomer_ID();
-            phone=c.getCustomer_Phone();
-        } else if (acc.getRole().equalsIgnoreCase("stadiumowner")){
-            stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
-            StadiumOwner o = oDAO.getStadiumOwnerByAccID(accID);
-            accName=o.getOwner_name();
-            roleID="Stadium Owner: " + o.getOwner_ID();
-            phone=o.getOwner_phone();
-        } else if (acc.getRole().equalsIgnoreCase("admin")){
-            adminDAO adDAO = new adminDAO();
-            Admin ad = adDAO.getAdminByAccID(accID);
-            accName = ad.getAdmin_name();
-            roleID = "Admin: " + ad.getAdmin_ID();
-            phone = ad.getAdmin_phone();
+        Cookie[] cookies = request.getCookies();
+        String email = null;
+        // get role
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("email")) {
+                email = ck.getValue();
+            }
         }
-        
-        String name = request.getParameter("name");
-        request.setAttribute("name", name);
-        request.setAttribute("accID", accID);
-        request.setAttribute("accName", accName );
-        request.setAttribute("roleID", roleID);
-        request.setAttribute("phone", phone);
-        request.setAttribute("email", email);
-        request.setAttribute("role", role);
-        
-        request.getRequestDispatcher("view/admin/AdAccDetail.jsp").forward(request, response);
+
+        stadiumDAO staDAO = new stadiumDAO();
+        List<Stadium> stadium = staDAO.sortStadiumByRating();
+        request.setAttribute("stadium", stadium);
+
+        if (email != null) {
+            accountDAO aDAO = new accountDAO();
+            String acID = aDAO.getAccountByEmail(email).getAcc_ID();
+
+            customerDAO cusDAO = new customerDAO();
+            request.setAttribute("name", cusDAO.getCustomerByAcc_ID(acID).getCustomer_Name());
+            request.getRequestDispatcher("view/customer/CusPopular.jsp").forward(request, response);
+        }
+        request.getRequestDispatcher("view/common/CommonPopular.jsp").forward(request, response);
     }
 
     /**
@@ -120,7 +109,7 @@ public class accountDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
     }
 
     /**

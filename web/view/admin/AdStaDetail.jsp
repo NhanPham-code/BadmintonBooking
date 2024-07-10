@@ -324,7 +324,7 @@
                 </div>
             </div>
             <a class="booking-btn" href="<%=request.getContextPath()%>/AcceptedRateBooking?stadiumID=${st.stadium_ID}&name=${requestScope.name}" style="text-decoration: none">Stadium's Booking Statistic</a>
-            <a class="booking-btn" href="" style="text-decoration: none">Stadium's Booking History</a>
+            <a class="booking-btn" href="<%=request.getContextPath()%>/bookingManage?stadiumID=${st.stadium_ID}" style="text-decoration: none">Stadium's Booking History</a>
         </div>
         <div class="footer">
             <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>

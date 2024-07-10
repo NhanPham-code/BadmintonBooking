@@ -89,7 +89,7 @@ public class home extends HttpServlet {
                 request.getRequestDispatcher("view/customer/cusDashBoard.jsp").forward(request, response);
             } else if (token.equalsIgnoreCase("StadiumOwner")) {
                 stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-                StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
                 request.setAttribute("name", sto.getOwner_name());
                 request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
             } else {

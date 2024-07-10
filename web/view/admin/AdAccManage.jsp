@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         <style>
             body {
-                font-family: 'Inter', Times, serif;
+                font-family: 'Inter', sans-serif;
                 margin: 0;
                 padding: 0;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
@@ -173,13 +173,13 @@
                 <c:forEach var="acc" items="${requestScope.accList}">
                     <div class="account-item" >
                         <div style = "display:flex; width:100%"onclick="window.location.href = 'accountDetail?accID=${acc.acc_ID}&name=${requestScope.name}';">
-                        <div class="avatar">
-                            <i class="fas fa-user-circle" style="font-size: 40px;"></i>
-                        </div>
-                        <div class="account-details">
-                            <div>Email: ${acc.email}</div>
-                            <div>Role: ${acc.role}</div>
-                        </div>
+                            <div class="avatar">
+                                <i class="fas fa-user-circle" style="font-size: 40px;"></i>
+                            </div>
+                            <div class="account-details">
+                                <div>Email: ${acc.email}</div>
+                                <div>Role: ${acc.role}</div>
+                            </div>
                         </div>
                         <div class="account-actions">
                             <a href="javascript:void(0);" onclick="confirmDelete('deleteAccount?accID=${acc.acc_ID}&name=${requestScope.name}')">Delete</a>

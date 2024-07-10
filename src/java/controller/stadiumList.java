@@ -109,7 +109,7 @@ public class stadiumList extends HttpServlet {
                     break;
                 case "stadiumowner":
                     stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-                    StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+                    StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
                     stList = new stadiumDAO().getStadiumByStadiumOwnerID(sto.getOwner_ID());
                     request.setAttribute("name", sto.getOwner_name());
                     destinationJSP = "view/stadiumowner/StadiumManagement.jsp";

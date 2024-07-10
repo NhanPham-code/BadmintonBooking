@@ -116,11 +116,10 @@ public class bookingDetail extends HttpServlet {
 
         } else if (token.equalsIgnoreCase("StadiumOwner")) {
             stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-            StadiumOwner sto = stoDAO.getStadimOwnerByAccID(ac.getAcc_ID());
+            StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
             request.setAttribute("name", sto.getOwner_name());
             request.getRequestDispatcher("view/stadiumowner/BookingDetail.jsp").forward(request, response);
         } else {
-
             adminDAO aDAO = new adminDAO();
             Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
             request.setAttribute("name", ad.getAdmin_name());

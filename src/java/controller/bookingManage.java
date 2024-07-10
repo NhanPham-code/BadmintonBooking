@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.accountDAO;
+import DAO.adminDAO;
 import DAO.bookingDetailDAO;
 import DAO.bookingDAO;
 import DAO.customerDAO;
@@ -80,33 +81,47 @@ public class bookingManage extends HttpServlet {
         for (Booking booking : bookingList) {
             if (booking.getBookingAccepted().equalsIgnoreCase("accepted")) {/////////////////////////////////////////////////////////////////////////////////////
                 acceptedBookings.add(booking);
-            } else if (booking.getBookingAccepted().equalsIgnoreCase("waiting")){///////////////////////////////////// waiting & reject 
+            } else if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {///////////////////////////////////// waiting & reject 
                 waitingBookings.add(booking);
             }
         }
-        
+
+        request.setAttribute("acceptedBookings", acceptedBookings);
+        request.setAttribute("waitingBookings", waitingBookings);
+
         accountDAO accDAO = new accountDAO();
         stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
-        
+        adminDAO adDAO = new adminDAO();
 
         Cookie[] cookies = request.getCookies();
-        String email = null;
-        if (cookies != null) {
+        String role = "";
+        String email = "";
+        if (cookies != null && cookies.length > 1) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equalsIgnoreCase("email")) {
                     email = cookie.getValue();
                 }
+                if (cookie.getName().equalsIgnoreCase("role")) {
+                    role = cookie.getValue();
+                }
+
             }
         }
 
         Account acc = accDAO.getAccountByEmail(email);
         String accID = acc.getAcc_ID();
-        
-        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
-        request.setAttribute("stadiumID", stadiumID);
-        request.setAttribute("acceptedBookings", acceptedBookings);
-        request.setAttribute("waitingBookings", waitingBookings);
-        request.getRequestDispatcher("view/stadiumowner/BookingManagement.jsp").forward(request, response);
+        if (role.equalsIgnoreCase("StadiumOwner")) {
+            request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
+            request.setAttribute("stadiumID", stadiumID);
+
+            request.getRequestDispatcher("view/stadiumowner/BookingManagement.jsp").forward(request, response);
+
+        } else if (role.equalsIgnoreCase("Admin")) {
+            request.setAttribute("name", adDAO.getAdminByAccID(accID).getAdmin_name());
+            request.setAttribute("stadiumID", stadiumID);
+
+            request.getRequestDispatcher("view/admin/AdStaBookDetail.jsp").forward(request, response);
+        }
     }
 
     /**

@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.accountDAO;
+import DAO.adminDAO;
 import DAO.bookingDetailDAO;
 import DAO.bookingDAO;
 import DAO.customerDAO;
@@ -70,7 +71,6 @@ public class bookingListManage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         Cookie[] cookies = request.getCookies();
         String role = null;
         String email = null;
@@ -86,16 +86,29 @@ public class bookingListManage extends HttpServlet {
         accountDAO accDAO = new accountDAO();
         stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
         stadiumDAO stdDAO = new stadiumDAO();
+        adminDAO adDAO = new adminDAO();
+        String ownerID = null;
 
         Account ac = accDAO.getAccountByEmail(email);
         String accID = ac.getAcc_ID();
-        String ownerID = ownerDAO.getStadimOwnerByAccID(accID).getOwner_ID();
+        
+        if (role.equalsIgnoreCase("StadiumOwner")) {
+            ownerID = ownerDAO.getStadiumOwnerByAccID(accID).getOwner_ID();
 
-        List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
+            List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
 
-        request.setAttribute("name", ownerDAO.getStadimOwnerByAccID(accID).getOwner_name());
-        request.setAttribute("listStd", listStd);
-        request.getRequestDispatcher("view/stadiumowner/BookingListManagement.jsp").forward(request, response);
+            request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
+            request.setAttribute("listStd", listStd);
+            request.getRequestDispatcher("view/stadiumowner/BookingListManagement.jsp").forward(request, response);
+        } else if (role.equalsIgnoreCase("Admin")) {
+            ownerID = ownerDAO.getStadiumOwnerByAccID(request.getParameter("accID")).getOwner_ID();
+
+            List<Stadium> listStd = stdDAO.getStadiumByStadiumOwnerID(ownerID);
+
+            request.setAttribute("name", adDAO.getAdminByAccID(accID).getAdmin_name());
+            request.setAttribute("listStd", listStd);
+            request.getRequestDispatcher("view/admin/AdOwnerListSta.jsp").forward(request, response);
+        }
     }
 
     /**

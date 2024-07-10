@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.accountDAO;
+import DAO.adminDAO;
 import DAO.bookingDAO;
 import DAO.customerDAO;
 import DAO.stadiumDAO;
@@ -68,39 +69,72 @@ public class bookingHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Check cookie de lay role chuyen trang
         Cookie[] cookies = request.getCookies();
-        String email = null;
-        if (cookies != null) {
+        String role = "";
+        String email = "";
+        if (cookies != null && cookies.length > 1) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equalsIgnoreCase("email")) {
                     email = cookie.getValue();
                 }
+                if (cookie.getName().equalsIgnoreCase("role")) {
+                    role = cookie.getValue();
+                }
+
             }
         }
         accountDAO accDAO = new accountDAO();
         customerDAO cusDAO = new customerDAO();
+        adminDAO adDAO = new adminDAO();
         Account acc = accDAO.getAccountByEmail(email);
         String accID = acc.getAcc_ID();
-        String customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
-        bookingDAO bookDAO = new bookingDAO();
-        List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
+        String customerID = null;
 
-        //seperate accepted and not accpeted
-        List<Booking> waitingBookings = new ArrayList<>();
-        List<Booking> notWaitingBookings = new ArrayList<>();
+        if (role.equalsIgnoreCase("Customer")) {
+            customerID = cusDAO.getCustomerByAcc_ID(accID).getCustomer_ID();
+            bookingDAO bookDAO = new bookingDAO();
+            List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
 
-        for (Booking booking : bookingList) {
-            if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
-                waitingBookings.add(booking);
-            } else {
-                notWaitingBookings.add(booking);
+            //seperate accepted and not accpeted
+            List<Booking> waitingBookings = new ArrayList<>();
+            List<Booking> notWaitingBookings = new ArrayList<>();
+
+            for (Booking booking : bookingList) {
+                if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
+                    waitingBookings.add(booking);
+                } else {
+                    notWaitingBookings.add(booking);
+                }
             }
-        }
 
-        request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
-        request.setAttribute("waitingBookings", waitingBookings);
-        request.setAttribute("notWaitingBookings", notWaitingBookings);
-        request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
+            request.setAttribute("name", cusDAO.getCustomerByAcc_ID(accID).getCustomer_Name());
+            request.setAttribute("waitingBookings", waitingBookings);
+            request.setAttribute("notWaitingBookings", notWaitingBookings);
+            request.getRequestDispatcher("view/customer/CusBookingHistory.jsp").forward(request, response);
+            
+        } else if (role.equalsIgnoreCase("Admin")) {
+            customerID = cusDAO.getCustomerByAcc_ID(request.getParameter("accID")).getCustomer_ID();
+            bookingDAO bookDAO = new bookingDAO();
+            List<Booking> bookingList = bookDAO.getBookingByCustomerID(customerID);
+
+            //seperate accepted and not accpeted
+            List<Booking> waitingBookings = new ArrayList<>();
+            List<Booking> notWaitingBookings = new ArrayList<>();
+
+            for (Booking booking : bookingList) {
+                if (booking.getBookingAccepted().equalsIgnoreCase("waiting")) {
+                    waitingBookings.add(booking);
+                } else {
+                    notWaitingBookings.add(booking);
+                }
+            }
+
+            request.setAttribute("name", adDAO.getAdminByAccID(accID).getAdmin_name());
+            request.setAttribute("waitingBookings", waitingBookings);
+            request.setAttribute("notWaitingBookings", notWaitingBookings);
+            request.getRequestDispatcher("view/admin/AdBookingHistory.jsp").forward(request, response);
+        }
     }
 
     /**

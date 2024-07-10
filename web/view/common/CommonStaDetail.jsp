@@ -345,7 +345,7 @@
 
         <div class="nav">
             <a href="stadiumList">STADIUM LIST</a>
-            <a href="#">POPULAR</a>
+            <a href="<%=request.getContextPath()%>/Popular">POPULAR</a>
         </div>
 
         <div class="container">
