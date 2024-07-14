@@ -112,10 +112,14 @@
                 outline: none;
             }
 
+           /* File Upload Container */
             .file-upload-container {
-                margin-bottom: 20px;
+                text-align: center;
+                margin: 20px 0;
+                padding: 0 120px;
             }
 
+            /* File Upload Label */
             .file-upload-label {
                 display: inline-block;
                 background-color: #4CAF50;
@@ -128,12 +132,15 @@
 
             .file-upload-label:hover {
                 background-color: #0056b3;
+                color: white;
             }
 
+            /* File Upload Input */
             .file-upload-input {
                 display: none;
             }
 
+            /* File Name Display */
             .file-upload-filename {
                 display: block;
                 margin-top: 10px;
@@ -147,7 +154,7 @@
         <div class="overlay"></div>
         <div class="form-container">
             <h1>ADD NEW STADIUM INFORMATION</h1>
-            <form action="AddNewSta" method="POST" enctype="multipart/form-data">
+            <form action="AddNewSta" method="POST" onsubmit="return validateTime()" enctype="multipart/form-data">
                 <label for="stadium-name">Stadium name:</label>
                 <input type="text" id="stadium-name" name="stadium_name" required>
 
@@ -167,8 +174,8 @@
                     function populateTimeSelect(selectId) {
                         var select = document.getElementById(selectId);
                         for (var hour = 0; hour <= 23; hour++) {
-                            for (var minute = 0; minute < 60; minute += 30) {
-                                var timeString = (hour < 10 ? "0" : "") + hour + ":" + (minute === 0 ? "00" : "30");
+                            for (var minute = 0; minute < 60; minute += 60) {
+                                var timeString = (hour < 10 ? "0" : "") + hour + ":00";
                                 var option = new Option(timeString, timeString);
                                 select.add(option);
                             }
@@ -221,12 +228,25 @@
                         } else {
                             document.getElementById('qr-file-name').textContent = "No file chosen";
                         }
-                    });
+                    }
+                    );
                 </script>
 
                 <label for="price-per-hour">Price Per Hour:</label>
                 <input type="text" id="price-per-hour" name="price_per_hour" required>
+                <script>
+                    function validateTime() {
+                        var startTime = document.getElementById("startTime").value;
+                        var endTime = document.getElementById("endTime").value;
 
+                        if ((startTime === endTime) || (startTime >= endTime)) {
+                            alert("Please select both start time and end time.");
+                            return false; // Ngăn không cho form được submit
+                        } else {
+                            return true; // Cho phép form submit
+                        }
+                    }
+                </script>
                 <button type="submit" class="confirm-button">CONFIRM</button>
             </form>
         </div>

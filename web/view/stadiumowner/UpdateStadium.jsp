@@ -259,7 +259,7 @@
         <div class="container">
             <div class="form-container">
                 <h1>UPDATE STADIUM INFORMATION</h1>
-                <form action="updateStadium" method="POST" enctype="multipart/form-data">
+                <form action="updateStadium" method="POST" onsubmit="return validateTime()" enctype="multipart/form-data">
                     <c:set var="st" value="${requestScope.stadium}"></c:set>
                         <label for="stadium-name">Stadium ID:</label>
                         <input type="text" id="stadium-name" name="stadium_ID" value="${st.stadium_ID}" readonly>
@@ -268,7 +268,7 @@
                     <input type="text" id="stadium-name" name="stadium_name" value="${st.stadium_name}" required>
 
                     <label for="stadium-address">Stadium Address:</label>
-                    <input type="text" id="stadium-address" name="stadium_address"value="${st.stadium_address}" required>
+                    <input type="text" id="stadium-address" name="stadium_address" value="${st.stadium_address}" required>
 
                     <label for="stadium-phone">Stadium Phone:</label>
                     <input type="text" id="stadium-phone" name="stadium_phone" value="${st.stadium_phone}" required maxlength="11" pattern="[0-9]{10,11}">
@@ -294,8 +294,8 @@
                         function populateTimeSelect(selectId) {
                             var select = document.getElementById(selectId);
                             for (var hour = 0; hour <= 23; hour++) {
-                                for (var minute = 0; minute < 60; minute += 30) {
-                                    var timeString = (hour < 10 ? "0" : "") + hour + ":" + (minute === 0 ? "00" : "30");
+                                for (var minute = 0; minute < 60; minute += 60) {
+                                    var timeString = (hour < 10 ? "0" : "") + hour + ":00";
                                     var option = new Option(timeString, timeString);
                                     select.add(option);
                                 }
@@ -355,8 +355,20 @@
                         });
                     </script>
                     <label for="price-per-hour">Price Per Hour:</label>
-                    <input type="text" id="price-per-hour" name="price_per_hour" value="" required>
+                    <input type="text" id="price-per-hour" name="price_per_hour" value="${st.pricePerHour}" required>
+                    <script>
+                        function validateTime() {
+                            var startTime = document.getElementById("startTime").value;
+                            var endTime = document.getElementById("endTime").value;
 
+                            if ((startTime === endTime) || (startTime >= endTime)) {
+                                alert("Please select both start time and end time.");
+                                return false; // Ngăn không cho form được submit
+                            } else {
+                                return true; // Cho phép form submit
+                            }
+                        }
+                    </script>
                     <button type="submit" class="confirm-button">CONFIRM</button>
                 </form>
             </div>
