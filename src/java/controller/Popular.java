@@ -94,8 +94,9 @@ public class Popular extends HttpServlet {
             customerDAO cusDAO = new customerDAO();
             request.setAttribute("name", cusDAO.getCustomerByAcc_ID(acID).getCustomer_Name());
             request.getRequestDispatcher("view/customer/CusPopular.jsp").forward(request, response);
+        }else {
+            request.getRequestDispatcher("view/common/CommonPopular.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("view/common/CommonPopular.jsp").forward(request, response);
     }
 
     /**
