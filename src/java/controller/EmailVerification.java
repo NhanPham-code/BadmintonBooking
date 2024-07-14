@@ -18,7 +18,7 @@ import model.RandomCode;
 
 /**
  *
- * @author Admin
+ * @author NhanPH
  */
 @WebServlet(name = "EmailVerification", urlPatterns = {"/EmailVerification"})
 public class EmailVerification extends HttpServlet {

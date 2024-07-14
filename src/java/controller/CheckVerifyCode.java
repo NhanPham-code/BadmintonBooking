@@ -21,7 +21,7 @@ import model.StadiumOwner;
 
 /**
  *
- * @author Admin
+ * @author NhanPH
  */
 @WebServlet(name = "CheckVerifyCode", urlPatterns = {"/CheckVerifyCode"})
 public class CheckVerifyCode extends HttpServlet {
@@ -78,93 +78,21 @@ public class CheckVerifyCode extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String email = null;
-        // get email
-        for (Cookie ck : cookies) {
-            if (ck.getName().equalsIgnoreCase("email")) {
-                email = ck.getValue();
-            }
-        }
         // code user input
         String verifyCode = request.getParameter("verifyCode");
 
         // code check
         String verifyCheckCode = request.getParameter("verifyCheckCode");
 
-        if (email != null) {
+        // email
+        String email = request.getParameter("email");
 
-            // email
-            email = request.getParameter("email");
-
-            if (verifyCode.equals(verifyCheckCode)) {
-                request.setAttribute("emailFix", email);
-                request.getRequestDispatcher("/view/common/FillNewPassword.jsp").forward(request, response);
-            } else {
-                request.setAttribute("error", "Your verify code is incorrect. Please try again!!!");
-                request.getRequestDispatcher("/view/common/FillEmailVerify.jsp").forward(request, response);
-            }
+        if (verifyCode.equals(verifyCheckCode)) {
+            request.setAttribute("emailFix", email);
+            request.getRequestDispatcher("/view/common/FillNewPassword.jsp").forward(request, response);
         } else {
-            if (verifyCode.equals(verifyCheckCode)) {
-                email = request.getParameter("email");
-                String name = request.getParameter("name");
-                String phone = request.getParameter("phone");
-                String password = request.getParameter("password");
-                String role = request.getParameter("role");
-                accountDAO aDAO = new accountDAO();
-
-                //add to account table
-                Account accNew = new Account();
-                // set value for new account
-                accNew.setEmail(email);
-                accNew.setPassword(password);
-                accNew.setRole(role);
-                // add to DB
-                aDAO.addNewAcc(accNew);
-                String acc_ID = aDAO.getAccountByEmail(email).getAcc_ID();
-                if (role.equalsIgnoreCase("StadiumOwner")) {
-
-                    // add to stadium owner table
-                    stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
-                    StadiumOwner ownerNew = new StadiumOwner();
-                    // auto create owner_ID
-                    String owner_ID = "";
-                    //set value for owner
-                    ownerNew.setOwner_ID(owner_ID);
-                    ownerNew.setOwner_name(name);
-                    ownerNew.setOwner_phone(phone);
-
-                    ownerNew.setAcc_ID(acc_ID);
-                    //add to DB
-                    oDAO.addNewOwner(ownerNew);
-
-                    request.setAttribute("email", email);
-                    //request.setAttribute("password", password);
-                    //move to login.jsp
-                    request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
-
-                } else {
-
-                    // add to customer table
-                    customerDAO cusDAO = new customerDAO();
-                    Customer cusNew = new Customer();
-                    //auto create customer_ID
-
-                    String customer_ID = "";
-                    //set value for customer
-                    cusNew.setCustomer_ID(customer_ID);
-                    cusNew.setCustomer_Name(name);
-                    cusNew.setCustomer_Phone(phone);
-                    cusNew.setAcc_ID(acc_ID);
-                    cusDAO.addNewCus(cusNew);
-                    request.setAttribute("email", email);
-                    request.getRequestDispatcher("/view/common/login.jsp").forward(request, response);
-                }
-            } else {
-                request.setAttribute("error", "Your verify code is incorrect. Please try again!!!");
-                request.getRequestDispatcher("/view/common/register.jsp").forward(request, response);
-
-            }
+            request.setAttribute("error", "Your verify code is incorrect. Please try again!!!");
+            request.getRequestDispatcher("/view/common/FillEmailVerify.jsp").forward(request, response);
         }
     }
 

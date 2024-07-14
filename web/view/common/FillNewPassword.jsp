@@ -1,7 +1,7 @@
 <%-- 
     Document   : FillNewPassword
     Created on : Jun 18, 2024, 9:15:58 PM
-    Author     : Admin
+    Author     : NhanPH
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

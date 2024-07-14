@@ -1,7 +1,7 @@
 <%-- 
     Document   : FillVerifyCode
     Created on : Jun 18, 2024, 8:17:24 PM
-    Author     : Admin
+    Author     : NhanPH
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -86,10 +86,6 @@
             <h1>Verify Code</h1>
             <p>Please enter the verification code sent to your email.</p>
             <form action="<%=request.getContextPath()%>/CheckVerifyCode" method="post">
-                <input type="hidden" name="name" value="${requestScope.name}">
-                <input type="hidden" name="phone" value="${requestScope.phone}">
-                <input type="hidden" name="password" value="${requestScope.password}">
-                <input type="hidden" name="role" value="${requestScope.role}">
                 <input type="hidden" name="email" value="${requestScope.email}">
                 <input type="hidden" name="verifyCheckCode" value="${requestScope.verifyCheckCode}">
                 <label for="verifyCode">Verification Code</label>
