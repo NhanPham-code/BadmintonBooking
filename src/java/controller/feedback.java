@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.feedbackDAO;
+import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,7 +13,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import model.Feedback;
+import model.Stadium;
 
 /**
  *
@@ -87,6 +91,18 @@ public class feedback extends HttpServlet {
             fDAO.addNewFeedback(description, ratingScort, customerID, stadiumID);
         }
 
+        stadiumDAO sDAO = new stadiumDAO();
+        Stadium satdium = sDAO.getStadiumByID(stadiumID);
+        
+        List<Feedback> feedbackList = new ArrayList<>();
+        feedbackList=fDAO.getFeedbackList(stadiumID);
+        float avg_ratingScore = 0;
+        for(Feedback fb : feedbackList){
+            avg_ratingScore += fb.getRatingScore();
+        }
+        avg_ratingScore = avg_ratingScore/feedbackList.size();
+        
+        sDAO.Feedback(avg_ratingScore, stadiumID);
         response.sendRedirect("stadiumDetail?stadiumID=" + stadiumID);
 
     }

@@ -231,16 +231,13 @@
                         <div class="head">
                             <b>ACCEPTED BOOKING ON DAY</b>
                             <div class="datePickerContainer">
-                                <form action="<%=request.getContextPath()%>acceptedBookFilter" method="GET">
-                                    <input type="hidden" name="command" value="filter">
-                                    <input type="date" id="selectedDate1" name="selectedDate">
-                                    <input type="submit" value="Filter">
-                                </form>
+                                <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
+                                <button type="button" onclick="filterAcceptedBookings()">Filter</button>
                             </div>
                         </div>
-                        <div class="booking-detail">
+                        <div class="booking-detail" id="acceptedBookingsContainer">
                             <c:forEach items="${acceptedBookings}" var="booking">
-                                <div class="booking-inf">
+                                <div class="booking-inf accepted-booking-container" data-date="${booking.date}">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
                                         <div style="display: flex">
@@ -256,11 +253,25 @@
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>                           
-                                <!-- Add more accepted bookings as needed -->
                             </c:forEach>
                         </div>
                     </div>
                 </div>
             </div>
         </body>
+        <script>
+    function filterAcceptedBookings() {
+        var selectedDate = document.getElementById("selectedDate1").value;
+        var bookingContainers = document.querySelectorAll(".accepted-booking-container");
+
+        bookingContainers.forEach(function(container) {
+            var bookingDate = container.getAttribute("data-date");
+            if (selectedDate === bookingDate) {
+                container.style.display = "block";
+            } else {
+                container.style.display = "none";
+            }
+        });
+    }
+</script>
     </html>

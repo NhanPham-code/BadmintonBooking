@@ -522,6 +522,36 @@ public class stadiumDAO {
 
         return popularStadium;
     }
+    
+    public void Feedback(float ratingScore, String stadiumID){
+        String sql = "UPDATE Stadium SET avg_ratingScore = ? WHERE stadium_ID=?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            // Set parameters for the prepared statement
+            ps.setFloat(1, ratingScore);
+            ps.setString(2, stadiumID);
+            // Execute the update statemen
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
 
     public static void main(String[] args) {
         stadiumDAO stDAO = new stadiumDAO();
