@@ -28,7 +28,11 @@ public class stadiumDAO {
     PreparedStatement ps;
     ResultSet rs;
     DBContext db = new DBContext();
-
+    
+    /**
+     * Author: NhanPH
+     * @return 
+     */
     public List<Stadium> getAllStadium() {
         stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
         List<Stadium> stadiumList = new ArrayList<>();
@@ -60,7 +64,11 @@ public class stadiumDAO {
 
         return stadiumList;
     }
-
+    /**
+     * Author: NhanPH
+     * @param key
+     * @return 
+     */
     public List<Stadium> searchStadiumByKey(String key) {
         stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
         List<Stadium> stList = new ArrayList<>();
@@ -94,7 +102,11 @@ public class stadiumDAO {
 
         return stList;
     }
-
+    /**
+     * Author: TienHN
+     * @param stadiumID
+     * @return 
+     */
     public Stadium getStadiumByID(String stadiumID) {
         stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
         Stadium stadium = null;
@@ -138,7 +150,12 @@ public class stadiumDAO {
         }
         return stadium;
     }
-
+    
+    /**
+     * DangVH
+     * @param stadium_ID
+     * @return 
+     */
     public boolean deleteStadium(String stadium_ID) {
         String deleteFeedbacksSql = "DELETE FROM Feedback WHERE stadium_ID = ?";
         String deleteBookingDetailsSql = "DELETE FROM BookingDetail WHERE booking_ID IN (SELECT booking_ID FROM Booking WHERE stadium_ID = ?)";
@@ -523,6 +540,11 @@ public class stadiumDAO {
         return popularStadium;
     }
     
+    /**
+     * Author: TienHN
+     * @param ratingScore
+     * @param stadiumID 
+     */
     public void Feedback(float ratingScore, String stadiumID){
         String sql = "UPDATE Stadium SET avg_ratingScore = ? WHERE stadium_ID=?";
         try {
