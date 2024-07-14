@@ -97,73 +97,63 @@ public class register extends HttpServlet {
         Account check = aDAO.getAccountByEmail(email);
 
         if (check == null) {
-//            //add to account table
-//            Account accNew = new Account();
-//            String acc_ID = "";
-//            // set value for new account
-//            accNew.setAcc_ID(acc_ID);
-//            accNew.setEmail(email);
-//            accNew.setPassword(hashPass);
-//            accNew.setRole(role);
-//            // add to DB
-//            aDAO.addNewAcc(accNew);
-//            acc_ID = aDAO.getAccountByEmail(email).getAcc_ID();
-//            if (role.equalsIgnoreCase("StadiumOwner")) {
-//
-//                // add to stadium owner table
-//                stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
-//                StadiumOwner ownerNew = new StadiumOwner();
-//                // auto create owner_ID
-//                String owner_ID = "";
-//                //set value for owner
-//                ownerNew.setOwner_ID(owner_ID);
-//                ownerNew.setOwner_name(name);
-//                ownerNew.setOwner_phone(phone);
-//
-//                ownerNew.setAcc_ID(acc_ID);
-//                //add to DB
-//                oDAO.addNewOwner(ownerNew);
-//
-//                request.setAttribute("email", email);
-//                //request.setAttribute("password", password);
-//                //move to login.jsp
-//                request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
-//
-//            } else {
-//
-//                // add to customer table
-//                customerDAO cusDAO = new customerDAO();
-//                Customer cusNew = new Customer();
-//                //auto create customer_ID
-//
-//                String customer_ID = "";
-//                //set value for customer
-//                cusNew.setCustomer_ID(customer_ID);
-//                cusNew.setCustomer_Name(name);
-//                cusNew.setCustomer_Phone(phone);
-//                cusNew.setAcc_ID(acc_ID);
-//                cusDAO.addNewCus(cusNew);
+            //add to account table
+            Account accNew = new Account();
+            // auto create acc_ID
+            accountDAO accDAO = new accountDAO();
+            int number = accDAO.getAllAccount().size() + 1;
+            String acc_ID = "ACC" + number;
+            // set value for new account
+            accNew.setAcc_ID(acc_ID);
+            accNew.setEmail(email);
+            accNew.setPassword(hashPass);
+            accNew.setRole(role);
+            // add to DB
+            aDAO.addNewAcc(accNew);
 
-            // create verify code
-            RandomCode randomCode = new RandomCode();
-            String verifyCode = randomCode.randomeVerifyCode();
+            if (role.equalsIgnoreCase("StadiumOwner")) {
 
-            // Send verify code for user
-            Email e = new Email();
-            e.sendEmail(email, verifyCode);
+                // add to stadium owner table
+                stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
+                StadiumOwner ownerNew = new StadiumOwner();
+                // auto create owner_ID
+                int ownerNumber = oDAO.getAllStadiumOwner().size() + 1;
+                String owner_ID = "OWNER" + ownerNumber;
+                //set value for owner
+                ownerNew.setOwner_ID(owner_ID);
+                ownerNew.setOwner_name(name);
+                ownerNew.setOwner_phone(phone);
+                ownerNew.setAcc_ID(acc_ID);
+                //add to DB
+                oDAO.addNewOwner(ownerNew);
 
-            // move to FillVerifyCode.jsp page
-            request.setAttribute("verifyCheckCode", verifyCode);
-            request.setAttribute("email", email);
-            request.setAttribute("name", name);
-            request.setAttribute("phone", phone);
-            request.setAttribute("password", hashPass);
-            request.setAttribute("role", role);
-            //move to login.jsp
-            request.getRequestDispatcher("/view/common/VerifyCode.jsp").forward(request, response);
+                request.setAttribute("email", email);
+                //request.setAttribute("password", password);
+                //move to login.jsp
+                request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
 
+            } else {
+
+                // add to customer table
+                customerDAO cusDAO = new customerDAO();
+                Customer cusNew = new Customer();
+                //auto create customer_ID
+                int cusNumber = cusDAO.getAllCustomer().size() + 1;
+                String customer_ID = "CUST" + cusNumber;
+                //set value for customer
+                cusNew.setCustomer_ID(customer_ID);
+                cusNew.setCustomer_Name(name);
+                cusNew.setCustomer_Phone(phone);
+                cusNew.setAcc_ID(acc_ID);
+                cusDAO.addNewCus(cusNew);
+
+                request.setAttribute("email", email);
+                //request.setAttribute("password", password);
+                //move to login.jsp
+                request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
+            }
         } else {
-            request.setAttribute("error", "This email is exists!!!");
+            request.setAttribute("error", "this email is exists!!!");
             request.getRequestDispatcher("view/common/register.jsp").forward(request, response);
         }
     }
