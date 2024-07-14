@@ -11,51 +11,43 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Update Stadium Information</title>
+        <title>Add Stadium Information</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
-                height: 100vh;
-
+                min-height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                background-color: #f0f2f5;
                 position: relative;
-                overflow: hidden;
+                overflow: auto;
             }
 
             .background-image {
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg2.jpg');
+                background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center;
                 filter: blur(5px);
-                /* Làm mờ ảnh */
                 z-index: -1;
             }
 
             .overlay {
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 background: rgba(255, 255, 255, 0.2);
-                /* Lớp phủ sáng màu để làm mờ ảnh nền */
                 z-index: -1;
             }
-
-            .content {
-                position: relative;
-                z-index: 1;
-                /* Đảm bảo nội dung hiển thị trên cùng */
-            }
-
 
             .form-container {
                 background-color: #ffffff;
@@ -64,6 +56,8 @@
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 width: 400px;
                 text-align: center;
+                position: relative;
+                z-index: 1;
             }
 
             .form-container h1 {
@@ -89,35 +83,6 @@
                 border-radius: 4px;
             }
 
-            .file-input-container {
-                position: relative;
-                margin-right: 300px;
-            }
-
-            .file-input-label {
-                position: absolute;
-                top: 0;
-                left: 0;
-                padding: 10px;
-                background-color: #fff;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                cursor: pointer;
-                width: calc(100% - 20px);
-                text-align: left;
-            }
-
-            .file-input-label::before {
-                content: 'ICON';
-                margin-right: 10px;
-            }
-
-            .file-input-container input[type="file"] {
-                opacity: 0;
-                width: calc(100% - 20px);
-                height: 100%;
-                cursor: pointer;
-            }
             .confirm-button {
                 background-color: #022B3A;
                 color: #fff;
@@ -131,73 +96,26 @@
 
             .confirm-button:hover {
                 background: #145569;
-                border-radius: 4px;
-                color: white;
             }
 
-            /* CSS mới để định dạng label start và end trên cùng một dòng */
             .time-labels {
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
-                /* Căn giữa theo chiều dọc */
             }
 
-            select {
+            .time-labels select {
                 padding: 8px;
                 border-radius: 5px;
                 border: 1px solid #ccc;
-                width: 100%;
-                max-width: 200px;
-                outline: none;
-                /* Điều chỉnh chiều rộng tối đa của các ô chọn */
-            }
-
-            /* Định dạng các nhãn để đặt cạnh nhau */
-            .label-container {
-                display: inline-block;
-                width: 80px;
-                /* Điều chỉnh chiều rộng của các nhãn */
-                text-align: right;
-
-                margin-left: 10px;
-                /* Tạo khoảng cách giữa các nhãn và các ô chọn */
-            }
-
-            /* Định dạng ô chọn thời gian để đặt cạnh nhau */
-            .select-container {
-                display: inline-block;
-                width: calc(70% - 70px);
-                /* Chiều rộng của ô chọn thời gian sẽ là 100% trừ đi chiều rộng của nhãn */
+                width: 48%;
                 outline: none;
             }
 
-            .file-input-container {
+            .file-upload-container {
                 margin-bottom: 20px;
             }
 
-            label {
-                display: block;
-                margin-bottom: 10px;
-            }
-
-            input[type="file"] {
-                display: none;
-            }
-
-
-            /* Định dạng khoảng cách giữa nút chọn hình ảnh và các hình ảnh đã chọn */
-            .space {
-                margin-top: 10px;
-            }
-
-            /* File Upload Container */
-            .file-upload-container {
-                text-align: center;
-                margin: 20px 0;
-                padding: 0 120px;
-            }
-
-            /* File Upload Label */
             .file-upload-label {
                 display: inline-block;
                 background-color: #4CAF50;
@@ -210,131 +128,107 @@
 
             .file-upload-label:hover {
                 background-color: #0056b3;
-                color: white;
             }
 
-            /* File Upload Input */
             .file-upload-input {
                 display: none;
             }
 
-            /* File Name Display */
             .file-upload-filename {
                 display: block;
                 margin-top: 10px;
                 font-size: 14px;
             }
-
         </style>
     </head>
 
     <body>
         <div class="background-image"></div>
         <div class="overlay"></div>
-        <div class="container">
-            <div class="form-container">
-                <h1>ADD NEW STADIUM INFORMATION</h1>
-                <form action="AddNewSta" method="POST" enctype="multipart/form-data">
-                    <label for="stadium-name">Stadium name:<i class="fas fa-star"></i></label>
-                    <input type="text" id="stadium-name" name="stadium_name" required>
+        <div class="form-container">
+            <h1>ADD NEW STADIUM INFORMATION</h1>
+            <form action="AddNewSta" method="POST" enctype="multipart/form-data">
+                <label for="stadium-name">Stadium name:</label>
+                <input type="text" id="stadium-name" name="stadium_name" required>
 
-                    <label for="stadium-address">Stadium address:</label>
-                    <input type="text" id="stadium-address" name="stadium_address" required>
+                <label for="stadium-address">Stadium address:</label>
+                <input type="text" id="stadium-address" name="stadium_address" required>
 
-                    <label for="stadium-phone">Stadium Phone:</label>
-                    <input type="text" id="stadium-phone" name="stadium_phone" required>
+                <label for="stadium-phone">Stadium Phone:</label>
+                <input type="text" id="stadium-phone" name="stadium_phone" required>
 
-                    <!-- Thêm một div để nhóm label start và end -->
-                    <label for="stadium-name">Choose Time:</label>
-                    <div class="time-labels">
-                        <div class="label-container">
-                            <label for="startTime">Start</label>
-                        </div>
-                        <div class="select-container">
-                            <select id="startTime" name="startTime"></select>
-                        </div>
-                        <div class="label-container">
-                            <label for="endTime">End</label>
-                        </div>
-                        <div class="select-container">
-                            <select id="endTime" name="endTime"></select>
-                        </div>
-                    </div>
+                <label for="stadium-time">Choose Time:</label>
+                <div class="time-labels">
+                    <select id="startTime" name="startTime"></select>
+                    <select id="endTime" name="endTime"></select>
+                </div>
 
-
-
-                    <script>
-                        function populateTimeSelect(selectId) {
-                            var select = document.getElementById(selectId);
-                            for (var hour = 0; hour <= 23; hour++) {
-                                for (var minute = 0; minute < 60; minute += 30) {
-                                    var timeString = (hour < 10 ? "0" : "") + hour + ":" + (minute === 0 ? "00" : "30");
-                                    var option = new Option(timeString, timeString);
-                                    select.add(option);
-                                }
+                <script>
+                    function populateTimeSelect(selectId) {
+                        var select = document.getElementById(selectId);
+                        for (var hour = 0; hour <= 23; hour++) {
+                            for (var minute = 0; minute < 60; minute += 30) {
+                                var timeString = (hour < 10 ? "0" : "") + hour + ":" + (minute === 0 ? "00" : "30");
+                                var option = new Option(timeString, timeString);
+                                select.add(option);
                             }
                         }
+                    }
 
-                        populateTimeSelect("startTime");
-                        populateTimeSelect("endTime");
+                    populateTimeSelect("startTime");
+                    populateTimeSelect("endTime");
 
-                        // Sử dụng JavaScript để ngăn người dùng chọn thời gian không hợp lệ
-                        document.getElementById("endTime").addEventListener("change", function () {
-                            var startTime = document.getElementById("startTime").value;
-                            var endTime = this.value;
-                            if (startTime >= endTime) {
-                                alert("Thời gian kết thúc phải sau thời gian bắt đầu.");
-                                this.value = startTime; // Đặt lại giá trị nếu không hợp lệ
-                            }
-                        });
-                    </script>
+                    document.getElementById("endTime").addEventListener("change", function () {
+                        var startTime = document.getElementById("startTime").value;
+                        var endTime = this.value;
+                        if (startTime >= endTime) {
+                            alert("Thời gian kết thúc phải sau thời gian bắt đầu.");
+                            this.value = startTime;
+                        }
+                    });
+                </script>
 
+                <label for="stadium-image">Stadium Image:</label>
+                <div class="file-upload-container">
+                    <label for="stadium-image" class="file-upload-label">Stadium Image</label>
+                    <input type="file" id="stadium-image" name="stadium_image" class="file-upload-input" accept="image/*" required>
+                    <span id="stadium-file-name" class="file-upload-filename"></span>
+                </div>
 
-                    <div class="space"></div>
-                    <label for="stadium-images">Stadium Image:</label>
-                    <div class="file-upload-container">
-                        <label for="stadium-image" class="file-upload-label">Stadium Image</label>
-                        <input type="file" id="stadium-image" name="stadium_image" class="file-upload-input" accept="image/*" required>                        
-                        <span id="stadium-file-name" class="file-upload-filename"></span>
-                    </div>
-                    <script>
-                        document.getElementById('stadium-image').addEventListener('change', function () {
-                            if (this.files.length > 0) {
-                                var fileName = this.files[0].name;
-                                document.getElementById('stadium-file-name').textContent = fileName;
-                            } else {
-                                document.getElemeopentimentById('stadium-file-name').textContent = "No file chosen";
-                            }
-                        });
-                    </script>
+                <script>
+                    document.getElementById('stadium-image').addEventListener('change', function () {
+                        if (this.files.length > 0) {
+                            var fileName = this.files[0].name;
+                            document.getElementById('stadium-file-name').textContent = fileName;
+                        } else {
+                            document.getElementById('stadium-file-name').textContent = "No file chosen";
+                        }
+                    });
+                </script>
 
-                    <div class="space"></div>
-                    <label for="stadium-images">QR Code:</label>
-                    <div class="file-upload-container">
-                        <label for="QRCode" class="file-upload-label">QR Code Image</label>
-                        <input type="file" id="QRCode" name="QRCode" class="file-upload-input" accept="image/*" required>
-                        <span id="qr-file-name" class="file-upload-filename"></span>
-                    </div>
+                <label for="QRCode">QR Code:</label>
+                <div class="file-upload-container">
+                    <label for="QRCode" class="file-upload-label">QR Code Image</label>
+                    <input type="file" id="QRCode" name="QRCode" class="file-upload-input" accept="image/*" required>
+                    <span id="qr-file-name" class="file-upload-filename"></span>
+                </div>
 
-                    <div class="space"></div>
+                <script>
+                    document.getElementById('QRCode').addEventListener('change', function () {
+                        if (this.files.length > 0) {
+                            var fileName = this.files[0].name;
+                            document.getElementById('qr-file-name').textContent = fileName;
+                        } else {
+                            document.getElementById('qr-file-name').textContent = "No file chosen";
+                        }
+                    });
+                </script>
 
-                    <script>
-                        document.getElementById('QRCode').addEventListener('change', function () {
-                            if (this.files.length > 0) {
-                                var fileName = this.files[0].name;
-                                document.getElementById('qr-file-name').textContent = fileName;
-                            } else {
-                                document.getElementById('qr-file-name').textContent = "No file chosen";
-                            }
-                        });
-                    </script>
+                <label for="price-per-hour">Price Per Hour:</label>
+                <input type="text" id="price-per-hour" name="price_per_hour" required>
 
-                    <label for="price-per-hour">Price Per Hour:</label>
-                    <input type="text" id="price-per-hour" name="price_per_hour" required>
-
-                    <button type="submit" class="confirm-button">CONFIRM</button>
-                </form>
-            </div>
+                <button type="submit" class="confirm-button">CONFIRM</button>
+            </form>
         </div>
     </body>
 </html>

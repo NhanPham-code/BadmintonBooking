@@ -17,36 +17,36 @@
             body {
                 font-family: Arial, sans-serif;
                 margin: 0;
-                height: 100vh;
+                min-height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                background-color: #f0f2f5;
                 position: relative;
-                overflow: hidden;
+                overflow: auto;
             }
 
             .background-image {
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg2.jpg');
+                background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center;
                 filter: blur(5px);
-                /* Làm mờ ảnh */
                 z-index: -1;
             }
 
             .overlay {
-                position: absolute;
+                position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 background: rgba(255, 255, 255, 0.2);
-                /* Lớp phủ sáng màu để làm mờ ảnh nền */
                 z-index: -1;
             }
 

@@ -245,7 +245,7 @@
                     <p><span>Stadium Phone Number:</span> ${st.stadium_phone}</p>
 
                     <input type="hidden" name="pricePerHour" value="${st.pricePerHour}">
-                    <p><span>Price Per Hour Of Court:</span> ${st.pricePerHour}</p>
+                    <p><span>Price Per Hour Of Court:</span> ${st.pricePerHour}.000 VND</p>
 
                     <c:forEach var="court" items="${requestScope.courtList}">
                         <input type="hidden" name="court_ID" value="${court.court_ID}"> <!-- comment -->
@@ -255,12 +255,12 @@
                     <input type="hidden" name="bookingTime" value="${requestScope.startTime}-${requestScope.endTime}"> <!-- comment -->
                     <p><span>Booking Time:</span> ${requestScope.startTime} - ${requestScope.endTime}</p>
 
-                    <input type="text" name="bookingDate" value="${requestScope.date}"> <!-- comment -->
+                    <input type="hidden" name="bookingDate" value="${requestScope.date}"> <!-- comment -->
                     <p><span>Booking Date:</span> ${requestScope.date}</p>
                 </div>
                 <div class="total">
                     <input type="hidden" name="total" value="${requestScope.total}"> <!-- comment -->
-                    <p><span>TOTAL:</span> ${requestScope.total}</p>
+                    <p><span>TOTAL:</span> ${requestScope.total}.000 VND</p>
                 </div>
                 <button type="button" class="confirm-button" onclick="openModal()">Confirm</button>
 
