@@ -145,7 +145,7 @@
 
             <div class="auth-links">
                 <a href="<%=request.getContextPath()%>/view/common/login.jsp">Login</a>
-                <a href="<%=request.getContextPath()%>/view/common/register.jsp">Register</a>
+                <a href="<%=request.getContextPath()%>/view/common/SendEmailRegis.jsp">Register</a>
             </div>
         </div>
 

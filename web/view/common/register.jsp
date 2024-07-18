@@ -101,7 +101,35 @@
             .input[type="radio"]:checked + label:before {
                 background-color: #022B3A; /* Màu nền của radio button khi được chọn */
             }
+            .password-container {
+                position: relative;
+            }
+
+            .show-password {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                color: #ccc;
+            }
         </style>
+        <script>
+            function togglePasswordVisibility() {
+                var passwordField = document.getElementById('password');
+                var passwordIcon = document.querySelector('.show-password');
+
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            }
+        </script>
     </head>
     <body>
         <h3 style="color: red">${requestScope.error}</h3>
@@ -115,9 +143,14 @@
                 <label for="phone"><b>Phone Number</b></label>
                 <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" required maxlength="11" pattern="[0-9]{10,11}">
                 <label for="email"><b>Email</b></label>
-                <input type="email" placeholder="Enter Email" name="email" id="email" required>
-                <label for="password"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="password" id="password" required>                
+                <input type="email" name="email" id="email" value="${requestScope.email}" readonly>
+                <div class="password-container">
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" id="password" pattern="^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$"
+                           title="Password must be at least 8 characters long and contain at least one number and one special character" 
+                           required>  
+                    <i class="fa fa-eye show-password" onclick="togglePasswordVisibility()"></i>
+                </div>
                 <p><b>Role: </b></p>
                 <input type="radio" name="role" value="Customer" required>
                 <label for="customer">Customer</label><br>

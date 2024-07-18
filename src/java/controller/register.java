@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Account;
 import model.Customer;
-import model.Email;
-import model.RandomCode;
 import model.StadiumOwner;
 import model.hashPasswordMD5;
 
@@ -99,10 +97,7 @@ public class register extends HttpServlet {
         if (check == null) {
             //add to account table
             Account accNew = new Account();
-            // auto create acc_ID
-            accountDAO accDAO = new accountDAO();
-            int number = accDAO.getAllAccount().size() + 1;
-            String acc_ID = "ACC" + number;
+            String acc_ID = "";
             // set value for new account
             accNew.setAcc_ID(acc_ID);
             accNew.setEmail(email);
@@ -110,19 +105,19 @@ public class register extends HttpServlet {
             accNew.setRole(role);
             // add to DB
             aDAO.addNewAcc(accNew);
-
+            acc_ID = aDAO.getAccountByEmail(email).getAcc_ID();
             if (role.equalsIgnoreCase("StadiumOwner")) {
 
                 // add to stadium owner table
                 stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
                 StadiumOwner ownerNew = new StadiumOwner();
                 // auto create owner_ID
-                int ownerNumber = oDAO.getAllStadiumOwner().size() + 1;
-                String owner_ID = "OWNER" + ownerNumber;
+                String owner_ID = "";
                 //set value for owner
                 ownerNew.setOwner_ID(owner_ID);
                 ownerNew.setOwner_name(name);
                 ownerNew.setOwner_phone(phone);
+
                 ownerNew.setAcc_ID(acc_ID);
                 //add to DB
                 oDAO.addNewOwner(ownerNew);
@@ -138,8 +133,8 @@ public class register extends HttpServlet {
                 customerDAO cusDAO = new customerDAO();
                 Customer cusNew = new Customer();
                 //auto create customer_ID
-                int cusNumber = cusDAO.getAllCustomer().size() + 1;
-                String customer_ID = "CUST" + cusNumber;
+
+                String customer_ID = "";
                 //set value for customer
                 cusNew.setCustomer_ID(customer_ID);
                 cusNew.setCustomer_Name(name);
@@ -153,7 +148,7 @@ public class register extends HttpServlet {
                 request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
             }
         } else {
-            request.setAttribute("error", "this email is exists!!!");
+            request.setAttribute("error", "This email is exists!!!");
             request.getRequestDispatcher("view/common/register.jsp").forward(request, response);
         }
     }
