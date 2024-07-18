@@ -29,7 +29,7 @@ import model.Stadium;
  * @author WINDOWS
  */
 @WebServlet(name = "CustomerHistoryController", urlPatterns = {"/CustomerHistoryController"})
-public class bookingHistory extends HttpServlet {
+public class CustomerHistoryController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -133,7 +133,7 @@ public class bookingHistory extends HttpServlet {
             request.setAttribute("name", adDAO.getAdminByAccID(accID).getAdmin_name());
             request.setAttribute("waitingBookings", waitingBookings);
             request.setAttribute("notWaitingBookings", notWaitingBookings);
-            request.getRequestDispatcher("view/admin/AdBookingHistory.jsp").forward(request, response);
+            request.getRequestDispatcher("view/admin/AdCusBookHistory.jsp").forward(request, response);
         }
     }
 

@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <div class="cus-book">
-                    <div class="head">BOOKING HISTORY (Waiting / Rejected)</div>
+                    <div class="head">BOOKING HISTORY (Waiting)</div>
                     <div class="booking-detail">
                         <c:forEach items="${waitingBookings}" var="booking">
                             <a href="bookingDetail?bookingID=${booking.booking_ID}">
@@ -165,7 +165,9 @@
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="stadium-status">${booking.bookingAccepted}</div>
+                                    <div class="stadium-status">
+                                        ${booking.bookingAccepted}
+                                    </div>
                                 </div>
                             </a>
                         </c:forEach>
