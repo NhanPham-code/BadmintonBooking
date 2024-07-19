@@ -23,8 +23,14 @@ public class feedbackDAO {
     ResultSet rs;
     DBContext db = new DBContext();
 
+    /**
+     * Author: TienHN
+     * @param stadiumID
+     * @return 
+     */
     public List<Feedback> getFeedbackList(String stadiumID) {
         customerDAO cDAO = new customerDAO();
+        stadiumDAO sDAO = new stadiumDAO();
         List<Feedback> FeedbackList = new ArrayList<>();
         String sql = "select * from Feedback where stadium_ID = ?";
         try {
@@ -34,10 +40,11 @@ public class feedbackDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback();
-                fb.setRatingScore(rs.getInt(1));
-                fb.setDescription(rs.getString(2));
-                fb.setCustomer(cDAO.getCustomerByID(rs.getString(3)));
-                fb.setStadium_ID(rs.getString(4));
+                fb.setFeedbackID(rs.getInt(1));
+                fb.setRatingScore(rs.getInt(2));
+                fb.setDescription(rs.getString(3));
+                fb.setCustomer(cDAO.getCustomerByID(rs.getString(4)));
+                fb.setStadium(sDAO.getStadiumByID(rs.getString(5)));
                 FeedbackList.add(fb);
             }
         } catch (Exception ex) {
@@ -47,8 +54,15 @@ public class feedbackDAO {
         return FeedbackList;
     }
 
+    /**
+     * Author: TienHN
+     * @param stadiumID
+     * @param ratingScore
+     * @return 
+     */
     public List<Feedback> getFeedbackFilterList(String stadiumID, int ratingScore) {
         customerDAO cDAO = new customerDAO();
+        stadiumDAO sDAO = new stadiumDAO();
         List<Feedback> FeedbackList = new ArrayList<>();
         String sql = "select * from Feedback where stadium_ID = ? AND ratingScore = ?";
         try {
@@ -59,10 +73,11 @@ public class feedbackDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Feedback fb = new Feedback();
-                fb.setRatingScore(rs.getInt(1));
-                fb.setDescription(rs.getString(2));
-                fb.setCustomer(cDAO.getCustomerByID(rs.getString(3)));
-                fb.setStadium_ID(rs.getString(4));
+                fb.setFeedbackID(rs.getInt(1));
+                fb.setRatingScore(rs.getInt(2));
+                fb.setDescription(rs.getString(3));
+                fb.setCustomer(cDAO.getCustomerByID(rs.getString(4)));
+                fb.setStadium(sDAO.getStadiumByID(rs.getString(5)));
                 FeedbackList.add(fb);
             }
         } catch (Exception ex) {
@@ -72,8 +87,15 @@ public class feedbackDAO {
         return FeedbackList;
     }
 
+    /**
+     * Author: TienHN
+     * @param stadiumID
+     * @param customerID
+     * @return 
+     */
     public Feedback getFeedback(String stadiumID, String customerID) {
         customerDAO cDAO = new customerDAO();
+        stadiumDAO sDAO = new stadiumDAO();
         Feedback fb = new Feedback();
         String sql = "select * from Feedback where stadium_ID = ? AND customer_ID = ?";
         try {
@@ -84,10 +106,11 @@ public class feedbackDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
 
-                fb.setRatingScore(rs.getInt(1));
-                fb.setDescription(rs.getString(2));
-                fb.setCustomer(cDAO.getCustomerByID(rs.getString(3)));
-                fb.setStadium_ID(rs.getString(4));
+                fb.setFeedbackID(rs.getInt(1));
+                fb.setRatingScore(rs.getInt(2));
+                fb.setDescription(rs.getString(3));
+                fb.setCustomer(cDAO.getCustomerByID(rs.getString(4)));
+                fb.setStadium(sDAO.getStadiumByID(rs.getString(5)));
             }
         } catch (Exception ex) {
             System.out.println();
@@ -96,6 +119,13 @@ public class feedbackDAO {
         return fb;
     }
 
+    /**
+     * Author: TienHN
+     * @param description
+     * @param ratingScore
+     * @param customer_ID
+     * @param stadium_ID
+     */
     public void addNewFeedback(String description, int ratingScore, String customer_ID, String stadium_ID) {
         String sql = "INSERT INTO [dbo].[Feedback]\n"
                 + "           ([ratingScore]\n"
@@ -120,7 +150,15 @@ public class feedbackDAO {
         }
 
     }
-
+    
+    
+/**
+     * Author: TienHN
+     * @param description
+     * @param ratingScore
+     * @param customer_ID
+     * @param stadium_ID
+     */
     public void updateFeedback(String description, int ratingScore, String customer_ID, String stadium_ID) {
         String sql = "UPDATE Feedback SET ratingScore = ?, description = ? WHERE stadium_ID=? AND customer_ID=?";
         try {
@@ -137,6 +175,11 @@ public class feedbackDAO {
 
     }
 
+    /**
+     * Author: TienHN
+     * @param customer_ID
+     * @param stadium_ID
+     */
     public void deleteFeedback(String customer_ID, String stadium_ID) {
         String sql = "DELETE Feedback WHERE stadium_ID=? AND customer_ID=?";
         try {
@@ -150,6 +193,10 @@ public class feedbackDAO {
         }
     }
 
+    /**
+     * Author: TienHN
+     * @param customer_ID
+     */
     public void deleteFeedbackCustomer(String customer_ID) {
         String sql = "DELETE Feedback WHERE customer_ID=?";
         try {

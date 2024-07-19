@@ -9,18 +9,12 @@ package model;
  * @author ADMIN
  */
 public class Feedback {
-    private String stadium_ID;
+
+    private int feedbackID;
+    private Stadium stadium;
     private Customer customer;
     private int ratingScore;
     private String description;
-
-    public String getStadium_ID() {
-        return stadium_ID;
-    }
-
-    public void setStadium_ID(String stadium_ID) {
-        this.stadium_ID = stadium_ID;
-    }
 
     public Customer getCustomer() {
         return customer;
@@ -49,11 +43,28 @@ public class Feedback {
     public Feedback() {
     }
 
-    public Feedback(String stadiumID, Customer customer, int ratingScore, String description) {
-        this.stadium_ID = stadium_ID;
+    public int getFeedbackID() {
+        return feedbackID;
+    }
+
+    public void setFeedbackID(int feedbackID) {
+        this.feedbackID = feedbackID;
+    }
+
+    public Stadium getStadium() {
+        return stadium;
+    }
+
+    public void setStadium(Stadium stadium) {
+        this.stadium = stadium;
+    }
+
+    public Feedback(int feedbackID, Stadium stadium, Customer customer, int ratingScore, String description) {
+        this.feedbackID = feedbackID;
+        this.stadium = stadium;
         this.customer = customer;
         this.ratingScore = ratingScore;
         this.description = description;
     }
-    
+
 }

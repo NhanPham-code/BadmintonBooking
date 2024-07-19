@@ -100,11 +100,17 @@
                 overflow-y: scroll;
                 display: block;
             }
+
+            .courtList{
+                height: 150px;
+                overflow-y: auto;
+            }
             .table-container table {
                 width: 100%;
                 border-collapse: collapse;
-                max-height: 200px;
+                height: 200px;
                 border-radius: 5px;
+
             }
 
             .table-container th{
@@ -301,21 +307,24 @@
                             </div>
                         </div>
                         <h2 style="color: white;margin-top: 30px;">Court List</h2>
-                        <table>
+                        <div class="courtList">
+                            <table>
 
-                            <thead>
-                                <tr>
-                                    <th style="color: white;">Court Number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="c" items="${requestScope.courtList}">
+                                <thead>
                                     <tr>
-                                        <td>${c.number}</td>
+                                        <th style="color: white;">Court Number</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="c" items="${requestScope.courtList}">
+                                        <tr>
+                                            <td>${c.number}</td>
+                                        </tr>
+                                       
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

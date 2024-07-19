@@ -49,6 +49,12 @@ public class accountDAO {
         return ac;
     }
 
+    /**
+     * Author: TienHN
+     * @param accID
+     * @param customerID
+     * @param ownerID
+     */
     public void deleteAccount(String accID, String customerID, String ownerID) {
         String sql = "Delete Account where acc_ID = ?";
         if (customerID.equals("")) {

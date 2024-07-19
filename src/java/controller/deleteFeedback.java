@@ -5,6 +5,7 @@
 package controller;
 
 import DAO.feedbackDAO;
+import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,8 +13,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import model.Feedback;
+import model.Stadium;
 
 /**
  *
@@ -74,6 +78,7 @@ public class deleteFeedback extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String selectedFeedback = request.getParameter("selectedFeedback");
         List<String> selectedFeedbackIds = Arrays.asList(selectedFeedback.split("_"));
         
@@ -83,7 +88,20 @@ public class deleteFeedback extends HttpServlet {
         for(int i=0; i<selectedFeedbackIds.size(); i++){
             fDAO.deleteFeedback(selectedFeedbackIds.get(i), stadiumID);
         }
+        stadiumDAO sDAO = new stadiumDAO();
+        Stadium satdium = sDAO.getStadiumByID(stadiumID);
+        
+        List<Feedback> feedbackList = new ArrayList<>();
+        feedbackList=fDAO.getFeedbackList(stadiumID);
+        float avg_ratingScore = 0;
+        if(feedbackList.size()!=0){
+        for(Feedback fb : feedbackList){
+            avg_ratingScore += fb.getRatingScore();
+        }
+        avg_ratingScore = avg_ratingScore/feedbackList.size();}
+        sDAO.Feedback(avg_ratingScore, stadiumID);
         response.sendRedirect("stadiumDetail?stadiumID=" + stadiumID);
+         //----------Tien------------//
     }
 
     /**

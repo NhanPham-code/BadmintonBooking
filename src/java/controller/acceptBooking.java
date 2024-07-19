@@ -59,11 +59,13 @@ public class acceptBooking extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String BookingID = request.getParameter("BookingID");
         bookingDAO bDAO = new bookingDAO();
         bDAO.acceptBooking(BookingID);
         Booking booking = bDAO.getBookingByBookingID(BookingID);
         response.sendRedirect("bookingManage?stadiumID="+booking.getStadium().getStadium_ID());
+         //----------Tien------------//
         
     }
 

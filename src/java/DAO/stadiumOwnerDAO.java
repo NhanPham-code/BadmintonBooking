@@ -199,6 +199,12 @@ public class stadiumOwnerDAO {
         return check;
     }
     
+    /**
+     * Author: TienHN
+     * @param StdoID
+     * @param name
+     * @param phone
+     */
     public void updateProfile(String StdoID, String name, String phone){
         String sql = "update StadiumOwner set owner_name = ?, owner_phone = ? where owner_ID = ?";
         try {
@@ -227,6 +233,10 @@ public class stadiumOwnerDAO {
         }     
     }
     
+    /**
+     * Author: TienHN
+     * @param accID
+     */
     public void deleteStadiumOwner(String accID){
         String sql = "DELETE StadiumOwner WHERE acc_ID=?";
         try {

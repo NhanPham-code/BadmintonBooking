@@ -48,6 +48,12 @@ public class adminDAO {
         return ad;
     }
     
+    /**
+     * Author: TienHN
+     * @param AdID
+     * @param name
+     * @param phone
+     */
     public void updateProfile(String AdID, String name, String phone){
         String sql = "update customer set admin_name = ?, admin_phone = ? where admin_ID = ?";
         try {

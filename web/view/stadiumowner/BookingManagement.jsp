@@ -260,6 +260,7 @@
             </div>
         </body>
         <script>
+             //----------Tien------------//
     function filterAcceptedBookings() {
         var selectedDate = document.getElementById("selectedDate1").value;
         var bookingContainers = document.querySelectorAll(".accepted-booking-container");

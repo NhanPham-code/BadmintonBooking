@@ -53,6 +53,11 @@ public class courtDAO {
         return courtList;
     }
 
+    /**
+     * Author: TienHN
+     * @param courtID
+     * @return Court
+     */
     public Court getCourtByID(String courtID) {
         Court court = new Court();
         String sql = "Select * from Court where court_ID=?";

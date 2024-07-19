@@ -73,6 +73,10 @@ public class bookingDetailDAO {
     }
 
     
+    /**
+     * Author: TienHN
+     * @param customerID
+     */
     public void deleteBookingDetailCustomer(String customerID ){
         String sql = "DELETE BookingDetail FROM BookingDetail JOIN Booking ON BookingDetail.booking_ID= Booking.booking_ID WHERE Booking.customer_ID=?"; 
         try {

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,6 +78,18 @@ public class feedback extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
+        Cookie[] cks = request.getCookies();
+        boolean check = false;
+        for(Cookie ck : cks) {
+            if(ck.getName().equalsIgnoreCase("email")) {
+                check = true;
+            }
+        }
+        if(check == false) {
+            response.sendRedirect("view/common/login.jsp");
+            return;
+        }
         String description = request.getParameter("description");
         int ratingScort = Integer.parseInt(request.getParameter("rating"));
         String customerID = request.getParameter("customerID");
@@ -104,7 +117,7 @@ public class feedback extends HttpServlet {
         
         sDAO.Feedback(avg_ratingScore, stadiumID);
         response.sendRedirect("stadiumDetail?stadiumID=" + stadiumID);
-
+         //----------Tien------------//
     }
 
     /**

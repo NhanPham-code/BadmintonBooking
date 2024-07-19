@@ -65,6 +65,7 @@ public class deleteAccount extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String accID = request.getParameter("accID");
         String customerID = "";
         String ownerID = "";
@@ -97,7 +98,7 @@ public class deleteAccount extends HttpServlet {
         List<Account> accList = aDAO.getAllAccount();
         request.setAttribute("accList", accList);
         request.getRequestDispatcher("view/admin/AdAccManage.jsp").forward(request, response);
-
+         //----------Tien------------//
     }
 
     /**

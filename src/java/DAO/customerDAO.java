@@ -200,7 +200,12 @@ public class customerDAO {
         }
         return check;
     }
-
+/**
+     * Author: TienHN
+     * @param CusID
+     * @param name
+     * @param phone
+     */
     public void updateProfile(String CusID, String name, String phone) {
         String sql = "update customer set customer_name = ?, customer_phone = ? where customer_ID = ?";
         try {
@@ -229,6 +234,10 @@ public class customerDAO {
         }
     }
 
+    /**
+     * Author: TienHN
+     * @param customer_ID
+     */
     public void deteleCustomer(String customer_ID) {
         String sql = "DELETE Customer WHERE customer_ID=?";
         try {

@@ -65,6 +65,7 @@ public class accountDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String accID = request.getParameter("accID");
         String accName = "";
         String roleID="";
@@ -107,6 +108,7 @@ public class accountDetail extends HttpServlet {
         request.setAttribute("role", role);
         
         request.getRequestDispatcher("view/admin/AdAccDetail.jsp").forward(request, response);
+         //----------Tien------------//
     }
 
     /**

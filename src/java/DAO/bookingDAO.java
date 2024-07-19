@@ -350,6 +350,10 @@ public class bookingDAO {
         return bookList;
     }
 
+    /**
+     * Author: TienHN
+     * @param customerID
+     */
     public void deleteBookingOfCustomer(String customerID) {
         String sql = "Delete Booking where customer_ID=?";
         try {
@@ -429,6 +433,10 @@ public class bookingDAO {
         return index;
     }
 
+    /**
+     * Author: TienHN
+     * @param bookingID
+     */
     public void acceptBooking(String bookingID) {
         String sql = " update Booking set bookingAccepted = 'accepted' where booking_ID = ?";
         try {
@@ -442,6 +450,10 @@ public class bookingDAO {
 
     }
 
+    /**
+     * Author: TienHN
+     * @param bookingID
+     */
     public void rejectBooking(String bookingID) {
         String sql = " update Booking set bookingAccepted = 'rejected' where booking_ID = ?";
         try {

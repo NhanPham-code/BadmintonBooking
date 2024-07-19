@@ -89,6 +89,7 @@ public class stadiumDetail extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //----------Tien------------//
         Cookie[] cookies = request.getCookies();
         String email = null;
         // get role
@@ -155,6 +156,7 @@ public class stadiumDetail extends HttpServlet {
         } else {
             request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);
         }
+        //----------Tien------------//
 
     }
 

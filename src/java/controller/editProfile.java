@@ -66,6 +66,7 @@ public class editProfile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         Cookie[] cookies = request.getCookies();
         String email = null;
         // get role
@@ -113,6 +114,7 @@ public class editProfile extends HttpServlet {
         request.setAttribute("ID", user_ID);
 
         request.getRequestDispatcher("view/common/EditProfile.jsp").forward(request, response);
+         //----------Tien------------//
     }
 
     /**
@@ -126,6 +128,7 @@ public class editProfile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String ID = request.getParameter("ID");
@@ -178,6 +181,7 @@ public class editProfile extends HttpServlet {
                 request.getRequestDispatcher("view/admin/AdPro.jsp").forward(request, response);
             }
         }
+         //----------Tien------------//
     }
 
     /**

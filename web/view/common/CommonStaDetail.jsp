@@ -427,7 +427,7 @@
 
                     <div class="feedback-form">
                         <h2>Leave Feedback</h2>
-                        <form id="feedback-form" action="process_feedback.php" method="post">
+                        <form id="feedback-form" action="feedback" method="post">
                             <div class="form-group">
                                 <label for="feedback-description">Description:</label>
                                 <textarea id="feedback-description" name="feedback-description" rows="4" required></textarea>

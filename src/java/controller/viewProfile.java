@@ -69,6 +69,7 @@ public class viewProfile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         Cookie[] cookies = request.getCookies();
         String email = null;
         // get role
@@ -110,6 +111,7 @@ public class viewProfile extends HttpServlet {
             //response.getWriter().println("StadiumOwner");
             request.getRequestDispatcher("view/stadiumowner/ProfileOwner.jsp").forward(request, response);
         }
+         //----------Tien------------//
     }
 
     /**

@@ -4,9 +4,13 @@
  */
 package controller;
 
+import DAO.accountDAO;
+import DAO.adminDAO;
 import DAO.courtDAO;
+import DAO.customerDAO;
 import DAO.feedbackDAO;
 import DAO.stadiumDAO;
+import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,9 +21,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import model.Account;
+import model.Admin;
 import model.Court;
+import model.Customer;
 import model.Feedback;
 import model.Stadium;
+import model.StadiumOwner;
 
 /**
  *
@@ -66,6 +74,7 @@ public class feedbackFilter extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         //----------Tien------------//
         String stadiumID = request.getParameter("stadiumID");
         String ratingScore = request.getParameter("rating");
 
@@ -98,20 +107,40 @@ public class feedbackFilter extends HttpServlet {
                 role = ck.getValue();
             }
         }
+        String email=  null;
+        for (Cookie ck : cookies) {
+            if (ck.getName().equalsIgnoreCase("email")) {
+                email = ck.getValue();
+            }
+        }
+        accountDAO aDAO = new accountDAO();
+        Account ac = aDAO.getAccountByEmail(email);
         if (role != null) {
             if (role.equals("Customer")) {
+                customerDAO cusDAO = new customerDAO();
+                Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+                
+                request.setAttribute("name", cus.getCustomer_Name());
                 request.getRequestDispatcher("view/customer/CusStaDetail.jsp").forward(request, response);
             }
             if (role.equalsIgnoreCase("stadiumowner")) {
+                stadiumOwnerDAO owDAO = new stadiumOwnerDAO();
+                StadiumOwner stdo = owDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
+
+                request.setAttribute("name", stdo.getOwner_name());
                 request.getRequestDispatcher("view/stadiumowner/StadiumDetail.jsp").forward(request, response);
             }
             if (role.equalsIgnoreCase("admin")) {
+                adminDAO adDAO = new adminDAO();
+                Admin ad = adDAO.getAdminByAccID(ac.getAcc_ID());
+
+                request.setAttribute("name", ad.getAdmin_name());
                 request.getRequestDispatcher("view/admin/AdStaDetail.jsp").forward(request, response);
             }
         } else  {
             request.getRequestDispatcher("view/common/CommonStaDetail.jsp").forward(request, response);
         }
-
+         //----------Tien------------//
     }
 
     /**
