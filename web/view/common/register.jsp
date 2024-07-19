@@ -1,7 +1,7 @@
 <%-- 
     Document   : CusRegister
     Created on : Jun 7, 2024, 5:10:29 PM
-    Author     : ADMIN
+    Author     : NhiTCU
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -12,10 +12,10 @@
         <title>Register</title>
         <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            />
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+              />
         <style>
             body {
                 font-family: Arial, Helvetica, sans-serif;
@@ -161,7 +161,7 @@
             </div>
 
             <div class="container-signin">
-                <p>Already have an account? <a href="login.jsp">Sign in</a>.</p>
+                <p>Already have an account? <a href="<%=request.getContextPath()%>/view/common/login.jsp">Sign in</a>.</p>
             </div>
         </form>
     </body>
