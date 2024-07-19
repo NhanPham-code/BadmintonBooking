@@ -114,6 +114,7 @@ public class feedback extends HttpServlet {
             avg_ratingScore += fb.getRatingScore();
         }
         avg_ratingScore = avg_ratingScore/feedbackList.size();
+        avg_ratingScore = (float) (Math.floor(avg_ratingScore * 10) / 10);
         
         sDAO.Feedback(avg_ratingScore, stadiumID);
         response.sendRedirect("stadiumDetail?stadiumID=" + stadiumID);

@@ -94,7 +94,7 @@ public class login extends HttpServlet {
                 request.setAttribute("name", ad.getAdmin_name());
                 request.getRequestDispatcher("view/admin/AdDashBoard.jsp").forward(request, response);
             }
-        } else {
+        } else { // chinh cho nay
             request.setAttribute("error", "Email was not registed!!!");
             request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
         }
@@ -156,9 +156,6 @@ public class login extends HttpServlet {
             //get accout by email
             Account ac = accDAO.getAccountByEmail(email);
 
-            HttpSession session = request.getSession();
-            session.setAttribute("email", email);
-            session.setAttribute("role", ac.getRole());
             if (rememberMe != null && rememberMe.equals("true")) {
                 // Sử dụng Cookie để ghi nhớ thông tin đăng nhập
 
@@ -170,6 +167,10 @@ public class login extends HttpServlet {
 
                 response.addCookie(emailCookie);
                 response.addCookie(roleCookie);
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("email", email);
+                session.setAttribute("role", ac.getRole());
             }
 
             // check role and move to correct page of role

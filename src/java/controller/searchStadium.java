@@ -5,15 +5,20 @@
 
 package controller;
 
+import DAO.accountDAO;
+import DAO.customerDAO;
 import DAO.stadiumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import model.Account;
+import model.Customer;
 import model.Stadium;
 
 /**
@@ -58,6 +63,31 @@ public class searchStadium extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        // check login
+        Cookie[] cks = request.getCookies();
+        boolean check = false;
+        String email = "";
+        String role = "";
+        for(Cookie ck : cks) {
+            if(ck.getName().equalsIgnoreCase("email")) {
+                check = true;
+                email = ck.getValue();
+            } else if(ck.getName().equalsIgnoreCase("role")) {
+                role = ck.getValue();
+            }
+        }
+        
+        // get user
+        if(role.equalsIgnoreCase("customer")) {
+            accountDAO accDAO = new accountDAO();
+            Account ac = accDAO.getAccountByEmail(email);
+            
+            customerDAO cusDAO = new customerDAO();
+            Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+            
+            request.setAttribute("name", cus.getCustomer_Name());
+        }
+        
         String searchKey = request.getParameter("searchKey");
         
         stadiumDAO stDAO = new stadiumDAO();
@@ -70,7 +100,13 @@ public class searchStadium extends HttpServlet {
         
         request.setAttribute("err", err);
         request.setAttribute("stList", searchList);
-        request.getRequestDispatcher("view/common/CommonStaList.jsp").forward(request, response);
+        
+        if(check == false) {
+            request.getRequestDispatcher("view/common/CommonStaList.jsp").forward(request, response);
+        }else {
+            request.getRequestDispatcher("view/customer/CusStaList.jsp").forward(request, response);
+        }
+              
     } 
 
     /** 
