@@ -18,12 +18,13 @@ public class DBContext {
         return DriverManager.getConnection(url, userID, password);
     }
 
+
     private final String serverName = "LAPTOP-LHN746VG\\NHANPH";
     private final String dbName = "BadmintonDB";
     private final String portNumber = "1433";
     private final String instance = "";
     private final String userID = "sa";
-    private final String password = "123";
+    private final String password = "0305150900nhv";
 
     public static void main(String[] args) {
         DBContext db = new DBContext();

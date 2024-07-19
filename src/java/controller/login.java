@@ -4,6 +4,7 @@
  */
 package controller;
 
+import DAO.GoogleLoginDAO;
 import DAO.accountDAO;
 import DAO.adminDAO;
 import DAO.customerDAO;
@@ -19,8 +20,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Account;
 import model.Admin;
 import model.Customer;
+import model.Iconstant;
 import model.StadiumOwner;
+import model.UserGoogle;
 import model.hashPasswordMD5;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.fluent.Form;
+import org.apache.http.client.fluent.Request;
+import java.io.IOException;
+import model.Iconstant;
+import model.UserGoogle;
 
 /**
  *
@@ -40,22 +53,54 @@ public class login extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet login</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet login at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String code = request.getParameter("code"); // lấy code từ gg trả về
+
+        GoogleLoginDAO gg = new GoogleLoginDAO();
+        String accessToken = gg.getToken(code); // lấy accessToken bằng CODE
+        UserGoogle acc = gg.getUserInfo(accessToken); // trả về thông tin của tài khoản bằng accessToken: email, name...
+        String email = acc.getEmail(); // lấy email để login
+        accountDAO accDAO = new accountDAO();
+        //get accout by email
+        Account ac = accDAO.getAccountByEmail(email);
+        if (ac != null) {
+            // add email by cookie
+            Cookie emailCookie = new Cookie("email", email);
+            Cookie roleCookie = new Cookie("role", ac.getRole());
+
+            emailCookie.setMaxAge(60 * 60 * 72);
+            roleCookie.setMaxAge(60 * 60 * 72);
+
+            response.addCookie(emailCookie);
+            response.addCookie(roleCookie);
+
+            // check role and move to correct page of role
+            if (ac.getRole().equalsIgnoreCase("Customer")) {
+                // create customerDao
+                customerDAO cusDAO = new customerDAO();
+                Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
+
+                request.setAttribute("name", cus.getCustomer_Name());
+                request.getRequestDispatcher("view/customer/cusDashBoard.jsp").forward(request, response);
+            } else if (ac.getRole().equalsIgnoreCase("StadiumOwner")) {
+                // create stadiumOwnerDAO
+                stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+                StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
+                request.setAttribute("name", sto.getOwner_name());
+                request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
+            } else {
+                adminDAO aDAO = new adminDAO();
+                Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
+
+                request.setAttribute("name", ad.getAdmin_name());
+                request.getRequestDispatcher("view/admin/AdDashBoard.jsp").forward(request, response);
+            }
+        } else {
+            request.setAttribute("error", "Email was not registed!!!");
+            request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -67,7 +112,7 @@ public class login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("view/common/login.jsp");
+        processRequest(request, response);
     }
 
     /**
@@ -96,7 +141,8 @@ public class login extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
+        String rememberMe = request.getParameter("remember_me");
+        System.out.print(rememberMe);
         // hash password
         hashPasswordMD5 md5 = new hashPasswordMD5();
         String hashPass = md5.hashPasswordMD5(password);
@@ -106,37 +152,44 @@ public class login extends HttpServlet {
         boolean checker = accDAO.checkLogin(email, hashPass);
 
         if (checker) {
+
             //get accout by email
             Account ac = accDAO.getAccountByEmail(email);
 
-            // add email by cookie
-            Cookie emailCookie = new Cookie("email", email);
-            Cookie roleCookie = new Cookie("role", ac.getRole());
+            HttpSession session = request.getSession();
+            session.setAttribute("email", email);
+            session.setAttribute("role", ac.getRole());
+            if (rememberMe != null && rememberMe.equals("true")) {
+                // Sử dụng Cookie để ghi nhớ thông tin đăng nhập
 
-            emailCookie.setMaxAge(60 * 60 * 72);
-            roleCookie.setMaxAge(60 * 60 * 72);
+                Cookie emailCookie = new Cookie("email", email);
+                Cookie roleCookie = new Cookie("role", ac.getRole());
 
-            response.addCookie(emailCookie);
-            response.addCookie(roleCookie);
+                emailCookie.setMaxAge(60 * 60 * 72);
+                roleCookie.setMaxAge(60 * 60 * 72);
+
+                response.addCookie(emailCookie);
+                response.addCookie(roleCookie);
+            }
 
             // check role and move to correct page of role
             if (ac.getRole().equalsIgnoreCase("Customer")) {
                 // create customerDao
                 customerDAO cusDAO = new customerDAO();
                 Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-                
+
                 request.setAttribute("name", cus.getCustomer_Name());
                 request.getRequestDispatcher("view/customer/cusDashBoard.jsp").forward(request, response);
             } else if (ac.getRole().equalsIgnoreCase("StadiumOwner")) {
                 // create stadiumOwnerDAO
                 stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-                StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());                
+                StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
                 request.setAttribute("name", sto.getOwner_name());
                 request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
             } else {
                 adminDAO aDAO = new adminDAO();
                 Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
-                
+
                 request.setAttribute("name", ad.getAdmin_name());
                 request.getRequestDispatcher("view/admin/AdDashBoard.jsp").forward(request, response);
             }
