@@ -104,7 +104,7 @@ public class VerifyEmailRegis extends HttpServlet {
             request.getRequestDispatcher("/view/common/CheckVerifyCodeRegis.jsp").forward(request, response);
         } else {
             request.setAttribute("error", "Your email exits");
-            request.getRequestDispatcher("/view/common/FillEmailVerify.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/common/SendEmailRegis.jsp").forward(request, response);
         }
 
     }

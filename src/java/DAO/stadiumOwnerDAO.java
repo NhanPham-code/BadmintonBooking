@@ -28,9 +28,9 @@ public class stadiumOwnerDAO {
 
     /**
      * Author: NhiTCU
-     * 
+     *
      * @param id
-     * @return 
+     * @return
      */
     public StadiumOwner getStadiumOwnerById(String id) {
         StadiumOwner sto = new StadiumOwner();
@@ -55,9 +55,9 @@ public class stadiumOwnerDAO {
 
     /**
      * Author: NhiTCU
-     * 
+     *
      * @param accID
-     * @return 
+     * @return
      */
     public StadiumOwner getStadiumOwnerByAccID(String accID) {
         StadiumOwner sto = null;
@@ -107,13 +107,13 @@ public class stadiumOwnerDAO {
 
     /**
      * Author: NhiTCU
-     * 
+     *
      * @param owner
-     * @return 
+     * @return
      */
     public int addNewOwner(StadiumOwner owner) {
         int check = 0;
-        String getMaxOwnerID = "SELECT MAX(owner_ID) FROM StadiumOwner";
+        String getMaxOwnerID = "SELECT COALESCE(MAX(CAST(SUBSTRING(owner_ID, 6, LEN(owner_ID) - 5) AS INT)), 0) FROM StadiumOwner";
         int maxNumber = 0;
         String newOwnerID = null;
 
@@ -125,7 +125,7 @@ public class stadiumOwnerDAO {
             if (rs.next()) {
                 String maxOwnerID = rs.getString(1);
                 // Extract the numeric part from the maximum account_ID
-                maxNumber = Integer.parseInt(maxOwnerID.substring(5)); // Assuming "ACC" prefix
+                maxNumber = Integer.parseInt(maxOwnerID); // Assuming "ACC" prefix
             }
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -198,14 +198,15 @@ public class stadiumOwnerDAO {
         }
         return check;
     }
-    
+
     /**
      * Author: TienHN
+     *
      * @param StdoID
      * @param name
      * @param phone
      */
-    public void updateProfile(String StdoID, String name, String phone){
+    public void updateProfile(String StdoID, String name, String phone) {
         String sql = "update StadiumOwner set owner_name = ?, owner_phone = ? where owner_ID = ?";
         try {
             conn = db.getConnection();
@@ -230,14 +231,15 @@ public class stadiumOwnerDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }     
+        }
     }
-    
+
     /**
      * Author: TienHN
+     *
      * @param accID
      */
-    public void deleteStadiumOwner(String accID){
+    public void deleteStadiumOwner(String accID) {
         String sql = "DELETE StadiumOwner WHERE acc_ID=?";
         try {
             conn = db.getConnection();
@@ -248,6 +250,7 @@ public class stadiumOwnerDAO {
             System.out.println();
         }
     }
+
     public static void main(String[] args) {
         stadiumOwnerDAO dao = new stadiumOwnerDAO();
 
@@ -256,7 +259,7 @@ public class stadiumOwnerDAO {
         sto.setOwner_name("owner3");
         sto.setOwner_phone("0939740742");
         sto.setAcc_ID("ACC6");
-        
+
         int check = dao.addNewOwner(sto);
         System.out.println(check);
     }

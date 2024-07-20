@@ -149,15 +149,7 @@
                     <input type="password" id="password" placeholder="Enter Password" name="password" required>
                     <i class="fa fa-eye show-password" onclick="togglePasswordVisibility()"></i>
                 </div>
-                <div class="form-check" style="display: flex; justify-content: space-between;">
-                    <div>
-                        <input class="form-check-input" type="checkbox" value="true" name="remember_me" id="remember_me">
-                        <label class="form-check-label text-secondary" for="remember_me">
-                            Remember me
-                        </label>
-                    </div>
-                    <a style="justify-content: flex-end" href="<%=request.getContextPath()%>/view/common/FillEmailVerify.jsp">Forgot Password?</a>
-                </div>
+                <a style="justify-content: flex-end" href="<%=request.getContextPath()%>/view/common/FillEmailVerify.jsp">Forgot Password?</a>
                 <hr>
                 <div class="btnregis">
                     <input class="registerbtn" type="submit" value="LOGIN">

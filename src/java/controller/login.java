@@ -95,8 +95,10 @@ public class login extends HttpServlet {
                 request.getRequestDispatcher("view/admin/AdDashBoard.jsp").forward(request, response);
             }
         } else { // chinh cho nay
-            request.setAttribute("error", "Email was not registed!!!");
-            request.getRequestDispatcher("view/common/login.jsp").forward(request, response);
+            request.setAttribute("email", email);
+            String password = "a785dd46c283ab4c51ede1ed313ab627";
+            request.setAttribute("password", password);
+            request.getRequestDispatcher("view/common/RegisterGoogle.jsp").forward(request, response);
         }
     }
 
@@ -141,8 +143,7 @@ public class login extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String rememberMe = request.getParameter("remember_me");
-        System.out.print(rememberMe);
+        
         // hash password
         hashPasswordMD5 md5 = new hashPasswordMD5();
         String hashPass = md5.hashPasswordMD5(password);
@@ -152,26 +153,18 @@ public class login extends HttpServlet {
         boolean checker = accDAO.checkLogin(email, hashPass);
 
         if (checker) {
-
             //get accout by email
             Account ac = accDAO.getAccountByEmail(email);
 
-            if (rememberMe != null && rememberMe.equals("true")) {
-                // Sử dụng Cookie để ghi nhớ thông tin đăng nhập
+            // add email by cookie
+            Cookie emailCookie = new Cookie("email", email);
+            Cookie roleCookie = new Cookie("role", ac.getRole());
 
-                Cookie emailCookie = new Cookie("email", email);
-                Cookie roleCookie = new Cookie("role", ac.getRole());
+            emailCookie.setMaxAge(60 * 60 * 72);
+            roleCookie.setMaxAge(60 * 60 * 72);
 
-                emailCookie.setMaxAge(60 * 60 * 72);
-                roleCookie.setMaxAge(60 * 60 * 72);
-
-                response.addCookie(emailCookie);
-                response.addCookie(roleCookie);
-            } else {
-                HttpSession session = request.getSession();
-                session.setAttribute("email", email);
-                session.setAttribute("role", ac.getRole());
-            }
+            response.addCookie(emailCookie);
+            response.addCookie(roleCookie);
 
             // check role and move to correct page of role
             if (ac.getRole().equalsIgnoreCase("Customer")) {

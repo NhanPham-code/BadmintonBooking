@@ -116,7 +116,7 @@ public class customerDAO {
      */
     public int addNewCus(Customer cus) {
         int check = 0;
-        String getMaxCusID = "SELECT MAX(customer_ID) FROM Customer";
+        String getMaxCusID = "SELECT COALESCE(MAX(CAST(SUBSTRING(customer_ID, 5, LEN(customer_ID) - 4) AS INT)), 0) FROM Customer";
         int maxNumber = 0;
         String newCustomerID = null;
 
@@ -128,7 +128,7 @@ public class customerDAO {
             if (rs.next()) {
                 String maxCusID = rs.getString(1);
                 // Extract the numeric part from the maximum account_ID
-                maxNumber = Integer.parseInt(maxCusID.substring(4)); // Assuming "ACC" prefix
+                maxNumber = Integer.parseInt(maxCusID); // Assuming "ACC" prefix
             }
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,8 +200,10 @@ public class customerDAO {
         }
         return check;
     }
-/**
+
+    /**
      * Author: TienHN
+     *
      * @param CusID
      * @param name
      * @param phone
@@ -236,6 +238,7 @@ public class customerDAO {
 
     /**
      * Author: TienHN
+     *
      * @param customer_ID
      */
     public void deteleCustomer(String customer_ID) {

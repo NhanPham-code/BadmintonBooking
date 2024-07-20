@@ -51,6 +51,7 @@ public class accountDAO {
 
     /**
      * Author: TienHN
+     *
      * @param accID
      * @param customerID
      * @param ownerID
@@ -268,7 +269,11 @@ public class accountDAO {
      */
     public int addNewAcc(Account accNew) {
         int check = 0;
-        String getMaxAccountID = "SELECT MAX(acc_ID) FROM Account";
+        // COALESCE câu lệnh trên sẽ trả về 0 thay vì NULL
+        // SUBSTRING(acc_ID, 4, LEN(acc_ID) - 3) cắt chuỗi từ vị trí thứ 4 (cắt 3 vì ACC có 3 kí tự)
+        // CAST() AS INT sẽ chuyển đổi chuỗi thành số nguyên
+        // MAX để chọn số lớn nhất
+        String getMaxAccountID = "SELECT COALESCE(MAX(CAST(SUBSTRING(acc_ID, 4, LEN(acc_ID) - 3) AS INT)), 0) FROM Account";
         int maxNumber = 0;
         String newAccountID = null;
 
@@ -280,7 +285,7 @@ public class accountDAO {
             if (rs.next()) {
                 String maxAccountID = rs.getString(1);
                 // Extract the numeric part from the maximum account_ID
-                maxNumber = Integer.parseInt(maxAccountID.substring(3)); // Assuming "ACC" prefix
+                maxNumber = Integer.parseInt(maxAccountID); // Assuming "ACC" prefix
             }
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);

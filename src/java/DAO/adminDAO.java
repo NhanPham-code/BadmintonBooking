@@ -55,7 +55,7 @@ public class adminDAO {
      * @param phone
      */
     public void updateProfile(String AdID, String name, String phone){
-        String sql = "update customer set admin_name = ?, admin_phone = ? where admin_ID = ?";
+        String sql = "update admin set admin_name = ?, admin_phone = ? where admin_ID = ?";
         try {
             conn = db.getConnection();
             ps = conn.prepareStatement(sql);

@@ -18,13 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Account;
 import model.Customer;
 import model.StadiumOwner;
+import model.hashPasswordMD5;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "CheckCode", urlPatterns = {"/CheckCode"})
-public class CheckCodeRegis extends HttpServlet {
+@WebServlet(name = "RegisterGoogle", urlPatterns = {"/RegisterGoogle"})
+public class RegisterGoogle extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +44,10 @@ public class CheckCodeRegis extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CheckCode</title>");            
+            out.println("<title>Servlet RegisterGoogle</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CheckCode at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet RegisterGoogle at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -78,23 +79,79 @@ public class CheckCodeRegis extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // code user input
-        String verifyCode = request.getParameter("verifyCode");
-
-        // code check
-        String verifyCheckCode = request.getParameter("verifyCheckCode");
-
-        // email
+        // get value from jsp
+        String name = request.getParameter("name");
+        String phone = request.getParameter("phone");
         String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String role = request.getParameter("role");
+        System.out.print(role);
+        accountDAO aDAO = new accountDAO();
 
-        if (verifyCode.equals(verifyCheckCode)) {
+        //add to account table
+        Account accNew = new Account();
+        String acc_ID = "";
+        // set value for new account
+        accNew.setAcc_ID(acc_ID);
+        accNew.setEmail(email);
+        accNew.setPassword(password);
+        accNew.setRole(role);
+        // add to DB
+        aDAO.addNewAcc(accNew);
+        // add email by cookie
+        Cookie emailCookie = new Cookie("email", email);
+        Cookie roleCookie = new Cookie("role", role);
+
+        emailCookie.setMaxAge(60 * 60 * 72);
+        roleCookie.setMaxAge(60 * 60 * 72);
+
+        response.addCookie(emailCookie);
+        response.addCookie(roleCookie);
+        acc_ID = aDAO.getAccountByEmail(email).getAcc_ID();
+        if (role.equalsIgnoreCase("StadiumOwner")) {
+
+            // add to stadium owner table
+            stadiumOwnerDAO oDAO = new stadiumOwnerDAO();
+            StadiumOwner ownerNew = new StadiumOwner();
+            // auto create owner_ID
+            String owner_ID = "";
+            //set value for owner
+            ownerNew.setOwner_ID(owner_ID);
+            ownerNew.setOwner_name(name);
+            ownerNew.setOwner_phone(phone);
+
+            ownerNew.setAcc_ID(acc_ID);
+            //add to DB
+            oDAO.addNewOwner(ownerNew);
+
             request.setAttribute("email", email);
-            request.getRequestDispatcher("/view/common/register.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Your verify code is incorrect. Please try again!!!");
-            request.getRequestDispatcher("/view/common/SendEmailRegis.jsp").forward(request, response);
-        }
+            //request.setAttribute("password", password);
+            //move to login.jsp
 
+            request.setAttribute("name", name);
+            request.getRequestDispatcher("view/stadiumowner/HomeStadiumOwner.jsp").forward(request, response);
+
+        } else {
+
+            // add to customer table
+            customerDAO cusDAO = new customerDAO();
+            Customer cusNew = new Customer();
+            //auto create customer_ID
+
+            String customer_ID = "";
+            //set value for customer
+            cusNew.setCustomer_ID(customer_ID);
+            cusNew.setCustomer_Name(name);
+            cusNew.setCustomer_Phone(phone);
+            cusNew.setAcc_ID(acc_ID);
+            cusDAO.addNewCus(cusNew);
+
+            request.setAttribute("email", email);
+            //request.setAttribute("password", password);
+            //move to home
+            request.setAttribute("name", name);
+            request.getRequestDispatcher("view/customer/cusDashBoard.jsp").forward(request, response);
+        }
     }
 
     /**
