@@ -84,6 +84,7 @@ public class ChartDrawController extends HttpServlet {
         Account acc = accDAO.getAccountByEmail(email);
         String accID = acc.getAcc_ID();
         String stadiumID = request.getParameter("StadiumID");
+        String stadiumName = request.getParameter("stadiumName");
 
         List<Booking> bookingList = new ArrayList<>();
         List<Booking> acceptedBookings = new ArrayList<>();
@@ -95,7 +96,7 @@ public class ChartDrawController extends HttpServlet {
                 acceptedBookings.add(booking);
             }
         }
-
+        request.setAttribute("stadiumName", stadiumName);
         request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
         request.setAttribute("acceptedBookings", acceptedBookings);

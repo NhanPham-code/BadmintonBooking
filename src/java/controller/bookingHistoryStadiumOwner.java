@@ -72,7 +72,7 @@ public class bookingHistoryStadiumOwner extends HttpServlet {
         stadiumOwnerDAO ownerDAO = new stadiumOwnerDAO();
         stadiumDAO staDAO = new stadiumDAO();
         bookingDAO bookDAO = new bookingDAO();
-
+        String stadiumName = request.getParameter("stadiumName");
         Cookie[] cookies = request.getCookies();
         String email = null;
         if (cookies != null) {
@@ -103,7 +103,8 @@ public class bookingHistoryStadiumOwner extends HttpServlet {
                 rejectedBookings.add(booking);
             }
         }
-
+        request.setAttribute("stadiumName", stadiumName);
+        request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
         request.setAttribute("acceptedBookings", acceptedBookings);
         request.setAttribute("rejectedBookings", rejectedBookings);

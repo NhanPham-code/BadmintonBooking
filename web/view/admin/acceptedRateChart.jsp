@@ -65,6 +65,20 @@
                     opacity: 1;
                 }
             }
+            .download-button {
+
+                padding: 10px 20px;
+                background-color: #004494;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 1em;
+                margin-top: 50px;
+            }
+            .download-button:hover {
+                background-color: #003366;
+            }
         </style>
     </head>
     <body>
@@ -72,10 +86,16 @@
         <header>
             <h1 class="animate-fadein">Booking Acceptance Rate Chart</h1>
             <p class="animate-fadein">Visual representation of accepted and rejected booking rates</p>
+
         </header>
 
+        <button class="download-button" onclick="downloadCSV()">Download Data</button>
+        <button class="download-button" onclick="downloadChart()">Download Chart</button>
+
         <div class="chart-container animate-fadein">
+
             <canvas id="chart"></canvas>
+
         </div>
 
         <footer>
@@ -170,6 +190,59 @@
 
             // Call showChart to render the chart
             showChart();
+
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadCSV() {
+                // Process the data to get the labels and data for the CSV
+                var processedData = processData();
+
+                // Initialize the CSV content with headers
+                var csv = 'Status,Rate\n';
+
+                // Loop through the processed data and add each entry to the CSV content
+                for (var i = 0; i < processedData.labels.length; i++) {
+                    csv += processedData.labels[i] + ',' + processedData.data[i] + '\n';
+                }
+
+                // Create a hidden link element
+                var hiddenElement = document.createElement('a');
+                // Set the href attribute to the CSV content with the appropriate MIME type
+                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+                hiddenElement.target = '_blank'; // Open in a new tab (optional)
+                // Set the download attribute with the desired file name
+                hiddenElement.download = 'BookingAcceptanceRates.csv';
+                // Trigger a click on the link to start the download
+                hiddenElement.click();
+            }
+
+             /**
+             * 
+             * @HongDang
+             */
+            function downloadChart() {
+                var chart = document.getElementById('chart');
+                var context = chart.getContext('2d');
+
+                // Save the current state
+                context.save();
+
+                // Set the background color to white
+                context.globalCompositeOperation = 'destination-over';
+                context.fillStyle = '#FFFFFF';
+                context.fillRect(0, 0, chart.width, chart.height);
+
+                // Restore the state
+                context.restore();
+
+                // Download the chart
+                var link = document.createElement('a');
+                link.href = chart.toDataURL('image/png');
+                link.download = 'chart_image.png';
+                link.click();
+            }
         </script>
     </body>
 </html>

@@ -70,7 +70,7 @@ public class bookingManage extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String stadiumID = request.getParameter("stadiumID");
-
+        String stadiumName = request.getParameter("stadiumName");
         bookingDAO bookDAO = new bookingDAO();
         List<Booking> bookingList = bookDAO.getBookingByStadiumID(stadiumID);
 
@@ -113,13 +113,13 @@ public class bookingManage extends HttpServlet {
         if (role.equalsIgnoreCase("StadiumOwner")) {
             request.setAttribute("name", ownerDAO.getStadiumOwnerByAccID(accID).getOwner_name());
             request.setAttribute("stadiumID", stadiumID);
-
+            request.setAttribute("stadiumName", stadiumName);
             request.getRequestDispatcher("view/stadiumowner/BookingManagement.jsp").forward(request, response);
 
         } else if (role.equalsIgnoreCase("Admin")) {
             request.setAttribute("name", adDAO.getAdminByAccID(accID).getAdmin_name());
             request.setAttribute("stadiumID", stadiumID);
-
+            request.setAttribute("stadiumName", stadiumName);
             request.getRequestDispatcher("view/admin/AdStaBookDetail.jsp").forward(request, response);
         }
     }

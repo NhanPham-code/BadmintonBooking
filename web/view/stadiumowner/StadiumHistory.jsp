@@ -20,7 +20,7 @@
                 margin: 0;
                 padding: 0;
             }
-
+     
             .content {
                 padding: 20px;
             }
@@ -38,7 +38,11 @@
                 flex: 1;
                 margin-right: 10px; /* Để tạo khoảng cách giữa các phần tử, nếu cần */
             }
-
+            .task{
+                display:column;
+                background-color: #BFDBF7;
+                padding-top: 1%;
+            }
             .booking-history button {
                 padding: 10px;
                 cursor: pointer;
@@ -273,25 +277,70 @@
                     text-align: center;
                 }
             }
+            .exit-button {
+                margin-bottom: 1%;
+                background-color: #BFDBF7;
+                margin-left: 10px;
+            }
+
+            .exit-button a {
+                font-family: cursive;
+                font-size: 120%;
+                color: blue;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+                position: relative;
+                padding-top: 10px;
+            }
+
+            .exit-button a::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: blue;
+                transform: scaleX(0);
+                transform-origin: bottom right;
+                transition: transform 0.3s ease-out;
+            }
+
+            .exit-button a:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+                
+            }
 
         </style>
 
     </head>
 
     <body>
-        <%@ include file="HeaderStadiumOwner.jsp" %>
-        <div class="booking-history">
-            <div class="menu">
-                <a href="#" class="menu-item active" onclick="showBookings('accepted')">Accepted</a>
-                <a href="#" class="menu-item" onclick="showBookings('notAccepted')">Not Accepted</a>
+
+        <div class="task">
+
+            <div class="exit-button">
+                <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
+
             </div>
-            <div class="datePickerContainer">
-                <input type="number" id="selectedDay" min="1" max="31" placeholder="Day">
-                <input type="number" id="selectedMonth" min="1" max="12" placeholder="Month">
-                <input type="number" id="selectedYear" min="2023" max="2050" placeholder="Year">
-                <button onclick="filterBookings()">Filter</button>
-                <div id="error-message" style="color: red; margin-top: 10px;"></div>
+
+
+            <div class="booking-history">  
+                <div class="menu">
+                    <a href="#" class="menu-item active" onclick="showBookings('accepted')">Accepted</a>
+                    <a href="#" class="menu-item" onclick="showBookings('notAccepted')">Not Accepted</a>
+                </div>
+                <div class="datePickerContainer">
+                    <input type="number" id="selectedDay" min="1" max="31" placeholder="Day">
+                    <input type="number" id="selectedMonth" min="1" max="12" placeholder="Month">
+                    <input type="number" id="selectedYear" min="2023" max="2050" placeholder="Year">
+                    <button onclick="filterBookings()">Filter</button>
+                    <div id="error-message" style="color: red; margin-top: 10px;"></div>
+                </div>
             </div>
+
         </div>
 
 

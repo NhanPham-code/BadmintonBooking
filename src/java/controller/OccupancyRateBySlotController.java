@@ -63,7 +63,7 @@ public class OccupancyRateBySlotController extends HttpServlet {
             throws ServletException, IOException {
         bookingDAO bookDAO = new bookingDAO();
         stadiumDAO staDAO = new stadiumDAO();
-
+        String stadiumName = request.getParameter("stadiumName");
         String yearString = request.getParameter("year");
         String monthString = request.getParameter("month");
         String dayString = request.getParameter("day");
@@ -88,7 +88,7 @@ public class OccupancyRateBySlotController extends HttpServlet {
         
         List<Integer> freqList = bookDAO.getBookingOfEachHourByStadiumIDandSelectedFactor(stadiumID, year, month, day);
         ArrayList<String> slotList = staDAO.convertToSlot(stadiumID);
-
+        request.setAttribute("stadiumName", stadiumName);
         request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("freqList", freqList);
         request.setAttribute("slotList", slotList);

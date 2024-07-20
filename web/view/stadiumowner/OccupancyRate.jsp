@@ -8,6 +8,9 @@
         <meta charset="UTF-8">
         <title>Sport Stadium Booking System</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.1/pizzip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.21.1/docxtemplater.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
         <style>
             body {
                 background: #E6FDE1;
@@ -95,13 +98,52 @@
                 transform: scaleX(1);
                 transform-origin: bottom left;
             }
+
+            .download-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .download-button button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+
+            }
+
+            .download-button button:hover {
+                background-color: #0056b3;
+            }
+            .button-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+
         </style>
     </head>
 
     <body>
-        <div class = "exit-button">
-            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
-        </div> 
+        <div class="button-container">
+            <div class="exit-button">
+                <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
+
+            </div>
+            <div class="download-buttons">
+                <div class="download-button">
+                    <button type="button" onclick="downloadData()">Download Data</button>
+                </div>
+                <div class="download-button">
+                    <button onclick="downloadChart()">Download Chart Image</button>
+                </div>
+            </div>
+        </div>
 
         <form id="chartForm" action="OccupancyRateController" method="get">
             <div class="datePickerContainer">
@@ -135,6 +177,8 @@
                     <option value="line">Line Chart</option>
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
                 </select>
+
+
             </div>
         </form>
 
@@ -179,7 +223,7 @@
                 var data = {
                     labels: processedData.labels,
                     datasets: [{
-                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking hours of each month" : "Booking hours of each day",
+                            label: monthSelector.disabled || monthSelector.value === "" ? "Booking of each month" : "Booking of each day",
                             backgroundColor: "rgba(255,99,132,0.2)",
                             borderColor: "rgba(255,99,132,1)",
                             borderWidth: 2,
@@ -292,8 +336,9 @@
                 var daySelector = document.getElementById('daySelector');
                 var chartTypeSelector = document.getElementById('chartTypeSelector');
                 var stadiumID = document.getElementById('stadiumID').value;
-
-                var url = 'OccupancyRateController?StadiumID=' + stadiumID;
+                var stadiumName = '${param.stadiumName}';
+                var url = 'OccupancyRateController?StadiumID=' + stadiumID + '&stadiumName=' + encodeURIComponent(stadiumName);
+                ;
 
                 if (yearSelector.value) {
                     url += '&year=' + yearSelector.value;
@@ -308,6 +353,91 @@
 
                 window.location.href = url;
             }
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadData() {
+                // Get the selected chart type
+                var chartType = document.getElementById('chartTypeSelector').value;
+                var processedData;
+
+                // Get the month and year selectors
+                var monthSelector = document.getElementById('monthSelector');
+                var yearSelector = document.getElementById('yearSelector');
+
+                // Get the stadium name from the URL parameter
+                var stadiumName = '${param.stadiumName}';
+
+                // Process data based on whether a month or a year is selected
+                if (monthSelector.disabled || monthSelector.value === "") {
+                    processedData = processYearData(); // Process yearly data
+                } else {
+                    processedData = processMonthData(); // Process monthly data
+                }
+
+                var data = processedData.data;
+                var labels = processedData.labels;
+
+                // Set the description based on whether a month or a year is selected
+                var description = monthSelector.disabled || monthSelector.value === "" ? "Monthly Booking Data" : "${stadiumName}" + " Daily Booking Data for " + monthSelector.options[monthSelector.selectedIndex].text + " in " + yearSelector.options[yearSelector.selectedIndex].text;
+
+                // Initialize CSV content
+                var csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Description," + description + "\n";
+                csvContent += "Date,Bookings\n";
+
+                // Add data to CSV
+                for (var i = 0; i < labels.length; i++) {
+                    csvContent += labels[i] + "," + data[i] + "\n";
+                }
+
+                // Encode CSV content and create download link
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "chart_data.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadChart() {
+                var chartType = document.getElementById('chartTypeSelector').value;
+                var monthSelector = document.getElementById('monthSelector');
+                var processedData;
+
+                if (monthSelector.disabled || monthSelector.value === "") {
+                    processedData = processYearData();
+                } else {
+                    processedData = processMonthData();
+                }
+
+                var chart = document.getElementById('chart');
+                var context = chart.getContext('2d');
+
+                // Save the current state
+                context.save();
+
+
+                context.globalCompositeOperation = 'destination-over';
+                context.fillStyle = '#E6FDE1';
+                context.fillRect(0, 0, chart.width, chart.height);
+
+                // Restore the state
+                context.restore();
+
+                // Download the chart
+                var link = document.createElement('a');
+                link.href = chart.toDataURL('image/png');
+                link.download = 'chart.png';
+                link.click();
+            }
+
+
         </script>
     </body>
 </html>

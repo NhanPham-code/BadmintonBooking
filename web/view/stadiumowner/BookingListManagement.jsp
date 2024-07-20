@@ -142,8 +142,8 @@
         <%@ include file="HeaderStadiumOwner.jsp" %>      
 
         <div class="stadium-list">
-            <c:forEach items="${requestScope.listStd}" var="st">
-                <div class="stadium-item" onclick="window.location.href = 'bookingManage?stadiumID=${st.stadium_ID}';">
+            <c:forEach items="${listStd}" var="st">
+                <div class="stadium-item" onclick="window.location.href = 'bookingManage?stadiumID=${st.stadium_ID}&stadiumName=${st.stadium_name}';">
                     <img src="${st.stadium_image}" alt="Stadium">
                     <div class="stadium-details">
                         <div>${st.stadium_name}</div>
@@ -162,6 +162,8 @@
                 <!-- Repeat the above stadium-item div for each stadium entry -->
             </c:forEach>
         </div>
+
+
     </body>
 
 </html>

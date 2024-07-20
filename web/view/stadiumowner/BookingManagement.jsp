@@ -167,10 +167,9 @@
             .court-list-container {
                 display: flex;
                 flex-wrap: wrap;
-                margin-bottom: -15px;
             }
             .court-number {
-                margin-left: 7px; /* Khoảng cách giữa các phần tử */
+                margin-right: 10px; /* Khoảng cách giữa các phần tử */
             }
 
             /* Optional: Add media queries for better responsiveness */
@@ -189,11 +188,12 @@
             <%@ include file="HeaderStadiumOwner.jsp" %>
             <div class="cus-book-his">
                 <div class="booking-history">
-                    <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}">Booking History</a>
-                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}">Revenue Chart</a>
-                    <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}">Occupancy rate Chart</a>
-                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}">Occupancy by Slot Chart</a>
+                    <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Booking History</a>
+                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Revenue Chart</a>
+                    <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy rate Chart</a>
+                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy by Slot Chart</a>
                 </div>
+
                 <div class="table">
                     <!-- Pending Bookings -->
                     <div class="cus-book" id="pendingBooking">
@@ -231,13 +231,16 @@
                         <div class="head">
                             <b>ACCEPTED BOOKING ON DAY</b>
                             <div class="datePickerContainer">
-                                <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
-                                <button type="button" onclick="filterAcceptedBookings()">Filter</button>
+                                <form action="<%=request.getContextPath()%>acceptedBookFilter" method="GET">
+                                    <input type="hidden" name="command" value="filter">
+                                    <input type="date" id="selectedDate1" name="selectedDate">
+                                    <input type="submit" value="Filter">
+                                </form>
                             </div>
                         </div>
-                        <div class="booking-detail" id="acceptedBookingsContainer">
+                        <div class="booking-detail">
                             <c:forEach items="${acceptedBookings}" var="booking">
-                                <div class="booking-inf accepted-booking-container" data-date="${booking.date}">
+                                <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
                                         <div style="display: flex">
@@ -253,26 +256,11 @@
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>                           
+                                <!-- Add more accepted bookings as needed -->
                             </c:forEach>
                         </div>
                     </div>
                 </div>
             </div>
         </body>
-        <script>
-             //----------Tien------------//
-    function filterAcceptedBookings() {
-        var selectedDate = document.getElementById("selectedDate1").value;
-        var bookingContainers = document.querySelectorAll(".accepted-booking-container");
-
-        bookingContainers.forEach(function(container) {
-            var bookingDate = container.getAttribute("data-date");
-            if (selectedDate === bookingDate) {
-                container.style.display = "block";
-            } else {
-                container.style.display = "none";
-            }
-        });
-    }
-</script>
     </html>

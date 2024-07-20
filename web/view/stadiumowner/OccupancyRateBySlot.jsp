@@ -8,6 +8,10 @@
         <meta charset="UTF-8">
         <title>Sport Stadium Booking System</title>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.1/pizzip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.21.1/docxtemplater.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
         <style>
             body {
                 background: #E6FDE1;
@@ -51,7 +55,7 @@
                 height: 80vh;
                 width: 95vw;
             }
-            
+
             .exit-button {
                 margin-bottom: 2%;
             }
@@ -83,17 +87,59 @@
                 transform: scaleX(1);
                 transform-origin: bottom left;
             }
+
+
+            .download-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .download-button button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+                margin-right: 10px;
+            }
+
+            .download-button button:hover {
+                background-color: #0056b3;
+            }
+            .button-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+
         </style>
     </head>
 
     <body>
-        <div class = "exit-button">
-            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
-        </div> 
-        
+        <div class="button-container">
+            <div class="exit-button">
+                <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
+
+            </div>
+            <div class="download-buttons">
+                <div class="download-button">
+                    <button onclick="downloadCSV()">Download Data</button>
+                </div>
+                <div class="download-button">
+                    <button onclick="downloadChart()">Download Chart Image</button>
+                </div>
+            </div>
+        </div>
+
+
         <form id="chartForm" action="OccupancyRateBySlotController" method="get">
             <div class="datePickerContainer">
-                <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}">
+                <input type="hidden" id="stadiumID" name="StadiumID" value="${param.StadiumID}" >
+
                 <select id="yearSelector" name="year" onchange="submitForm()">
                     <option value="">Select Year (reset param)</option>
                     <option value="2025" ${requestScope.selectedYear == 2025 ? 'selected' : ''}>2025</option>
@@ -126,7 +172,7 @@
                     <option value="bar">Bar Chart (Vertical)</option>
                     <option value="line">Line Chart</option>
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
-<!--                    <option value="pie">Pie chart</option>-->
+                    <!--                    <option value="pie">Pie chart</option>-->
                 </select>
             </div>
         </form>
@@ -134,6 +180,7 @@
         <div class="chart-container">
             <canvas id="chart"></canvas>
         </div>
+
 
         <script>
             var freqList = [
@@ -296,8 +343,9 @@
                 var daySelector = document.getElementById('daySelector');
                 var chartTypeSelector = document.getElementById('chartTypeSelector');
                 var stadiumID = document.getElementById('stadiumID').value;
+                var stadiumName = '${param.stadiumName}'; // Get stadiumName from URL parameter
 
-                var url = 'OccupancyRateBySlotController?StadiumID=' + stadiumID;
+                var url = 'OccupancyRateBySlotController?StadiumID=' + stadiumID + '&stadiumName=' + encodeURIComponent(stadiumName);
 
                 if (yearSelector.value) {
                     url += '&year=' + yearSelector.value;
@@ -315,6 +363,65 @@
 
                 window.location.href = url;
             }
+
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadCSV() {
+                var headers = []; // Initialize an empty array for headers
+
+                // Get the stadium name from the URL parameter
+                var urlParams = new URLSearchParams(window.location.search);
+                var stadiumName = urlParams.get('stadiumName');
+
+                // Get year and month from selectors
+                var year = document.getElementById('yearSelector').value;
+                var month = document.getElementById('monthSelector').value;
+                var day = document.getElementById('daySelector').value; // Get the selected day
+
+                // Construct the filename
+                var filename = stadiumName ? stadiumName : 'UnknownStadium';
+                if (year) {
+                    filename += '_year:' + year; // Format year as 'year:2024'
+                    if (month) {
+                        filename += '_month:' + month;
+                        if (day) {
+                            filename += '_day:' + day; // Append the day if selected
+                        }
+                    }
+                }
+                filename += '';
+
+                // Add headers
+                headers.push('Slot'); // A2 cell
+                headers.push('Booking Count'); // B2 cell
+
+                var csvContent = "data:text/csv;charset=utf-8,";
+
+                // Add filename as the first row in CSV content
+                csvContent += ' ' + filename + '\n\n';
+
+                // Add headers row to CSV content
+                csvContent += headers.join(',') + '\n';
+
+                // Add data rows (assuming freqList and slotList are defined elsewhere in your code)
+                freqList.forEach(function (row, index) {
+                    csvContent += '' + slotList[index] + ',' + row + '\n';
+                });
+
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", filename + ".csv"); // Ensure the filename ends with .csv
+                document.body.appendChild(link); // Required for Firefox
+
+                link.click(); // This will download the data file with the constructed filename
+            }
+
+
+
+
 
             document.addEventListener('DOMContentLoaded', function () {
                 updateMonthSelector();
@@ -352,8 +459,62 @@
             document.getElementById('submitButton').addEventListener('click', function () {
                 submitForm();
             });
+
+
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadChart() {
+                var chart = document.getElementById('chart');
+                var context = chart.getContext('2d');
+
+                // Save the current state
+                context.save();
+
+                // Set the background color to white
+                context.globalCompositeOperation = 'destination-over';
+                context.fillStyle = '#E6FDE1';
+                context.fillRect(0, 0, chart.width, chart.height);
+
+                // Restore the state
+                context.restore();
+
+                // Download the chart
+                var link = document.createElement('a');
+                link.href = chart.toDataURL('image/png');
+                link.download = 'chart.png';
+                link.click();
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                updateMonthSelector();
+                updateDaySelector();
+
+                document.getElementById('yearSelector').addEventListener('change', function () {
+                    updateMonthSelector();
+                });
+
+                document.getElementById('monthSelector').addEventListener('change', function () {
+                    updateDaySelector();
+                });
+
+                document.getElementById('daySelector').addEventListener('change', function () {
+                });
+
+                document.getElementById('chartTypeSelector').addEventListener('change', function () {
+                    updateChartType();
+                });
+
+                var urlParams = new URLSearchParams(window.location.search);
+                var chartType = urlParams.get('chartType');
+                if (chartType) {
+                    document.getElementById('chartTypeSelector').value = chartType;
+                    showChart();
+                }
+            });
+
+
         </script>
     </body>
 </html>
-
-

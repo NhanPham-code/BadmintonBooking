@@ -63,7 +63,7 @@ public class OccupancyRateController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         bookingDAO bookDAO = new bookingDAO();
-
+        String stadiumName = request.getParameter("stadiumName");
         String yearString = request.getParameter("year");
         String monthString = request.getParameter("month");
         int year, month = 0;
@@ -87,7 +87,7 @@ public class OccupancyRateController extends HttpServlet {
 
         // Logging
         System.out.println("Year: " + year + ", StadiumID: " + stadiumID + ", FreqList size: " + freqList.size());
-
+        request.setAttribute("stadiumName", stadiumName);
         request.setAttribute("stadiumID", stadiumID);
         request.setAttribute("freqList", freqList);
         request.setAttribute("selectedMonth", month);

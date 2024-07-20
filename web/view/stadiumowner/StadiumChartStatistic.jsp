@@ -77,7 +77,7 @@
                 height: 90vh;
                 width: 95vw;
             }
-            
+
             .exit-button {
                 margin-bottom: 2%;
             }
@@ -109,14 +109,52 @@
                 transform: scaleX(1);
                 transform-origin: bottom left;
             }
+            .download-buttons {
+                display: flex;
+                gap: 10px;
+            }
+
+            .download-button button {
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background-color 0.3s;
+                margin-right: 10px;
+            }
+
+            .download-button button:hover {
+                background-color: #0056b3;
+            }
+            .button-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+            }
+
         </style>
     </head>
 
     <body>
-        <div class = "exit-button">
-            <a href="bookingManage?stadiumID=${requestScope.stadiumID}">Return to menu</a>
-        </div> 
-        
+        <div class="button-container">
+            <div class="exit-button">
+                <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
+
+            </div>
+            <div class="download-buttons">
+                <div class="download-button">
+                    <button type="button" onclick="downloadData()">Download Data</button>
+                </div>
+                <div class="download-button">
+                    <button onclick="downloadChart()">Download Chart Image</button>
+                </div>
+            </div>
+        </div>
+
         <div class="datePickerContainer">
             <select id="yearSelector">
                 <option value="" disabled selected>Select Year</option>
@@ -190,7 +228,7 @@
 
                     acceptedBookings.forEach(function (booking) {
                         var date = new Date(booking.date);
-                        var day = date.getDate();
+                        var day = date.getDate() - 1;
                         dailyData[day] += booking.total;
                     });
 
@@ -300,6 +338,87 @@
                 document.getElementById('yearSelector').value = new Date().getFullYear();
                 showChart();
             });
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadData() {
+                // Get the selected year and month from the selectors
+                var selectedYear = parseInt(document.getElementById('yearSelector').value);
+                var selectedMonth = document.getElementById('monthSelector').value;
+                var monthSelected = selectedMonth !== ""; // Check if a month is selected
+
+                // If a month is selected without selecting a year, show an alert and return
+                if (monthSelected && isNaN(selectedYear)) {
+                    alert("Please select a year before selecting a month.");
+                    return;
+                }
+
+                // Filter the bookings by the selected year
+                var filteredBookings = filterByYear(acceptedBookings, selectedYear);
+                // If a month is selected, filter the bookings by the selected month as well
+                if (monthSelected) {
+                    filteredBookings = filterByMonth(filteredBookings, parseInt(selectedMonth));
+                }
+
+                // Get the stadium name from the parameter
+                var stadiumName = '${param.stadiumName}';
+                // Process the filtered bookings data
+                var processedData = processData(filteredBookings, monthSelected ? parseInt(selectedMonth) : null);
+                var data = processedData.data; // Extract data
+                var labels = processedData.labels; // Extract labels
+                // Create the description for the CSV file based on whether a month is selected
+                var description = monthSelected ? "Revenue ${stadiumName} Booking Data for " + document.getElementById('monthSelector').options[document.getElementById('monthSelector').selectedIndex].text : "Monthly Booking Data";
+
+                // Initialize the CSV content
+                var csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Description," + description + "\n";
+                csvContent += "Date,Total\n";
+
+                // Add the data rows to the CSV content
+                for (var i = 0; i < labels.length; i++) {
+                    csvContent += labels[i] + "," + data[i] + "\n";
+                }
+
+                // Create an encoded URI from the CSV content
+                var encodedUri = encodeURI(csvContent);
+                // Create a download link
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "booking_data.csv");
+                // Append the link to the document and trigger a click to start the download
+                document.body.appendChild(link);
+                link.click();
+                // Remove the link from the document
+                document.body.removeChild(link);
+            }
+
+            /**
+             * 
+             * @HongDang
+             */
+            function downloadChart() {
+                var chart = document.getElementById('chart');
+                var context = chart.getContext('2d');
+
+                // Save the current state
+                context.save();
+
+                // Set the background color to white
+                context.globalCompositeOperation = 'destination-over';
+                context.fillStyle = '#E6FDE1';
+                context.fillRect(0, 0, chart.width, chart.height);
+
+                // Restore the state
+                context.restore();
+
+                // Download the chart
+                var link = document.createElement('a');
+                link.href = chart.toDataURL('image/png');
+                link.download = 'chart_image.png';
+                link.click();
+            }
+
         </script>
     </body>
 </html>
