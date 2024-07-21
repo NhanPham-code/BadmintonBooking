@@ -233,11 +233,39 @@ public class courtDAO {
             }
         }
     }
+    
+    public int countCourt(String stadiumID) {
+        int count = 0;
+        String sql = "select number from Court where stadium_ID = ?";
+        try {
+            conn = db.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, stadiumID);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                count++;
+            }
+        } catch (Exception ex) {
+            System.out.println();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception closeEx) {
+                closeEx.printStackTrace();
+            }
+        }
+        return count;
+    }
 
     public static void main(String[] args) {
-        List<Court> courtList = new ArrayList<>();
-        courtDAO cDAO = new courtDAO();
-        courtList = cDAO.getCourtListByStadiumID("STD2");
-        System.out.println(courtList.size());
+        courtDAO sAO = new courtDAO();
+        String stadiumID = "STD1";
+        int count = sAO.countCourt(stadiumID);
+        System.out.println(count);
     }
 }

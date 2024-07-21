@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,11 @@ import model.Booking;
 import model.Court;
 import model.Customer;
 import model.Stadium;
+import DAO.courtDAO;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import static java.util.Collections.list;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -352,6 +358,7 @@ public class bookingDAO {
 
     /**
      * Author: TienHN
+     *
      * @param customerID
      */
     public void deleteBookingOfCustomer(String customerID) {
@@ -435,6 +442,7 @@ public class bookingDAO {
 
     /**
      * Author: TienHN
+     *
      * @param bookingID
      */
     public void acceptBooking(String bookingID) {
@@ -452,6 +460,7 @@ public class bookingDAO {
 
     /**
      * Author: TienHN
+     *
      * @param bookingID
      */
     public void rejectBooking(String bookingID) {
@@ -529,14 +538,65 @@ public class bookingDAO {
             throw new RuntimeException("Error querying booking data", ex);
         } catch (Exception ex) {
             Logger.getLogger(bookingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return bookingHours;
     }
-    
+
     //get day with year and month
     public int getDaysInMonth(int year, int month) {
         YearMonth yearMonth = YearMonth.of(year, month);
         return yearMonth.lengthOfMonth();
+    }
+
+    //get day in year
+    public int getDaysInYear(int year) {
+        return Year.of(year).length();
+    }
+
+    //get day
+    public int getDay(String stadium_ID, int year, int month, int day) {
+        if (day != -1 && month != -1 && year != -1) {
+            return 1;
+        } else if (month != -1 && year != -1) {
+            return getDaysInMonth(year, month);
+        } else if (year != -1) {
+            return getDaysInYear(year);
+        }
+        LocalDate date = LocalDate.now();
+        return date.getDayOfYear(); //để cho đỡ lỗi thôi chứ cũng có xử lý đâu
+    }
+
+    //get sample
+    public int getRateSample(String stadium_ID, int year, int month, int day) {
+        courtDAO cDAO = new courtDAO();
+        return getDay(stadium_ID, year, month, day) * cDAO.countCourt(stadium_ID);
+    }
+
+    public List<Float> getFilledRateByHour(String stadium_ID, int year, int month, int day) {
+        List<Integer> freqList = getBookingOfEachHourByStadiumIDandSelectedFactor(stadium_ID, year, month, day);
+        return freqList.stream()
+                .map(num -> {
+                    float rate = (float) num * 100 / getRateSample(stadium_ID, year, month, day);
+                    BigDecimal bd = new BigDecimal(rate);
+                    bd = bd.setScale(1, RoundingMode.HALF_UP); //trên 5 làm tròn lên
+                    return bd.floatValue();
+                })
+                .collect(Collectors.toList());
     }
 
     //PhuocDH
@@ -596,8 +656,27 @@ public class bookingDAO {
                 }
             }
 
+        } catch (SQLException ex) {
+            // Xử lý ngoại lệ một cách cụ thể hơn
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error querying booking data", ex);
+            throw new RuntimeException("Error querying booking data", ex);
         } catch (Exception ex) {
             Logger.getLogger(accountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Đóng các resource ở đây nếu cần thiết
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return freqList;
     }
@@ -714,16 +793,21 @@ public class bookingDAO {
 
     }*/
     public static void main(String[] args) {
-        bookingDAO bDAO = new bookingDAO();
-//        String BookingID = "BOOK2";
-//        List<Booking> bookings = bDAO.getBookingByStadiumID("STD2");
-//
-//        System.out.println(bookings);
-//        System.out.println(bookings.get(1).getCourtList().get(0).getNumber());
+        bookingDAO calculator = new bookingDAO();
 
-        //List<Integer> freqList = bDAO.getBookingTimeByStadiumIDandSelectedFactor("STD1", 2024);
-        //System.out.println(freqList);
-        List<Float> rs = bDAO.getAcceptedBookingRate("STD5");
-        System.out.println(rs);
+        // Test parameters
+        String stadiumID = "STD1";
+        int year = 2024;
+        int month = 6;
+        int day = -1;
+
+        System.out.println(calculator.getRateSample(stadiumID, year, month, day));
+
+        List<Float> result = calculator.getFilledRateByHour(stadiumID, year, month, day);
+
+        System.out.println("Booking rates for each hour:");
+        for (int i = 0; i < result.size(); i++) {
+            System.out.println("Hour " + i + ": " + result.get(i));
+        }
     }
 }

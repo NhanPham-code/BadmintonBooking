@@ -125,6 +125,34 @@
                 align-items: center;
                 gap: 10px;
             }
+            @media (max-width: 600px) {
+                .button-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start; /* Aligns items to the left */
+                    margin-bottom: 2%;
+                }
+
+                .download-buttons .download-button button {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .download-buttons {
+                    width: 100%;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .download-buttons {
+                    flex-direction: column;
+                }
+
+                .datePickerContainer {
+                    width: 100%;
+                }
+            }
+
 
         </style>
     </head>

@@ -31,7 +31,6 @@
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 font-size: 16px;
-                margin-right: 10px;
                 margin-bottom: 10px;
             }
 
@@ -103,7 +102,6 @@
                 cursor: pointer;
                 border-radius: 4px;
                 transition: background-color 0.3s;
-                margin-right: 10px;
             }
 
             .download-button button:hover {
@@ -116,6 +114,34 @@
                 gap: 10px;
             }
 
+            @media (max-width: 600px) {
+                .button-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start; /* Aligns items to the left */
+                    margin-bottom: 2%;
+                }
+
+                .download-buttons .download-button button {
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+
+                .download-buttons {
+                    width: 100%;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .download-buttons {
+                    flex-direction: column;
+                }
+
+                .datePickerContainer {
+                    width: 100%;
+                }
+            }
+
         </style>
     </head>
 
@@ -123,8 +149,8 @@
         <div class="button-container">
             <div class="exit-button">
                 <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
-
             </div>
+
             <div class="download-buttons">
                 <div class="download-button">
                     <button onclick="downloadCSV()">Download Data</button>
@@ -174,6 +200,11 @@
                     <option value="horizontalBar">Bar Chart (Horizontal)</option>
                     <!--                    <option value="pie">Pie chart</option>-->
                 </select>
+
+                <select id="dataTyleSelector" onchange="updateChartType()">
+                    <option value="percent">By percentage</option>
+                    <option value="number">By number</option>
+                </select>
             </div>
         </form>
 
@@ -195,20 +226,39 @@
             </c:forEach>
             ];
 
+            var freqListRate = [
+            <c:forEach var="item" items="${requestScope.freqListRate}" varStatus="itemStatus">
+            "${item}"<c:if test="${!itemStatus.last}">,</c:if>
+            </c:forEach>
+            ];
+
             function processData() {
-                return {
-                    labels: slotList,
-                    data: freqList.map(Number)
-                };
+                const selector = document.getElementById('dataTyleSelector');
+                const selectedValue = selector.value;
+
+                if (selectedValue === 'number') {
+                    return {
+                        labels: slotList,
+                        data: freqList.map(Number)
+                    };
+                } else if (selectedValue === 'percent') {
+                    return {
+                        labels: slotList,
+                        data: freqListRate.map(Number)
+                    };
+                }
             }
 
             function showChart() {
                 var chartType = document.getElementById('chartTypeSelector').value;
                 var processedData = processData();
+                var dataTypeSelector = document.getElementById('dataTyleSelector');
+                var isPercentage = dataTypeSelector.value === 'percent';
+
                 var data = {
                     labels: processedData.labels,
                     datasets: [{
-                            label: "Booking slot count",
+                            label: isPercentage ? "Booking slot percentage" : "Booking slot count",
                             backgroundColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,0.2)",
                             borderColor: chartType === 'pie' ? generateColors(processedData.data.length) : "rgba(255,99,132,1)",
                             borderWidth: chartType === 'pie' ? 1 : 2,
@@ -240,6 +290,24 @@
                         x: {
                             grid: {
                                 display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (isPercentage) {
+                                        label += context.parsed.y.toFixed(1) + '%';
+                                    } else {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
                             }
                         }
                     }
