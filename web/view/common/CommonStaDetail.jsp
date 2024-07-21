@@ -21,7 +21,9 @@
                 margin: 0;
                 padding: 0;
                 background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
-
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
             }
 
             .header, .footer {
@@ -321,13 +323,19 @@
 
             }
             .footer {
+                width: 100%;
                 background: #022B3A;
                 color: white;
-                display: flex;
-                justify-content: center;
                 align-items: center;
-                padding: 10px;
+                padding: 10px 20px;
                 box-sizing: border-box;
+                justify-content: space-around;
+                display: flex;
+                padding: 10px;
+                margin-top: auto;
+            }
+            .footer div {
+                margin: 5px 0;
             }
         </style>
     </head>
@@ -339,7 +347,7 @@
             </div>
             <div class="auth-links">
                 <a href="<%=request.getContextPath()%>/view/common/login.jsp">Login</a>
-                <a href="<%=request.getContextPath()%>/view/common/register.jsp">Register</a>
+                <a href="<%=request.getContextPath()%>/view/common/SendEmailRegis.jsp">Register</a>
             </div>
         </div>
 
@@ -370,21 +378,23 @@
                             </div>
                         </div>
                         <h2 style="color: white;margin-top: 30px;">Court List</h2>
-                        <table>
+                        <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
+                            <table>
 
-                            <thead>
-                                <tr>
-                                    <th style="color: white;">Court Number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="c" items="${requestScope.courtList}">
+                                <thead>
                                     <tr>
-                                        <td>${c.number}</td>
+                                        <th style="color: white;">Court Number</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="c" items="${requestScope.courtList}">
+                                        <tr>
+                                            <td>${c.number}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -453,9 +463,9 @@
             </div>
             <a class="booking-btn" href="<%=request.getContextPath()%>/view/common/login.jsp">Book Now</a>
         </div>
-
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>

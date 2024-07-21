@@ -5,12 +5,23 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Admin View Booking Detail</title>
         <style>
+            body{
+                font-family: 'Inter', sans-serif;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                min-height: 100vh;
+            }
             .stadium-bg {
                 flex-grow: 1;
                 width: 100%;
@@ -76,9 +87,9 @@
             <div class="stadium-board">
                 <div class="stadium-detail">
                     <c:set var="bk" value="${requestScope.booking}"></c:set>
-                    <div class="stadium-inf">
-                        <h1>Customer name:</h1>
-                        <p>${bk.customer.customer_Name}</p>
+                        <div class="stadium-inf">
+                            <h1>Customer name:</h1>
+                            <p>${bk.customer.customer_Name}</p>
                     </div>
                     <div class="stadium-inf">
                         <h1>Customer phone:</h1>

@@ -134,7 +134,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <jsp:include page="CusFooter.jsp" flush="true" />     
-</body>
+
+        <jsp:include page="CusFooter.jsp" flush="true" />     
+    </body>
 </html>

@@ -134,7 +134,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <jsp:include page="CusFooter.jsp" flush="true" />     
-</body>
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
+        </div>
+    </body>
 </html>

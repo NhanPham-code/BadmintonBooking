@@ -21,7 +21,7 @@
                 display: flex;
                 align-items: center;
                 flex-direction: column;
-                margin-top: 30px;
+                margin-top: 130px;
             }
 
             * {
@@ -153,7 +153,6 @@
                     <p><a href="viewProfile">Back to Account</a>.</p>
                 </div>
             </div>
-
 
         </form>
     </body>

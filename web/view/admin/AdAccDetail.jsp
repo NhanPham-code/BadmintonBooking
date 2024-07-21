@@ -19,11 +19,13 @@
             />
         <style>
             body {
+                font-family: 'Inter', sans-serif;
                 margin: 0;
-                font-family: "Inter", sans-serif;
-                background: white;
-                display: flex;
-                flex-direction: column;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
                 min-height: 100vh;
             }
             .cus-profile {

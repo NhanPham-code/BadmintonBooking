@@ -25,7 +25,7 @@
                 background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center;
-                min-height: 100vh;
+                min-height: 75vh;
                 padding: 20px;
                 box-sizing: border-box;
                 display: flex;
@@ -91,15 +91,17 @@
             }
 
             .footer {
+                position: absolute;
+                bottom: 0;
                 justify-content: space-around;
                 display: flex;
                 align-items: center;
-                padding: 10px;
-                /* Reduce padding to make footer smaller */
-                margin-top: auto;
-                /* Push the footer to the bottom */
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
+                background: #022B3A;
+                color: white;
             }
-
             .footer div {
                 margin: 5px 0;
             }
@@ -162,8 +164,10 @@
                 <!-- Repeat the above stadium-item div for each stadium entry -->
             </c:forEach>
         </div>
-
-
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
+        </div>
     </body>
 
 </html>

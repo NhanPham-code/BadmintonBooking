@@ -132,7 +132,7 @@
 
             .booking-detail a {
                 text-decoration: none;
-                color: white;
+                color: black
             }
 
             .booking-inf {
@@ -167,9 +167,26 @@
             .court-list-container {
                 display: flex;
                 flex-wrap: wrap;
+                margin-bottom: -15px
             }
             .court-number {
                 margin-right: 10px; /* Khoảng cách giữa các phần tử */
+            }
+
+            .footer {
+                width: 100%;
+                background: #022B3A;
+                color: white;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                justify-content: space-around;
+                display: flex;
+                padding: 10px;
+                margin-top: auto;
+            }
+            .footer div {
+                margin: 5px 0;
             }
 
             /* Optional: Add media queries for better responsiveness */
@@ -180,26 +197,25 @@
                 .cus-book {
                     min-height: 200px;
                 }
+            }
+        </style>
+    </head>
+    <body>
+        <%@ include file="HeaderStadiumOwner.jsp" %>
+        <div class="cus-book-his">
+            <div class="booking-history">
+                <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Booking History</a>
+                <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Revenue Chart</a>
+                <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy rate Chart</a>
+                <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy by Slot Chart</a>
+            </div>
 
-
-            </style>
-        </head>
-        <body>
-            <%@ include file="HeaderStadiumOwner.jsp" %>
-            <div class="cus-book-his">
-                <div class="booking-history">
-                    <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Booking History</a>
-                    <a href="ChartDrawController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Revenue Chart</a>
-                    <a href="OccupancyRateController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy rate Chart</a>
-                    <a href="OccupancyRateBySlotController?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Occupancy by Slot Chart</a>
-                </div>
-
-                <div class="table">
-                    <!-- Pending Bookings -->
-                    <div class="cus-book" id="pendingBooking">
-                        <div class="head"><b>PENDING BOOKINGS</b></div>
-                        <div class="booking-detail">
-                            <c:forEach items="${waitingBookings}" var="booking">
+            <div class="table">
+                <!-- Pending Bookings -->
+                <div class="cus-book" id="pendingBooking">
+                    <div class="head"><b>PENDING BOOKINGS</b></div>
+                    <div class="booking-detail">
+                        <c:forEach items="${waitingBookings}" var="booking">
                                 <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
@@ -213,54 +229,55 @@
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
                                     <div class="action-buttons">
-                                        <a href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>
-                                        <a href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
+                                        <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>
+                                        <a style ="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
                                     </div>
                                     <div class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>
+                            <!-- Add more pending bookings as needed -->
+                        </c:forEach>
+                    </div>
+                </div>
 
-                                <!-- Add more pending bookings as needed -->
-                            </c:forEach>
+                <!-- Accepted Bookings -->
+                <div class="cus-book" id="acceptedBooking">
+                    <div style="padding: 12px 0" class="head">
+                        <b>ACCEPTED BOOKING ON DAY</b>
+                        <div class="datePickerContainer">
+                            <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
+                            <button type="button" onclick="filterAcceptedBookings()">Filter</button>
                         </div>
                     </div>
-
-                    <!-- Accepted Bookings -->
-                    <div class="cus-book" id="acceptedBooking">
-                        <div class="head">
-                            <b>ACCEPTED BOOKING ON DAY</b>
-                            <div class="datePickerContainer">
-                                <form action="<%=request.getContextPath()%>acceptedBookFilter" method="GET">
-                                    <input type="hidden" name="command" value="filter">
-                                    <input type="date" id="selectedDate1" name="selectedDate">
-                                    <input type="submit" value="Filter">
-                                </form>
-                            </div>
-                        </div>
-                        <div class="booking-detail">
-                            <c:forEach items="${acceptedBookings}" var="booking">
-                                <div class="booking-inf">
+                    <div class="booking-detail" id="acceptedBookingsContainer">
+                        <c:forEach items="${acceptedBookings}" var="booking">
+                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
+                                <div class="booking-inf accepted-booking-container" data-date="${booking.date}">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
-                                        <div style="display: flex">
-                                            Court:
+                                        <div class="court-list-container">
+                                            <div>Court:</div>
                                             <c:forEach var="c" items="${booking.courtList}">
-                                                <p>${c.number}</p>
+                                                <p class="court-number">${c.number}</p>
                                             </c:forEach>
                                         </div>
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="stadium-status">
+                                    <div style ="color: green" class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
-                                </div>                           
-                                <!-- Add more accepted bookings as needed -->
-                            </c:forEach>
-                        </div>
+                                </div>  
+                            </a>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
-        </body>
-    </html>
+
+            <div class="footer">
+                <div>CONTACT US: 0778289817</div>
+                <div>EMAIL: bookingsystem3105@gmail.com</div>
+            </div>
+    </body>
+</html>

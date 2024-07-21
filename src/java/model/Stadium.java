@@ -8,6 +8,9 @@ package model;
  *
  * @author nhanPH
  */
+import java.text.DecimalFormat;
+import model.StadiumOwner;
+
 public class Stadium {
     private String stadium_ID;
     private String stadium_name;
@@ -85,7 +88,8 @@ public class Stadium {
     }
 
     public double getAvg_ratingScore() {
-        return avg_ratingScore;
+        DecimalFormat df = new DecimalFormat("#.#");
+        return Double.parseDouble(df.format(avg_ratingScore));
     }
 
     public void setAvg_ratingScore(double avg_ratingScore) {
@@ -115,6 +119,5 @@ public class Stadium {
     public void setOwner(StadiumOwner owner) {
         this.owner = owner;
     }
-    
-    
 }
+

@@ -398,7 +398,8 @@
         </div>
 
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>

@@ -98,6 +98,13 @@
                 margin-left: 20px; /* Added margin for better spacing */
                 color: green; /* Optional: Change text color to green */
             }
+            .accepted {
+                color: green; /* Màu xanh cho trạng thái accept */
+            }
+
+            .rejected {
+                color: red; /* Màu đỏ cho trạng thái reject */
+            }
 
             /* Optional: Add media queries for better responsiveness */
             @media (max-width: 768px) {
@@ -113,58 +120,54 @@
                                     min-height: 400px;
                                 }
                             }*/
+            }
+        </style>
+    </head>
+    <body>
+        <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
 
-            </style>
-        </head>
-        <body>
-            <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
-
-            <div class="cus-book-his">
-                <div class="cus-book">
-                    <div class="head">BOOKING HISTORY</div>
-                    <div class="booking-detail">
-                        <c:forEach items="${notWaitingBookings}" var="booking">
-                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
-                                <div class="booking-inf">
-                                    <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
-                                    <div class="stadium-details">
-                                        <div>Stadium: ${booking.stadium.stadium_name}</div>
-                                        <div>Court amount: ${booking.courtQuantity}</div>
-                                        <div>Date: ${booking.date}</div>
-                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
-                                    </div>
-                                    <div class="stadium-status">
-
-
-                                        <div>${booking.bookingAccepted}</div>
-
-
-                                    </div>
+        <div class="cus-book-his">
+            <div class="cus-book">
+                <div class="head">BOOKING HISTORY</div>
+                <div class="booking-detail">
+                    <c:forEach items="${notWaitingBookings}" var="booking">
+                        <a href="bookingDetail?bookingID=${booking.booking_ID}">
+                            <div class="booking-inf">
+                                <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
+                                <div class="stadium-details">
+                                    <div>Stadium: ${booking.stadium.stadium_name}</div>
+                                    <div>Court amount: ${booking.courtQuantity}</div>
+                                    <div>Date: ${booking.date}</div>
+                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                 </div>
-                            </a>
-                        </c:forEach>
-                    </div>
-                </div>
-                <div class="cus-book">
-                    <div class="head">BOOKING HISTORY (Waiting)</div>
-                    <div class="booking-detail">
-                        <c:forEach items="${waitingBookings}" var="booking">
-                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
-                                <div class="booking-inf">
-                                    <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
-                                    <div class="stadium-details">
-                                        <div>Stadium: ${booking.stadium.stadium_name}</div>
-                                        <div>Court amount: ${booking.courtQuantity}</div>
-                                        <div>Date: ${booking.date}</div>
-                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
-                                    </div>
-                                    <div class="stadium-status">${booking.bookingAccepted}</div>
+                                <div class="${booking.bookingAccepted == 'accepted' ? 'accepted' : 'rejected'}">
+                                    ${booking.bookingAccepted}
                                 </div>
-                            </a>
-                        </c:forEach>
-                    </div>
+                            </div>
+                        </a>
+                    </c:forEach>
                 </div>
             </div>
-            <jsp:include page="CusFooter.jsp" flush="true" />
-        </body>
-    </html>
+            <div class="cus-book">
+                <div class="head">BOOKING HISTORY (Waiting)</div>
+                <div class="booking-detail">
+                    <c:forEach items="${waitingBookings}" var="booking">
+                        <a href="bookingDetail?bookingID=${booking.booking_ID}">
+                            <div class="booking-inf">
+                                <img src="<%=request.getContextPath()%>/${booking.stadium.stadium_image}" alt="Stadium">
+                                <div class="stadium-details">
+                                    <div>Stadium: ${booking.stadium.stadium_name}</div>
+                                    <div>Court amount: ${booking.courtQuantity}</div>
+                                    <div>Date: ${booking.date}</div>
+                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
+                                </div>
+                                <div style ="color: green" class="stadium-status">${booking.bookingAccepted}</div>
+                            </div>
+                        </a>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+        <jsp:include page="CusFooter.jsp" flush="true" />
+    </body>
+</html>

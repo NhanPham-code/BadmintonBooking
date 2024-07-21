@@ -100,6 +100,7 @@
                 text-align: center;
                 background-color: #ffffff;
             }
+            
             .stadium-info{
                 display:flex;
             }
@@ -217,6 +218,16 @@
                 padding: 10px;
                 box-sizing: border-box;
             }
+            .footer {
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -327,7 +338,8 @@
             <a class="booking-btn" href="<%=request.getContextPath()%>/bookingManage?stadiumID=${st.stadium_ID}" style="text-decoration: none">Stadium's Booking History</a>
         </div>
         <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>

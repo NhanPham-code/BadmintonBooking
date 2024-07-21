@@ -27,7 +27,7 @@
                 color: white;
                 display: flex;
                 justify-content: space-between;
-                align-items: center;       
+                align-items: center;
                 padding: 10px 20px;
                 box-sizing: border-box;
             }
@@ -107,18 +107,6 @@
             .stadium-actions a:hover {
                 background: #145569;
             }
-            .footer {
-                position: absolute;
-                bottom: 0;
-                justify-content: space-around;
-                display: flex;
-                align-items: center;
-                padding: 10px 20px;
-                box-sizing: border-box;
-                width: 100%;
-                background: #022B3A;
-                color: white;
-            }
             .footer div {
                 margin: 5px 0;
             }
@@ -162,6 +150,16 @@
             #add-new-btn:hover {
                 background-color: #0056b3;
             }
+            .footer {
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -188,7 +186,7 @@
 
         <div class="footer">
             <div>CONTACT US: 0778289817</div>
-            <div>EMAIL: group1@gmail.com</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>

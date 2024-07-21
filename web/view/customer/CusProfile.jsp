@@ -155,8 +155,6 @@
                 </div>
             </div>
         </div>
-        <div class="footer">
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
-        </div>
+        <jsp:include page = "CusFooter.jsp" flush = "true" />
     </body>
 </html>

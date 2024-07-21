@@ -79,11 +79,8 @@
         <div class="banner" id="banner">
             <!-- N?i dung banner -->
         </div>
-
-        <div class="footer">
-            <div>CONTACT US: 0778289817</div>
-            <div>EMAIL: group1@gmail.com</div>
-        </div>
+        
+        <jsp:include page = "CusFooter.jsp" flush = "true" />
     </body>
 </html>
 

@@ -79,6 +79,18 @@
             .download-button:hover {
                 background-color: #003366;
             }
+            .footer {
+                background: #022B3A;
+                color: white;
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .footer div {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -98,9 +110,10 @@
 
         </div>
 
-        <footer>
-            <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
-        </footer>
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
+        </div>
 
         <script>
             // Ensure listRate is correctly populated
@@ -218,7 +231,7 @@
                 hiddenElement.click();
             }
 
-             /**
+            /**
              * 
              * @HongDang
              */

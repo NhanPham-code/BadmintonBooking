@@ -132,7 +132,7 @@
 
             .booking-detail a {
                 text-decoration: none;
-                color: white;
+                color: black;
             }
 
             .booking-inf {
@@ -172,6 +172,13 @@
             .court-number {
                 margin-left: 7px; /* Khoảng cách giữa các phần tử */
             }
+            .waiting {
+                color: blue; /* Màu xanh cho trạng thái accept */
+            }
+
+            .rejected {
+                color: red; /* Màu đỏ cho trạng thái reject */
+            }
 
             /* Optional: Add media queries for better responsiveness */
             @media (max-width: 768px) {
@@ -181,18 +188,19 @@
                 .cus-book {
                     min-height: 200px;
                 }
-
-            </style>
-        </head>
-        <body>
-            <jsp:include page="AdHeader.jsp" flush="true" />
-            <div class="cus-book-his">
-                <div class="table">
-                    <!-- Pending Bookings -->
-                    <div class="cus-book" id="pendingBooking">
-                        <div class="head"><b>PENDING BOOKINGS</b></div>
-                        <div class="booking-detail">
-                            <c:forEach items="${waitingBookings}" var="booking">
+            }
+        </style>
+    </head>
+    <body>
+        <jsp:include page="AdHeader.jsp" flush="true" />
+        <div class="cus-book-his">
+            <div class="table">
+                <!-- Pending Bookings -->
+                <div class="cus-book" id="pendingBooking">
+                    <div class="head"><b>PENDING BOOKINGS</b></div>
+                    <div class="booking-detail">
+                        <c:forEach items="${waitingBookings}" var="booking">
+                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
                                 <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
@@ -205,61 +213,64 @@
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="stadium-status">
+                                    <div class="${booking.bookingAccepted == 'rejected' ? 'rejected' : 'waiting'}">
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>
-                                <!-- Add more pending bookings as needed -->
-                            </c:forEach>
+                            </a>
+                            <!-- Add more pending bookings as needed -->
+                        </c:forEach>
+                    </div>
+                </div>
+
+                <!-- Accepted Bookings -->
+                <div class="cus-book" id="acceptedBooking">
+                    <div style="padding: 12px 0" class="head">
+                        <b>ACCEPTED BOOKING ON DAY</b>
+                        <div class="datePickerContainer">
+                            <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
+                            <button type="button" onclick="filterAcceptedBookings()">Filter</button>
                         </div>
                     </div>
-
-                    <!-- Accepted Bookings -->
-                    <div class="cus-book" id="acceptedBooking">
-                        <div class="head">
-                            <b>ACCEPTED BOOKING ON DAY</b>
-                            <div class="datePickerContainer">
-                                <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
-                                <button type="button" onclick="filterAcceptedBookings()">Filter</button>
-                            </div>
-                        </div>
-                        <div class="booking-detail" id="acceptedBookingsContainer">
-                            <c:forEach items="${acceptedBookings}" var="booking">
+                    <div class="booking-detail" id="acceptedBookingsContainer">
+                        <c:forEach items="${acceptedBookings}" var="booking">
+                            <a href="bookingDetail?bookingID=${booking.booking_ID}">
                                 <div class="booking-inf accepted-booking-container" data-date="${booking.date}">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
-                                        <div style="display: flex">
-                                            Court:
+                                        <div class="court-list-container">
+                                            <div>Court:</div>
                                             <c:forEach var="c" items="${booking.courtList}">
-                                                <p>${c.number}</p>
+                                                <p class="court-number">${c.number}</p>
                                             </c:forEach>
                                         </div>
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div class="stadium-status">
+                                    <div style ="color: green" class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
-                                </div>                           
-                            </c:forEach>
-                        </div>
+                                </div>  
+                            </a>
+                        </c:forEach>
                     </div>
                 </div>
             </div>
-        </body>
-        <script>
-            function filterAcceptedBookings() {
-                var selectedDate = document.getElementById("selectedDate1").value;
-                var bookingContainers = document.querySelectorAll(".accepted-booking-container");
+        </div>
+    </body>
+    <script>
+        function filterAcceptedBookings() {
+            var selectedDate = document.getElementById("selectedDate1").value;
+            var bookingContainers = document.querySelectorAll(".accepted-booking-container");
 
-                bookingContainers.forEach(function (container) {
-                    var bookingDate = container.getAttribute("data-date");
-                    if (selectedDate === bookingDate) {
-                        container.style.display = "block";
-                    } else {
-                        container.style.display = "none";
-                    }
-                });
-            }
-        </script>
-    </html>
+            bookingContainers.forEach(function (container) {
+                var bookingDate = container.getAttribute("data-date");
+                if (selectedDate === bookingDate) {
+                    container.style.display = "block";
+                } else {
+                    container.style.display = "none";
+                }
+            });
+        }
+    </script>
+</html>

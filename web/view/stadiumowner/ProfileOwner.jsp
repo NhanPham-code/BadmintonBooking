@@ -18,10 +18,22 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
             />
         <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #bfdbf7;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
             .cus-profile {
                 width: 100%;
                 background: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
-                ;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
                 padding: 55px 55px;
                 box-sizing: border-box;
                 display: flex;
@@ -49,15 +61,20 @@
             }
 
             .footer {
+                position: absolute;
+                bottom: 0;
+                justify-content: space-around;
+                display: flex;
+                align-items: center;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                width: 100%;
                 background: #022B3A;
                 color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                box-sizing: border-box;
             }
-
+            .footer div {
+                margin: 5px 0;
+            }
             .avatar {
                 font-size: 5rem;
                 color: #1f7a8c;
@@ -162,12 +179,11 @@
                 </div>
                 <!-- Repeat the above stadium-item div for each stadium entry -->
             </div>
-            
+
         </div>
-                    <div class="footer">
-                <p>&copy; 2024 Badminton Stadium Booking System. All rights reserved.</p>
-            </div>
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
+        </div>
     </body>
 </html>
-
-

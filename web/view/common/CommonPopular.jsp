@@ -182,7 +182,7 @@
             </div>
             <div class="auth-links">
                 <a href="<%=request.getContextPath()%>/view/common/login.jsp">Login</a>
-                <a href="<%=request.getContextPath()%>/view/common/register.jsp">Register</a>
+                <a href="<%=request.getContextPath()%>/view/common/SendEmailRegis.jsp">Register</a>
             </div>
         </div>
 
@@ -222,7 +222,7 @@
         </div>
         <div class="footer">
             <div>CONTACT US: 0778289817</div>
-            <div>EMAIL: group1@gmail.com</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>
