@@ -74,7 +74,7 @@ public class changePassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         //----------Tien------------//
+         //----------Dang------------//
         String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
@@ -108,7 +108,7 @@ public class changePassword extends HttpServlet {
                 request.getRequestDispatcher("view/common/ChangePassword.jsp").forward(request, response);
             }
         }
-         //----------Tien------------//
+        //----------Dang------------//
     }
 
     /**

@@ -18,7 +18,6 @@
                 padding-top: 3%;
                 padding-left: 3%;
                 font-size: 14px;
-
             }
             .booking-history a {
                 padding: 10px;
@@ -28,12 +27,12 @@
                 background:#022b3a;
                 border: 1px solid #ccc;
                 font-size: 16px;
-                transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+                transition: background-color 0.3s, color 0.3s;
                 outline: none;
             }
             .booking-history a:hover {
-                background: #1f7a8c;  /* Even lighter hover color */
-                border-radius: 4px; /* Change text color */
+                background: #1f7a8c;
+                border-radius: 4px;
             }
             .datePickerContainer {
                 position: relative;
@@ -43,22 +42,20 @@
             }
 
             .datePickerContainer input[type="date"] {
-                padding: 0px 12px; /* Thay đổi padding nếu cần */
+                padding: 0px 12px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
-                font-size: 16px; /* Thay đổi font size nếu cần */
+                font-size: 16px;
             }
 
-            /* Tạo hiệu ứng hover */
             .datePickerContainer input[type="date"]:hover {
                 border-color: #999;
             }
 
-            /* Tạo hiệu ứng focus */
             .datePickerContainer input[type="date"]:focus {
                 outline: none;
-                border-color: #007bff; /* Màu border khi focus */
-                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Hiệu ứng nổi bật khi focus */
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             }
 
             #selectedDate1, #selectedDate2 {
@@ -69,17 +66,17 @@
                 padding: 3%;
                 box-sizing: border-box;
                 gap: 20px;
-                flex-wrap: wrap; /* Allows wrapping on smaller screens */
+                flex-wrap: wrap;
             }
             .action-buttons a {
-                text-decoration: none;  /*Remove underline */
+                text-decoration: none;
                 padding: 5px 10px;
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
                 outline: none;
                 justify-content: center;
-                display: inline-block; /* Ensure buttons display inline */
+                display: inline-block;
             }
             .accept{
                 background-color: #4CAF50;
@@ -110,7 +107,7 @@
                 flex-direction: column;
                 height: auto;
                 min-height: 400px;
-                max-height: 600px; /* Set max height to prevent overflow */
+                max-height: 600px;
                 overflow: hidden;
             }
 
@@ -122,12 +119,12 @@
                 color: black;
                 font-size: 18px;
                 padding: 15px 0;
-                background-color: #BFDBF7; /* Added background color for header */
+                background-color: #BFDBF7;
             }
 
             .booking-detail {
                 overflow-y: auto;
-                padding: 10px; /* Added padding for better spacing */
+                padding: 10px;
             }
 
             .booking-detail a {
@@ -142,7 +139,7 @@
                 border: 1px solid #000;
                 border-bottom: none;
                 padding: 10px;
-                margin-bottom: 10px; /* Added margin for spacing between bookings */
+                margin-bottom: 10px;
             }
 
             .booking-inf img {
@@ -161,8 +158,8 @@
                 flex-direction: column;
                 align-items: flex-end;
                 justify-content: center;
-                margin-left: 20px; /* Added margin for better spacing */
-                color: green; /* Optional: Change text color to green */
+                margin-left: 20px;
+                color: green;
             }
             .court-list-container {
                 display: flex;
@@ -170,17 +167,16 @@
                 margin-bottom: -15px;
             }
             .court-number {
-                margin-left: 7px; /* Khoảng cách giữa các phần tử */
+                margin-left: 7px;
             }
             .waiting {
-                color: blue; /* Màu xanh cho trạng thái accept */
+                color: blue;
             }
 
             .rejected {
-                color: red; /* Màu đỏ cho trạng thái reject */
+                color: red;
             }
 
-            /* Optional: Add media queries for better responsiveness */
             @media (max-width: 768px) {
                 .cus-book-his {
                     flex-direction: column;
@@ -218,7 +214,6 @@
                                     </div>
                                 </div>
                             </a>
-                            <!-- Add more pending bookings as needed -->
                         </c:forEach>
                     </div>
                 </div>
@@ -247,7 +242,7 @@
                                         <div>Date: ${booking.date}</div>
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div style ="color: green" class="stadium-status">
+                                    <div style="color: green" class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>  
@@ -265,7 +260,7 @@
 
             bookingContainers.forEach(function (container) {
                 var bookingDate = container.getAttribute("data-date");
-                if (selectedDate === bookingDate) {
+                if (selectedDate === "" || selectedDate === bookingDate) {
                     container.style.display = "block";
                 } else {
                     container.style.display = "none";

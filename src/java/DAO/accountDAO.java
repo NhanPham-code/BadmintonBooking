@@ -358,6 +358,12 @@ public class accountDAO {
         return check;
     }
 
+    /**
+     * Author: PhuocDH
+     *
+     * @param newEmail
+     * @param accID
+     */
     public void updateEmail(String newEmail, String accID) {
         String sql = "update account set email = ? where acc_ID = ?";
         try {
@@ -385,6 +391,12 @@ public class accountDAO {
         }
     }
 
+    /**
+     * Author: DangVH
+     *
+     * @param email
+     * @param newPassword
+     */
     public void updatePassword(String email, String newPassword) {
 
         String sql = "update account set password = ? where email = ?";

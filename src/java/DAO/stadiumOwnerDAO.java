@@ -200,7 +200,7 @@ public class stadiumOwnerDAO {
     }
 
     /**
-     * Author: TienHN
+     * Author: PhuocDH
      *
      * @param StdoID
      * @param name

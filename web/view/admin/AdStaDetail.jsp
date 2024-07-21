@@ -250,6 +250,7 @@
                             </div>
                         </div>
                         <h2 style="color: white;margin-top: 30px;">Court List</h2>
+                        <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
                         <table>
                             <thead>
                                 <tr>
@@ -264,6 +265,7 @@
                                 </c:forEach>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
                 <div class="right-container">

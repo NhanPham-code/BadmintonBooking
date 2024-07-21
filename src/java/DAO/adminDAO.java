@@ -49,7 +49,7 @@ public class adminDAO {
     }
     
     /**
-     * Author: TienHN
+     * Author: PhuocDH
      * @param AdID
      * @param name
      * @param phone

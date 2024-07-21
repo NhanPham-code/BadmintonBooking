@@ -216,6 +216,7 @@
                     <div class="head"><b>PENDING BOOKINGS</b></div>
                     <div class="booking-detail">
                         <c:forEach items="${waitingBookings}" var="booking">
+                            
                                 <div class="booking-inf">
                                     <div class="stadium-details">
                                         <div>Customer Name: ${booking.customer.customer_Name}</div>
@@ -229,13 +230,15 @@
                                         <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
                                     <div class="action-buttons">
-                                        <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>
+                                        <a style ="color: white" href="bookingDetail?bookingID=${booking.booking_ID}" class="accept">Detail</a>
+                                        <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>   
                                         <a style ="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
                                     </div>
                                     <div class="stadium-status">
                                         ${booking.bookingAccepted}
                                     </div>
                                 </div>
+
                             <!-- Add more pending bookings as needed -->
                         </c:forEach>
                     </div>
@@ -280,4 +283,19 @@
                 <div>EMAIL: bookingsystem3105@gmail.com</div>
             </div>
     </body>
+    <script>
+        function filterAcceptedBookings() {
+            var selectedDate = document.getElementById("selectedDate1").value;
+            var bookingContainers = document.querySelectorAll(".accepted-booking-container");
+
+            bookingContainers.forEach(function (container) {
+                var bookingDate = container.getAttribute("data-date");
+                if (selectedDate === "" || selectedDate === bookingDate) {
+                    container.style.display = "block";
+                } else {
+                    container.style.display = "none";
+                }
+            });
+        }
+    </script>
 </html>

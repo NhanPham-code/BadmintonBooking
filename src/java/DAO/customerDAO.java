@@ -202,7 +202,7 @@ public class customerDAO {
     }
 
     /**
-     * Author: TienHN
+     * Author: PhuocDH
      *
      * @param CusID
      * @param name
