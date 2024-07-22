@@ -271,13 +271,16 @@
 
             }
             .footer {
-                background: #022B3A;
-                color: white;
+                justify-content: space-around;
                 display: flex;
-                justify-content: center;
                 align-items: center;
                 padding: 10px;
                 box-sizing: border-box;
+                background: #022B3A;
+                color: white;
+            }
+            .footer div {
+                margin: 5px 0;
             }
         </style>
 
