@@ -100,7 +100,6 @@
                 border-radius: 5px;
                 margin-top: 20px;
                 margin-bottom: 20px;
-
             }
 
             .top-container {
@@ -108,13 +107,12 @@
                 background-color: #f5f5f5;
                 color: black;
                 border-radius: 5px;
-
             }
 
             .top-container img {
                 margin-top: 20px;
                 width: 80%;
-                height:300px;
+                height: 300px;
                 border-radius: 5px;
             }
 
@@ -131,14 +129,13 @@
             .left-container, .right-container {
                 flex: 1;
                 margin-right: 20px;
-
             }
 
             .right-container {
                 margin-right: 0;
             }
 
-            .table-container{
+            .table-container {
                 background-color: #022B3A;
                 padding: 20px;
                 border-radius: 5px;
@@ -146,24 +143,15 @@
                 height: 530px;
             }
 
-            .feedback-form {
-
-                padding: 20px;
-                border-radius: 5px;
-                margin-bottom: 20px;
-                background-color:#022B3A;
-            }
-
             .feedback-container {
-                height: 205px; /* Set a max height for scrollbar to appear */
-                overflow-y: auto; /* Enable vertical scrollbar */
+                height: 205px;
+                overflow-y: auto;
                 border: 1px solid #ccc;
                 padding: 10px;
                 border-radius: 5px;
                 background-color: #022B3A;
-                overflow-y: scroll;
-                display: block;
             }
+
             .table-container table {
                 width: 100%;
                 border-collapse: collapse;
@@ -171,12 +159,14 @@
                 border-radius: 5px;
             }
 
-            .table-container th{
+            .table-container th {
                 border: 2px solid #000;
                 padding: 8px;
                 text-align: center;
                 background-color: #1F7A8C;
+                color: white;
             }
+
             .table-container td {
                 border: 2px solid #000;
                 padding: 8px;
@@ -184,19 +174,17 @@
                 background-color: #ffffff;
             }
 
-            .stadium-info{
-                display:flex;
+            .stadium-info {
+                display: flex;
             }
-            .stadium-info img{
-                margin-right: 40px;
-                margin-left: 40px;
+
+            .stadium-info img {
+                margin: 0 40px;
                 width: 200px;
                 height: 200px;
                 background-color: #ccc;
-                display: block;
-                margin-bottom: 20px;
+                border-radius: 5px;
             }
-
 
             .feedback-item {
                 display: flex;
@@ -248,7 +236,7 @@
             }
 
             .feedback-form textarea, .feedback-form select {
-                width: 94%;
+                width: 100%;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
@@ -273,7 +261,7 @@
             .filter-container {
                 display: flex;
                 align-items: center;
-                margin-left: 55%;
+                margin-left: auto;
             }
 
             .filter-button {
@@ -312,37 +300,23 @@
             .booking-btn:hover {
                 background-color: #145569;
             }
+
             .rating {
                 display: flex;
                 align-items: center;
             }
+
             .rating .fa-star {
                 font-size: 20px;
                 color: gold;
                 margin-left: 5px;
-
-            }
-            .footer {
-                width: 100%;
-                background: #022B3A;
-                color: white;
-                align-items: center;
-                padding: 10px 20px;
-                box-sizing: border-box;
-                justify-content: space-around;
-                display: flex;
-                padding: 10px;
-                margin-top: auto;
-            }
-            .footer div {
-                margin: 5px 0;
             }
         </style>
     </head>
     <body>
         <div class="header">
             <div class="logo">
-                <img src="<%=request.getContextPath()%>/img/logo/logo.png" alt="Logo" width="40px" height="40px">
+                <img src="<%=request.getContextPath()%>/img/logo/logo.png" alt="Logo" width="40" height="40">
                 <span>Badminton Stadium Booking</span>
             </div>
             <div class="auth-links">
@@ -359,28 +333,23 @@
         <div class="container">
             <div class="top-container">
                 <c:set var="st" value="${requestScope.stadium}"></c:set>
-
-                    <img src="${st.stadium_image}" alt="Picture">
-
+                <img src="${st.stadium_image}" alt="Picture">
             </div>
             <div class="flex-container">
                 <div class="left-container">
-
                     <div class="table-container">
-                        <h1 style="text-align: center;color: white;">${st.stadium_name}</h1>
-
-                        <div class="stadium-info"> 
-                            <img src="${st.QRcode}" alt="Stadium Background">
+                        <h1 style="text-align: center; color: white;">${st.stadium_name}</h1>
+                        <div class="stadium-info">
+                            <img src="${st.QRcode}" alt="Stadium QR Code">
                             <div>
                                 <p style="margin-top: 60px; color: white;">Address: ${st.stadium_address}</p>
                                 <p style="color: white;">Phone Number: ${st.stadium_phone}</p>
                                 <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
                             </div>
                         </div>
-                        <h2 style="color: white;margin-top: 30px;">Court List</h2>
-                        <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
+                        <h2 style="color: white; margin-top: 30px;">Court List</h2>
+                        <div style="overflow-y: scroll; height: 130px; margin-top: 20px;">
                             <table>
-
                                 <thead>
                                     <tr>
                                         <th style="color: white;">Court Number</th>
@@ -400,12 +369,11 @@
 
                 <div class="right-container">
                     <div class="feedback-container">
-                        <div style="display: flex;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h2 style="color: white;">Feedback</h2>
                             <form class="filter-container" action="feedbackFilter" method="GET">
-
                                 <div class="filter-dropdown">
-                                    <select id="rating-filter" name = "rating">
+                                    <select id="rating-filter" name="rating">
                                         <option value="all">All</option>
                                         <option value="5">5 stars</option>
                                         <option value="4">4 stars</option>
@@ -414,7 +382,7 @@
                                         <option value="1">1 star</option>
                                     </select>
                                 </div>
-                                <input type="hidden" id="stadiumID" name="stadiumID" value=${st.stadium_ID}>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
                                 <button id="filter-button" type="submit" class="filter-button">Filter</button>
                             </form>
                         </div>
@@ -425,7 +393,7 @@
                                     <div class="feedback-content">
                                         <p class="feedback-name">${fb.customer.customer_Name}</p>
                                         <p class="feedback-description">${fb.description}</p>
-                                        <div class="rating">                        
+                                        <div class="rating">
                                             <p class="feedback-rating">Rating Score: ${fb.ratingScore}</p>
                                             <i class="fas fa-star"></i>
                                         </div>
@@ -456,17 +424,14 @@
                             <button type="submit">Submit Feedback</button>
                         </form>
                     </div>
-
-
                 </div>
-
             </div>
             <a class="booking-btn" href="<%=request.getContextPath()%>/view/common/login.jsp">Book Now</a>
         </div>
+
         <div class="footer">
             <div>CONTACT US: 0778289817</div>
             <div>EMAIL: bookingsystem3105@gmail.com</div>
         </div>
     </body>
 </html>
-

@@ -4,7 +4,6 @@
     Author     : ADMIN
 --%>
 
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -228,6 +227,37 @@
             .footer div {
                 margin: 5px 0;
             }
+
+            .court-list {
+                overflow-y: scroll;
+                height: 130px;
+                margin-top: 20px;
+                background-color: #022B3A;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            .court-list table {
+                width: 100%;
+                border-collapse: collapse;
+                border-radius: 5px;
+            }
+
+            .court-list th {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #1F7A8C;
+                color: white;
+            }
+
+            .court-list td {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #ffffff;
+            }
+            
         </style>
     </head>
     <body>
@@ -250,21 +280,21 @@
                             </div>
                         </div>
                         <h2 style="color: white;margin-top: 30px;">Court List</h2>
-                        <div style="overflow-y: scroll; height: 130px; margin-top:20px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="color: white;">Court Number</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="c" items="${requestScope.courtList}">
+                        <div class="court-list">
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td>${c.number}</td>
+                                        <th>Court Number</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="c" items="${requestScope.courtList}">
+                                        <tr>
+                                            <td>${c.number}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -345,5 +375,3 @@
         </div>
     </body>
 </html>
-
-

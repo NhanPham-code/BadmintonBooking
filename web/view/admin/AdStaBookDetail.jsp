@@ -185,6 +185,20 @@
                     min-height: 200px;
                 }
             }
+            .filter-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #1F7A8C;
+                color: white;
+                outline: none;
+                margin-left: 10px;
+            }
+            .filter-button:hover{
+                background-color: #145569;
+            }
         </style>
     </head>
     <body>
@@ -224,7 +238,7 @@
                         <b>ACCEPTED BOOKING ON DAY</b>
                         <div class="datePickerContainer">
                             <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
-                            <button type="button" onclick="filterAcceptedBookings()">Filter</button>
+                            <button  class="filter-button"type="button" onclick="filterAcceptedBookings()">Filter</button>
                         </div>
                     </div>
                     <div class="booking-detail" id="acceptedBookingsContainer">

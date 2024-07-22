@@ -198,6 +198,20 @@
                     min-height: 200px;
                 }
             }
+            .filter-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #1F7A8C;
+                color: white;
+                outline: none;
+                margin-left: 10px;
+            }
+            .filter-button:hover{
+                background-color: #145569;
+            }
         </style>
     </head>
     <body>
@@ -216,28 +230,28 @@
                     <div class="head"><b>PENDING BOOKINGS</b></div>
                     <div class="booking-detail">
                         <c:forEach items="${waitingBookings}" var="booking">
-                            
-                                <div class="booking-inf">
-                                    <div class="stadium-details">
-                                        <div>Customer Name: ${booking.customer.customer_Name}</div>
-                                        <div class="court-list-container">
-                                            <div>Court:</div>
-                                            <c:forEach var="c" items="${booking.courtList}">
-                                                <p class="court-number">${c.number}</p>
-                                            </c:forEach>
-                                        </div>
-                                        <div>Date: ${booking.date}</div>
-                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
+
+                            <div class="booking-inf">
+                                <div class="stadium-details">
+                                    <div>Customer Name: ${booking.customer.customer_Name}</div>
+                                    <div class="court-list-container">
+                                        <div>Court:</div>
+                                        <c:forEach var="c" items="${booking.courtList}">
+                                            <p class="court-number">${c.number}</p>
+                                        </c:forEach>
                                     </div>
-                                    <div class="action-buttons">
-                                        <a style ="color: white" href="bookingDetail?bookingID=${booking.booking_ID}" class="accept">Detail</a>
-                                        <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>   
-                                        <a style ="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
-                                    </div>
-                                    <div class="stadium-status">
-                                        ${booking.bookingAccepted}
-                                    </div>
+                                    <div>Date: ${booking.date}</div>
+                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                 </div>
+                                <div class="action-buttons">
+                                    <a style ="color: white" href="bookingDetail?bookingID=${booking.booking_ID}" class="accept">Detail</a>
+                                    <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>   
+                                    <a style ="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
+                                </div>
+                                <div class="stadium-status">
+                                    ${booking.bookingAccepted}
+                                </div>
+                            </div>
 
                             <!-- Add more pending bookings as needed -->
                         </c:forEach>
@@ -250,7 +264,7 @@
                         <b>ACCEPTED BOOKING ON DAY</b>
                         <div class="datePickerContainer">
                             <input type="date" id="selectedDate1" name="selectedDate" value="${requestScope.date}" required>
-                            <button type="button" onclick="filterAcceptedBookings()">Filter</button>
+                            <button class="filter-button" type="button" onclick="filterAcceptedBookings()">Filter</button>
                         </div>
                     </div>
                     <div class="booking-detail" id="acceptedBookingsContainer">

@@ -7,134 +7,417 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Booking Detail</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Badminton Stadium Booking System</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
-            .stadium-bg {
-                flex-grow: 1;
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #bfdbf7;
+                margin: 0;
+                padding: 0;
+                background-image: url('<%=request.getContextPath()%>/img/background/bg3.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+
+            .header, .footer {
                 width: 100%;
-                padding: 40px;
-                box-sizing: border-box;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: url('<%=request.getContextPath()%>/img/background/bg3.jpg') no-repeat center center; /* Background image */
-                background-size: cover; /* Cover the entire background */
-            }
-            .stadium-board {
-                background: rgba(255, 255, 255, 0.9); /* Slightly transparent to show background */
-                border-radius: 4px;
-                width: 100%;
-                max-width: 800px;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }
-            .stadium-detail {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-            }
-            .stadium-inf {
+                background: #022B3A;
+                color: white;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                border-bottom: 1px solid #ccc;
-                padding-bottom: 10px;
-                margin-bottom: 10px;
+                padding: 10px 20px;
+                box-sizing: border-box;
             }
-            .stadium-inf h1 {
-                font-size: 18px;
-                margin: 0;
-            }
-            .stadium-inf p {
-                font-size: 16px;
-                margin: 0;
-            }
-            .court {
+
+            .header .logo {
                 display: flex;
                 align-items: center;
+            }
+
+            .header .logo img {
+                margin-right: 10px;
+            }
+
+            .header .auth-links {
+                display: flex;
                 gap: 10px;
             }
-            .total {
+
+            .header .auth-links a {
+                background: none;
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 4px;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .header .auth-links a:hover {
+                background: #145569;
+            }
+
+            .nav {
+                width: 100%;
+                background: #1F7A8C;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                color: white;
+                padding: 10px 0;
+            }
+
+            .nav a {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 18px;
+                text-decoration: none;
+                cursor: pointer;
+                padding: 10px 20px;
+            }
+
+            .nav a:hover {
+                background: #145569;
+                border-radius: 4px;
+            }
+
+            .container {
+                display: flex;
+                flex-direction: column;
+                max-width: 1300px;
+                margin: auto;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+
+            .top-container {
+                text-align: center;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
+            }
+
+            .top-container img {
+                margin-top: 20px;
+                width: 80%;
+                height: 300px;
+                border-radius: 5px;
+            }
+
+            .flex-container {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
+                padding: 0px 20px;
+                background-color: #f5f5f5;
+                color: black;
+                border-radius: 5px;
                 margin-top: 20px;
-                padding-top: 10px;
-                border-top: 2px solid #000;
             }
-            .total h1 {
+
+            .left-container, .right-container {
+                flex: 1;
+                margin-right: 20px;
+            }
+
+            .right-container {
+                margin-right: 0;
+            }
+
+            .table-container {
+                background-color: #022B3A;
+                padding: 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                height: 530px;
+            }
+
+            .feedback-container {
+                height: 205px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #022B3A;
+            }
+
+            .table-container table {
+                width: 100%;
+                border-collapse: collapse;
+                max-height: 200px;
+                border-radius: 5px;
+            }
+
+            .table-container th {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #1F7A8C;
+                color: white;
+            }
+
+            .table-container td {
+                border: 2px solid #000;
+                padding: 8px;
+                text-align: center;
+                background-color: #ffffff;
+            }
+
+            .stadium-info {
+                display: flex;
+            }
+
+            .stadium-info img {
+                margin: 0 40px;
+                width: 200px;
+                height: 200px;
+                background-color: #ccc;
+                border-radius: 5px;
+            }
+
+            .feedback-item {
+                display: flex;
+                align-items: center;
+                background: #fff;
+                margin-bottom: 10px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            .feedback-item i {
+                font-size: 50px;
+                margin-right: 10px;
+            }
+
+            .feedback-content {
+                flex-grow: 2;
+            }
+
+            .feedback-rating {
+                font-size: 14px;
+            }
+
+            .feedback-name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .feedback-description {
+                margin-bottom: 5px;
+            }
+
+            .feedback-form {
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .feedback-form .form-group {
+                margin-bottom: 15px;
+            }
+
+            .feedback-form label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .feedback-form textarea, .feedback-form select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .feedback-form button {
+                display: block;
+                width: 100%;
+                padding: 10px;
+                background-color: #1F7A8C;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .feedback-form button:hover {
+                background-color: #145569;
+            }
+
+            .filter-container {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+            }
+
+            .filter-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #f0f0f0;
+                outline: none;
+                margin-left: 10px;
+            }
+
+            .filter-dropdown select {
+                padding: 5px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 5px;
+            }
+
+            .booking-btn {
+                display: block;
+                width: 200px;
+                padding: 10px;
+                background-color: #1F7A8C;
+                color: white;
+                text-align: center;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 20px auto;
+            }
+
+            .booking-btn:hover {
+                background-color: #145569;
+            }
+
+            .rating {
+                display: flex;
+                align-items: center;
+            }
+
+            .rating .fa-star {
                 font-size: 20px;
-                margin: 0;
+                color: gold;
+                margin-left: 5px;
             }
         </style>
     </head>
     <body>
         <jsp:include page="CusHeaderNoSearch.jsp" flush="true" />
-        <div class="stadium-bg">
-            <div class="stadium-board">
-                <div class="stadium-detail">
-                    <c:set var="bk" value="${requestScope.booking}"></c:set>
-                        <div class="stadium-inf">
-                            <h1>Customer name:</h1>
-                            <p>${bk.customer.customer_Name}</p>
+        <div class="container">
+            <div class="top-container">
+                <c:set var="st" value="${requestScope.stadium}"></c:set>
+                <img src="${st.stadium_image}" alt="Picture">
+            </div>
+            <div class="flex-container">
+                <div class="left-container">
+                    <div class="table-container">
+                        <h1 style="text-align: center; color: white;">${st.stadium_name}</h1>
+                        <div class="stadium-info">
+                            <img src="${st.QRcode}" alt="Stadium QR Code">
+                            <div>
+                                <p style="margin-top: 60px; color: white;">Address: ${st.stadium_address}</p>
+                                <p style="color: white;">Phone Number: ${st.stadium_phone}</p>
+                                <p style="color: white;">Price per hour: ${st.pricePerHour}</p>
+                            </div>
+                        </div>
+                        <h2 style="color: white; margin-top: 30px;">Court List</h2>
+                        <div style="overflow-y: scroll; height: 130px; margin-top: 20px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="color: white;">Court Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="c" items="${requestScope.courtList}">
+                                        <tr>
+                                            <td>${c.number}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="stadium-inf">
-                        <h1>Customer phone:</h1>
-                        <p>${bk.customer.customer_Phone}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Stadium name:</h1>
-                        <p>${bk.stadium.stadium_name}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Stadium address:</h1>
-                        <p>${bk.stadium.stadium_address}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Stadium contact:</h1>
-                        <p>${bk.stadium.stadium_phone}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Date:</h1>
-                        <p>${bk.date}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Time Booked:</h1>
-                        <p>${bk.startTime} - ${bk.endTime}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Court Quantity</h1>
-                        <p>${bk.courtQuantity}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Chosen court:</h1>
-                        <div class="court">
-                            <c:forEach var="c" items="${requestScope.chooseCourt}">
-                                <p>${c.number}</p>
-                                <img src="<%=request.getContextPath()%>/img/icon/icon.png" alt="icon" width="40px" height="40px" />
+                </div>
+
+                <div class="right-container">
+                    <div class="feedback-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 style="color: white;">Feedback</h2>
+                            <form class="filter-container" action="feedbackFilter" method="GET">
+                                <div class="filter-dropdown">
+                                    <select id="rating-filter" name="rating">
+                                        <option value="all">All</option>
+                                        <option value="5">5 stars</option>
+                                        <option value="4">4 stars</option>
+                                        <option value="3">3 stars</option>
+                                        <option value="2">2 stars</option>
+                                        <option value="1">1 star</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="stadiumID" name="stadiumID" value="${st.stadium_ID}">
+                                <button id="filter-button" type="submit" class="filter-button">Filter</button>
+                            </form>
+                        </div>
+                        <div class="feedback-list">
+                            <c:forEach var="fb" items="${requestScope.feedbackList}">
+                                <div class="feedback-item" data-rating="${fb.ratingScore}">
+                                    <i class="fas fa-user-circle"></i>
+                                    <div class="feedback-content">
+                                        <p class="feedback-name">${fb.customer.customer_Name}</p>
+                                        <p class="feedback-description">${fb.description}</p>
+                                        <div class="rating">
+                                            <p class="feedback-rating">Rating Score: ${fb.ratingScore}</p>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </c:forEach>
                         </div>
                     </div>
-                    <div class="stadium-inf">
-                        <h1>Price per hour:</h1>
-                        <p>${bk.stadium.pricePerHour}</p>
-                    </div>
-                    <div class="stadium-inf">
-                        <h1>Banking Image:</h1>
-                        <img src="${bk.bankingImage}" width="300px" height="450px" alt="bankingImage"/>
-                    </div>
-                    <div class="total">
-                        <h1>Total:</h1>
-                        <h1>${bk.total}.000 VND</h1>
+
+                    <div class="feedback-form">
+                        <h2>Leave Feedback</h2>
+                        <form id="feedback-form" action="feedback" method="post">
+                            <div class="form-group">
+                                <label for="feedback-description">Description:</label>
+                                <textarea id="feedback-description" name="feedback-description" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="rating">Rating:</label>
+                                <select id="rating" name="rating" required>
+                                    <option value="">Choose a rating</option>
+                                    <option value="1">1 - Very Poor</option>
+                                    <option value="2">2 - Poor</option>
+                                    <option value="3">3 - Average</option>
+                                    <option value="4">4 - Good</option>
+                                    <option value="5">5 - Excellent</option>
+                                </select>
+                            </div>
+                            <button type="submit">Submit Feedback</button>
+                        </form>
                     </div>
                 </div>
             </div>
+            <a class="booking-btn" href="<%=request.getContextPath()%>/view/common/login.jsp">Book Now</a>
         </div>
 
-        <jsp:include page="CusFooter.jsp" flush="true" />     
+        <div class="footer">
+            <div>CONTACT US: 0778289817</div>
+            <div>EMAIL: bookingsystem3105@gmail.com</div>
+        </div>
     </body>
 </html>
+

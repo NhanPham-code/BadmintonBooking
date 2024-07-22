@@ -157,6 +157,13 @@ public class bookingCourt extends HttpServlet {
                 }
             }
 
+            if (freeCourt.size()==0) {
+                request.setAttribute("stadium_ID", stadium_ID);
+                request.setAttribute("error", "Sorry! There are no courts that match your requirements!");
+                request.getRequestDispatcher("view/customer/CusBookingTime.jsp").forward(request, response);
+                return;
+            }
+            
             request.setAttribute("stadium_ID", stadium_ID);
             request.setAttribute("startTime", startTimeOfCus);
             request.setAttribute("endTime", endTimeOfCus);
