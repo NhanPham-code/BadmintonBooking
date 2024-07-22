@@ -138,6 +138,7 @@
             .booking-inf {
                 display: flex;
                 align-items: center;
+                justify-content: space-between;
                 background: #fff;
                 border: 1px solid #000;
                 border-bottom: none;
@@ -149,6 +150,17 @@
                 width: 60px;
                 height: 60px;
                 border-radius: 50%;
+            }
+
+            .booking-actions {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-end;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 5px;
             }
 
             .stadium-details {
@@ -228,31 +240,32 @@
                 <!-- Pending Bookings -->
                 <div class="cus-book" id="pendingBooking">
                     <div class="head"><b>PENDING BOOKINGS</b></div>
-                    <div class="booking-detail">
+                    <div class="booking-detail">    
                         <c:forEach items="${waitingBookings}" var="booking">
-
                             <div class="booking-inf">
-                                <div class="stadium-details">
-                                    <div>Customer Name: ${booking.customer.customer_Name}</div>
-                                    <div class="court-list-container">
-                                        <div>Court:</div>
-                                        <c:forEach var="c" items="${booking.courtList}">
-                                            <p class="court-number">${c.number}</p>
-                                        </c:forEach>
+                                <a href="bookingDetail?bookingID=${booking.booking_ID}&stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">
+                                    <div class="stadium-details">
+                                        <div>Customer Name: ${booking.customer.customer_Name}</div>
+                                        <div class="court-list-container">
+                                            <div>Court:</div>
+                                            <c:forEach var="c" items="${booking.courtList}">
+                                                <p class="court-number">${c.number}</p>
+                                            </c:forEach>
+                                        </div>
+                                        <div>Date: ${booking.date}</div>
+                                        <div>Time: ${booking.startTime} - ${booking.endTime}</div>
                                     </div>
-                                    <div>Date: ${booking.date}</div>
-                                    <div>Time: ${booking.startTime} - ${booking.endTime}</div>
-                                </div>
-                                <div class="action-buttons">
-                                    <a style ="color: white" href="bookingDetail?bookingID=${booking.booking_ID}" class="accept">Detail</a>
-                                    <a style ="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>   
-                                    <a style ="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
-                                </div>
-                                <div class="stadium-status">
-                                    ${booking.bookingAccepted}
+                                </a>
+                                <div class="booking-actions">
+                                    <div class="action-buttons">
+                                        <a style="color: white" href="acceptBooking?BookingID=${booking.booking_ID}" class="accept">Accept</a>
+                                        <a style="color: white" href="rejectBooking?BookingID=${booking.booking_ID}" class="reject">Reject</a>
+                                    </div>
+                                    <div class="stadium-status">
+                                        ${booking.bookingAccepted}
+                                    </div>
                                 </div>
                             </div>
-
                             <!-- Add more pending bookings as needed -->
                         </c:forEach>
                     </div>

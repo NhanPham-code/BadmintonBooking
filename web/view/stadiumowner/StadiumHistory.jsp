@@ -20,7 +20,7 @@
                 margin: 0;
                 padding: 0;
             }
-     
+
             .content {
                 padding: 20px;
             }
@@ -310,7 +310,7 @@
             .exit-button a:hover::after {
                 transform: scaleX(1);
                 transform-origin: bottom left;
-                
+
             }
 
         </style>
@@ -370,7 +370,9 @@
                         <td>${booking.startTime}-${booking.endTime}</td>
                         <td style="color: green; font-weight: bold">${booking.bookingAccepted}</td>
                         <td class="action-buttons">
-                            <a href="#" class="detail">Detail</a>
+                            <a href="detail?bookingID=${booking.booking_ID}&stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}" class="detail">
+                                Detail
+                            </a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -399,7 +401,9 @@
                         <td>${booking.startTime}-${booking.endTime}</td>
                         <td style="color:red; font-weight: bold">${booking.bookingAccepted}</td>
                         <td class="action-buttons">
-                            <a href="#" class="detail">Detail</a>
+                            <a href="detail?bookingID=${booking.booking_ID}&stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}" class="detail">
+                                Detail
+                            </a>
                         </td>
                     </tr>                    
                 </c:forEach>

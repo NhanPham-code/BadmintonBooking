@@ -1,7 +1,7 @@
 <%-- 
-    Document   : BookingDetail
-    Created on : Jun 19, 2024, 9:35:29 AM
-    Author     : NhiTCU
+    Document   : Details
+    Created on : Jul 22, 2024, 5:29:14 PM
+    Author     : PhuocDH
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -111,7 +111,7 @@
                 <div class="stadium-detail">
                     
                     <div class="exit-button">
-                        <a href="bookingManage?stadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
+                        <a href="bookingHistoryStadiumOwner?StadiumID=${requestScope.stadiumID}&stadiumName=${requestScope.stadiumName}">Return to menu</a>
                     </div>
 
                     <c:set var="bk" value="${requestScope.booking}"></c:set>

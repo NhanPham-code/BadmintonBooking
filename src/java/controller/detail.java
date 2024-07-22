@@ -5,10 +5,7 @@
 package controller;
 
 import DAO.accountDAO;
-import DAO.adminDAO;
-import DAO.bookingDetailDAO;
 import DAO.bookingDAO;
-import DAO.customerDAO;
 import DAO.stadiumOwnerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,22 +15,18 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Account;
 import model.Booking;
 import model.Court;
-import java.sql.Time;
-import java.util.List;
-import java.util.Date;
-import model.Account;
-import model.Admin;
-import model.Customer;
 import model.StadiumOwner;
 
 /**
  *
- * @author NhiTCU
+ * @author WINDOWS
  */
-@WebServlet(name = "bookingDetail", urlPatterns = {"/bookingDetail"})
-public class bookingDetail extends HttpServlet {
+@WebServlet(name = "detail", urlPatterns = {"/detail"})
+public class detail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,10 +45,10 @@ public class bookingDetail extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet bookingDetail</title>");
+            out.println("<title>Servlet detail</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet bookingDetail at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet detail at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -107,30 +100,16 @@ public class bookingDetail extends HttpServlet {
         }
         accountDAO accDAO = new accountDAO();
         Account ac = accDAO.getAccountByEmail(email);
-        // Chuyen trang jsp        
-        if (token.equalsIgnoreCase("Customer")) {
-            customerDAO cusDAO = new customerDAO();
-            Customer cus = cusDAO.getCustomerByAcc_ID(ac.getAcc_ID());
-            request.setAttribute("name", cus.getCustomer_Name());
-            request.getRequestDispatcher("view/customer/CusBookingDetail.jsp").forward(request, response);
 
-        } else if (token.equalsIgnoreCase("StadiumOwner")) {
-            String stadiumID = request.getParameter("stadiumID");
-            String stadiumName = request.getParameter("stadiumName");
-            stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
-            StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
+        String stadiumID = request.getParameter("stadiumID");
+        String stadiumName = request.getParameter("stadiumName");
+        stadiumOwnerDAO stoDAO = new stadiumOwnerDAO();
+        StadiumOwner sto = stoDAO.getStadiumOwnerByAccID(ac.getAcc_ID());
 
-            request.setAttribute("stadiumName", stadiumName);
-            request.setAttribute("stadiumID", stadiumID);
-            request.setAttribute("name", sto.getOwner_name());
-            request.getRequestDispatcher("view/stadiumowner/BookingDetail.jsp").forward(request, response);
-        } else {
-            adminDAO aDAO = new adminDAO();
-            Admin ad = aDAO.getAdminByAccID(ac.getAcc_ID());
-            request.setAttribute("name", ad.getAdmin_name());
-            request.getRequestDispatcher("view/admin/AdBookingDetail.jsp").forward(request, response);
-        }
-
+        request.setAttribute("stadiumName", stadiumName);
+        request.setAttribute("stadiumID", stadiumID);
+        request.setAttribute("name", sto.getOwner_name());
+        request.getRequestDispatcher("view/stadiumowner/Details.jsp").forward(request, response);
     }
 
     /**
